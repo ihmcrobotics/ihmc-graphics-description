@@ -10,15 +10,13 @@ buildscript {
 apply plugin: "us.ihmc.ihmc-build"
 
 ihmc {
-   loadProductProperties("./product.properties")
-   
+   group = "us.ihmc"
+   version = "0.11.0"
+   vcsUrl = "https://github.com/ihmcrobotics/ihmc-graphics-description"
+   openSource = true
+
    configureDependencyResolution()
    configurePublications()
-}
-
-testSuites {
-   def prefix = "LIBS-IHMCOPENROBOTICSSOFTWARE"
-   bambooPlanKeys = [prefix + "FAST", prefix + "INDEVELOPMENT", prefix + "UI", prefix + "VIDEO"]
 }
 
 mainDependencies {
