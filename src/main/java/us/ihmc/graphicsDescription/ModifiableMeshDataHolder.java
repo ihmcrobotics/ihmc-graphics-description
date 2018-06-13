@@ -1,9 +1,9 @@
 package us.ihmc.graphicsDescription;
 
 import gnu.trove.list.array.TIntArrayList;
+import us.ihmc.commons.lists.RecyclingArrayList;
 import us.ihmc.euclid.tuple3D.Point3D32;
 import us.ihmc.euclid.tuple3D.Vector3D32;
-import us.ihmc.robotics.lists.RecyclingArrayList;
 
 /**
  * This class provides an mutable data structure for 3D graphic mesh that is independent from the graphics engine to be used.
