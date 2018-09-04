@@ -201,7 +201,7 @@ public class YoGraphicPolygon extends YoGraphicAbstractShape implements RemoteYo
    public YoGraphicPolygon duplicate(YoVariableRegistry newRegistry)
    {
       return new YoGraphicPolygon(getName(), yoFrameConvexPolygon2d.duplicate(newRegistry), yoFramePoint.duplicate(newRegistry),
-                                  yoFrameOrientation.duplicate(newRegistry), scale, height, appearance);
+                                  yoFrameYawPitchRoll.duplicate(newRegistry), scale, height, appearance);
    }
 
    @Override

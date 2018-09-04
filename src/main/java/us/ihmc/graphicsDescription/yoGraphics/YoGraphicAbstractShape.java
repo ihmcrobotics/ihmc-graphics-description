@@ -17,7 +17,7 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
 {
    private static final ReferenceFrame worldFrame = ReferenceFrame.getWorldFrame();
    protected final YoFramePoint3D yoFramePoint;
-   protected final YoFrameYawPitchRoll yoFrameOrientation;
+   protected final YoFrameYawPitchRoll yoFrameYawPitchRoll;
    protected final double scale;
    private final Vector3D translationVector = new Vector3D();
 
@@ -27,7 +27,7 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
       framePoint.checkReferenceFrameMatch(worldFrame);
 
       this.yoFramePoint = framePoint;
-      this.yoFrameOrientation = frameOrientation;
+      this.yoFrameYawPitchRoll = frameOrientation;
 
       this.scale = scale;
    }
@@ -45,7 +45,7 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
       YoDouble roll = (YoDouble) yoVariables[yoIndex++];
 
       yoFramePoint = new YoFramePoint3D(x, y, z, worldFrame);
-      yoFrameOrientation = new YoFrameYawPitchRoll(yaw, pitch, roll, worldFrame);
+      yoFrameYawPitchRoll = new YoFrameYawPitchRoll(yaw, pitch, roll, worldFrame);
 
       this.scale = scale;
    }
@@ -54,7 +54,7 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
    {
       yoFramePoint.checkReferenceFrameMatch(framePose.getReferenceFrame());
       yoFramePoint.set(framePose.getPosition());
-      yoFrameOrientation.set(framePose.getOrientation());
+      yoFrameYawPitchRoll.set(framePose.getOrientation());
    }
 
    public void setPosition(double x, double y, double z)
@@ -74,17 +74,17 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
 
    public void getOrientation(FrameQuaternion orientationToPack)
    {
-      this.yoFrameOrientation.getFrameOrientationIncludingFrame(orientationToPack);
+      this.yoFrameYawPitchRoll.getFrameOrientationIncludingFrame(orientationToPack);
    }
 
    public void setOrientation(FrameQuaternion orientation)
    {
-      this.yoFrameOrientation.set(orientation);
+      this.yoFrameYawPitchRoll.set(orientation);
    }
 
    public void setYawPitchRoll(double yaw, double pitch, double roll)
    {
-      this.yoFrameOrientation.setYawPitchRoll(yaw, pitch, roll);
+      this.yoFrameYawPitchRoll.setYawPitchRoll(yaw, pitch, roll);
    }
 
    public void setTransformToWorld(RigidBodyTransform transformToWorld)
@@ -98,7 +98,7 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
 
       double[] yawPitchRoll = new double[3];
       orientation.getYawPitchRoll(yawPitchRoll);
-      yoFrameOrientation.setYawPitchRoll(yawPitchRoll[0], yawPitchRoll[1], yawPitchRoll[2]);
+      yoFrameYawPitchRoll.setYawPitchRoll(yawPitchRoll[0], yawPitchRoll[1], yawPitchRoll[2]);
    }
 
    public void setToReferenceFrame(ReferenceFrame referenceFrame)
@@ -137,7 +137,7 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
    {
       transform3D.setIdentity();
       translationVector.set(yoFramePoint.getX(), yoFramePoint.getY(), yoFramePoint.getZ());
-      yoFrameOrientation.getEulerAngles(rotationEulerVector);
+      yoFrameYawPitchRoll.getEulerAngles(rotationEulerVector);
 
       transform3D.setRotationEuler(rotationEulerVector);
       transform3D.setTranslation(translationVector);
@@ -153,7 +153,7 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
    public void setPoseToNaN()
    {
       yoFramePoint.setToNaN();
-      yoFrameOrientation.setToNaN();
+      yoFrameYawPitchRoll.setToNaN();
    }
 
    @Override
@@ -161,7 +161,7 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
    {
       if (yoFramePoint.containsNaN())
          return true;
-      if (yoFrameOrientation.containsNaN())
+      if (yoFrameYawPitchRoll.containsNaN())
          return true;
 
       return false;
@@ -176,9 +176,9 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
       vars[i++] = yoFramePoint.getYoY();
       vars[i++] = yoFramePoint.getYoZ();
 
-      vars[i++] = yoFrameOrientation.getYaw();
-      vars[i++] = yoFrameOrientation.getPitch();
-      vars[i++] = yoFrameOrientation.getRoll();
+      vars[i++] = yoFrameYawPitchRoll.getYaw();
+      vars[i++] = yoFrameYawPitchRoll.getPitch();
+      vars[i++] = yoFrameYawPitchRoll.getRoll();
 
       return vars;
    }

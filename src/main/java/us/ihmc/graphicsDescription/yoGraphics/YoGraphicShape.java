@@ -40,6 +40,6 @@ public class YoGraphicShape extends YoGraphicAbstractShape
    @Override
    public YoGraphic duplicate(YoVariableRegistry newRegistry)
    {
-      return new YoGraphicShape(getName(), getLinkGraphics(), yoFramePoint.duplicate(newRegistry), yoFrameOrientation.duplicate(newRegistry), scale);
+      return new YoGraphicShape(getName(), getLinkGraphics(), yoFramePoint.duplicate(newRegistry), yoFrameYawPitchRoll.duplicate(newRegistry), scale);
    }
 }
