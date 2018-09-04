@@ -20,7 +20,9 @@ import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoFrameConvexPolygon2D;
 import us.ihmc.yoVariables.variable.YoFramePoint2D;
 import us.ihmc.yoVariables.variable.YoFramePoint3D;
+import us.ihmc.yoVariables.variable.YoFramePose3D;
 import us.ihmc.yoVariables.variable.YoFramePoseUsingYawPitchRoll;
+import us.ihmc.yoVariables.variable.YoFrameQuaternion;
 import us.ihmc.yoVariables.variable.YoFrameYawPitchRoll;
 import us.ihmc.yoVariables.variable.YoInteger;
 import us.ihmc.yoVariables.variable.YoVariable;
@@ -37,36 +39,61 @@ public class YoGraphicPolygon extends YoGraphicAbstractShape implements RemoteYo
 
    private final AppearanceDefinition appearance;
 
+   public YoGraphicPolygon(String name, YoFramePose3D framePose, int maxNumberOfVertices, YoVariableRegistry registry, double scale,
+                           AppearanceDefinition appearance)
+   {
+      this(name, new YoFrameConvexPolygon2D(name + "ConvexPolygon2d", worldFrame, maxNumberOfVertices, registry), framePose, scale, appearance);
+   }
+
+   public YoGraphicPolygon(String name, YoFrameConvexPolygon2D yoFrameConvexPolygon2d, YoFramePose3D framePose, double scale, AppearanceDefinition appearance)
+   {
+      this(name, yoFrameConvexPolygon2d, framePose.getPosition(), framePose.getOrientation(), scale, appearance);
+   }
+
+   public YoGraphicPolygon(String name, YoFrameConvexPolygon2D yoFrameConvexPolygon2d, YoFramePoint3D framePoint, YoFrameQuaternion orientation, double scale,
+                           AppearanceDefinition appearance)
+   {
+      this(name, yoFrameConvexPolygon2d, framePoint, orientation, scale, DEFAULT_HEIGHT, appearance);
+   }
+
+   public YoGraphicPolygon(String name, YoFrameConvexPolygon2D yoFrameConvexPolygon2d, YoFramePoint3D framePoint, YoFrameQuaternion orientation, double scale,
+                           double height, AppearanceDefinition appearance)
+   {
+      this(name, yoFrameConvexPolygon2d, framePoint, null, orientation, scale, height, appearance);
+   }
+
+   public YoGraphicPolygon(String name, YoFrameConvexPolygon2D convexPolygon2d, String namePrefix, String nameSuffix, YoVariableRegistry registry,
+                           boolean useYawPitchRoll, double scale, AppearanceDefinition appearance)
+   {
+      this(name, convexPolygon2d, new YoFramePoint3D(namePrefix, nameSuffix, worldFrame, registry),
+           useYawPitchRoll ? new YoFrameYawPitchRoll(namePrefix, nameSuffix, worldFrame, registry) : null,
+           useYawPitchRoll ? null : new YoFrameQuaternion(namePrefix, nameSuffix, worldFrame, registry), scale, DEFAULT_HEIGHT, appearance);
+   }
+
+   public YoGraphicPolygon(String name, YoFramePoseUsingYawPitchRoll framePose, int maxNumberOfVertices, YoVariableRegistry registry, double scale,
+                           AppearanceDefinition appearance)
+   {
+      this(name, new YoFrameConvexPolygon2D(name + "ConvexPolygon2d", worldFrame, maxNumberOfVertices, registry), framePose, scale, appearance);
+   }
+
    public YoGraphicPolygon(String name, YoFrameConvexPolygon2D yoFrameConvexPolygon2d, YoFramePoseUsingYawPitchRoll framePose, double scale,
                            AppearanceDefinition appearance)
    {
       this(name, yoFrameConvexPolygon2d, framePose.getPosition(), framePose.getOrientation(), scale, appearance);
    }
 
-   public YoGraphicPolygon(String name, YoFrameConvexPolygon2D convexPolygon2d, String namePrefix, String nameSuffix, YoVariableRegistry registry, double scale,
+   public YoGraphicPolygon(String name, int maxNumberOfVertices, YoVariableRegistry registry, boolean useYawPitchRoll, double scale,
                            AppearanceDefinition appearance)
    {
-      this(name, convexPolygon2d, new YoFramePoint3D(namePrefix, nameSuffix, worldFrame, registry),
-           new YoFrameYawPitchRoll(namePrefix, nameSuffix, worldFrame, registry), scale, appearance);
+      this(name, new YoFrameConvexPolygon2D(name + "ConvexPolygon2d", worldFrame, maxNumberOfVertices, registry), registry, useYawPitchRoll, scale, appearance);
    }
 
-   public YoGraphicPolygon(String name, YoFrameConvexPolygon2D convexPolygon2d, YoVariableRegistry registry, double scale, AppearanceDefinition appearance)
+   public YoGraphicPolygon(String name, YoFrameConvexPolygon2D convexPolygon2d, YoVariableRegistry registry, boolean useYawPitchRoll, double scale,
+                           AppearanceDefinition appearance)
    {
       this(name, convexPolygon2d, new YoFramePoint3D(name + "Position", worldFrame, registry),
-           new YoFrameYawPitchRoll(name + "Orientation", worldFrame, registry), scale, appearance);
-   }
-
-   public YoGraphicPolygon(String name, YoFramePoseUsingYawPitchRoll framePose, int maxNumberOfVertices, YoVariableRegistry registry, double scale,
-                           AppearanceDefinition appearance)
-   {
-      this(name, new YoFrameConvexPolygon2D(name + "ConvexPolygon2d", worldFrame, maxNumberOfVertices, registry), framePose.getPosition(),
-           framePose.getOrientation(), scale, appearance);
-   }
-
-   public YoGraphicPolygon(String name, int maxNumberOfVertices, YoVariableRegistry registry, double scale, AppearanceDefinition appearance)
-   {
-      this(name, new YoFrameConvexPolygon2D(name + "ConvexPolygon2d", worldFrame, maxNumberOfVertices, registry),
-           new YoFramePoint3D(name + "Position", worldFrame, registry), new YoFrameYawPitchRoll(name + "Orientation", worldFrame, registry), scale, appearance);
+           useYawPitchRoll ? new YoFrameYawPitchRoll(name + "Orientation", worldFrame, registry) : null,
+           useYawPitchRoll ? null : new YoFrameQuaternion(name + "Orientation", worldFrame, registry), scale, DEFAULT_HEIGHT, appearance);
    }
 
    public YoGraphicPolygon(String name, YoFrameConvexPolygon2D yoFrameConvexPolygon2d, YoFramePoint3D framePoint, YoFrameYawPitchRoll orientation, double scale,
@@ -78,7 +105,13 @@ public class YoGraphicPolygon extends YoGraphicAbstractShape implements RemoteYo
    public YoGraphicPolygon(String name, YoFrameConvexPolygon2D yoFrameConvexPolygon2d, YoFramePoint3D framePoint, YoFrameYawPitchRoll orientation, double scale,
                            double height, AppearanceDefinition appearance)
    {
-      super(name, framePoint, orientation, scale);
+      this(name, yoFrameConvexPolygon2d, framePoint, orientation, null, scale, height, appearance);
+   }
+
+   private YoGraphicPolygon(String name, YoFrameConvexPolygon2D yoFrameConvexPolygon2d, YoFramePoint3D framePoint, YoFrameYawPitchRoll yawPitchRoll,
+                            YoFrameQuaternion quaternion, double scale, double height, AppearanceDefinition appearance)
+   {
+      super(name, framePoint, yawPitchRoll, quaternion, scale);
 
       if (yoFrameConvexPolygon2d.getNumberOfVertices() <= 0)
          yoFrameConvexPolygon2d.set(Vertex2DSupplier.emptyVertex2DSupplier());
@@ -200,8 +233,12 @@ public class YoGraphicPolygon extends YoGraphicAbstractShape implements RemoteYo
    @Override
    public YoGraphicPolygon duplicate(YoVariableRegistry newRegistry)
    {
-      return new YoGraphicPolygon(getName(), yoFrameConvexPolygon2d.duplicate(newRegistry), yoFramePoint.duplicate(newRegistry),
-                                  yoFrameYawPitchRoll.duplicate(newRegistry), scale, height, appearance);
+      if (isUsingYawPitchRoll())
+         return new YoGraphicPolygon(getName(), yoFrameConvexPolygon2d.duplicate(newRegistry), yoFramePoint.duplicate(newRegistry),
+                                     yoFrameYawPitchRoll.duplicate(newRegistry), scale, height, appearance);
+      else
+         return new YoGraphicPolygon(getName(), yoFrameConvexPolygon2d.duplicate(newRegistry), yoFramePoint.duplicate(newRegistry),
+                                     yoFrameQuaternion.duplicate(newRegistry), scale, height, appearance);
    }
 
    @Override
