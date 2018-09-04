@@ -8,11 +8,14 @@ import us.ihmc.euclid.transform.AffineTransform;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.graphicsDescription.plotting.artifact.Artifact;
+import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoFramePoint3D;
 import us.ihmc.yoVariables.variable.YoFrameYawPitchRoll;
+import us.ihmc.yoVariables.variable.YoVariable;
 
 public abstract class YoGraphicAbstractShape extends YoGraphic
 {
+   private static final ReferenceFrame worldFrame = ReferenceFrame.getWorldFrame();
    protected final YoFramePoint3D yoFramePoint;
    protected final YoFrameYawPitchRoll yoFrameOrientation;
    protected final double scale;
@@ -21,10 +24,28 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
    protected YoGraphicAbstractShape(String name, YoFramePoint3D framePoint, YoFrameYawPitchRoll frameOrientation, double scale)
    {
       super(name);
-      framePoint.checkReferenceFrameMatch(ReferenceFrame.getWorldFrame());
+      framePoint.checkReferenceFrameMatch(worldFrame);
 
       this.yoFramePoint = framePoint;
       this.yoFrameOrientation = frameOrientation;
+
+      this.scale = scale;
+   }
+
+   protected YoGraphicAbstractShape(String name, YoVariable<?>[] yoVariables, double scale)
+   {
+      super(name);
+
+      int yoIndex = 0;
+      YoDouble x = (YoDouble) yoVariables[yoIndex++];
+      YoDouble y = (YoDouble) yoVariables[yoIndex++];
+      YoDouble z = (YoDouble) yoVariables[yoIndex++];
+      YoDouble yaw = (YoDouble) yoVariables[yoIndex++];
+      YoDouble pitch = (YoDouble) yoVariables[yoIndex++];
+      YoDouble roll = (YoDouble) yoVariables[yoIndex++];
+
+      yoFramePoint = new YoFramePoint3D(x, y, z, worldFrame);
+      yoFrameOrientation = new YoFrameYawPitchRoll(yaw, pitch, roll, worldFrame);
 
       this.scale = scale;
    }
@@ -73,7 +94,7 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
       transformToWorld.getTranslation(translationToWorld);
 
       this.yoFramePoint.set(translationToWorld);
-      FrameQuaternion orientation = new FrameQuaternion(ReferenceFrame.getWorldFrame(), transformToWorld.getRotationMatrix());
+      FrameQuaternion orientation = new FrameQuaternion(worldFrame, transformToWorld.getRotationMatrix());
 
       double[] yawPitchRoll = new double[3];
       orientation.getYawPitchRoll(yawPitchRoll);
@@ -144,5 +165,21 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
          return true;
 
       return false;
+   }
+
+   public YoVariable<?>[] getVariables()
+   {
+      YoVariable<?>[] vars = new YoVariable[6];
+      int i = 0;
+
+      vars[i++] = yoFramePoint.getYoX();
+      vars[i++] = yoFramePoint.getYoY();
+      vars[i++] = yoFramePoint.getYoZ();
+
+      vars[i++] = yoFrameOrientation.getYaw();
+      vars[i++] = yoFrameOrientation.getPitch();
+      vars[i++] = yoFrameOrientation.getRoll();
+
+      return vars;
    }
 }

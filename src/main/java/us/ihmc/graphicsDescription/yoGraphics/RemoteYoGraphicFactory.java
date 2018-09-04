@@ -17,8 +17,6 @@ import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoFrameConvexPolygon2D;
 import us.ihmc.yoVariables.variable.YoFrameLineSegment2D;
 import us.ihmc.yoVariables.variable.YoFramePoint2D;
-import us.ihmc.yoVariables.variable.YoFramePoint3D;
-import us.ihmc.yoVariables.variable.YoFrameYawPitchRoll;
 import us.ihmc.yoVariables.variable.YoInteger;
 import us.ihmc.yoVariables.variable.YoVariable;
 
@@ -126,21 +124,7 @@ public class RemoteYoGraphicFactory
 
    private static YoGraphicPolygon yoGraphicPolygonFromMessage(String name, YoVariable<?>[] vars, double[] consts, AppearanceDefinition appearance)
    {
-      ReferenceFrame referenceFrame = ReferenceFrame.getWorldFrame();
-      int i = 0;
-      YoInteger yoNumVertices = (YoInteger) vars[i++];
-      ArrayList<YoFramePoint2D> yoFramePoints = new ArrayList<YoFramePoint2D>();
-      while (i < vars.length - 6)
-      {
-         yoFramePoints.add(new YoFramePoint2D((YoDouble) vars[i++], (YoDouble) vars[i++], referenceFrame));
-      }
-
-      YoFrameConvexPolygon2D convexPolygon2d = new YoFrameConvexPolygon2D(yoFramePoints, yoNumVertices, referenceFrame);
-
-      YoFramePoint3D framePoint = new YoFramePoint3D((YoDouble) vars[i++], (YoDouble) vars[i++], (YoDouble) vars[i++], referenceFrame);
-      YoFrameYawPitchRoll frameOrientation = new YoFrameYawPitchRoll((YoDouble) vars[i++], (YoDouble) vars[i++], (YoDouble) vars[i++], referenceFrame);
-
-      return new YoGraphicPolygon(name, convexPolygon2d, framePoint, frameOrientation, consts[0], appearance);
+      return YoGraphicPolygon.createAsRemoteYoGraphic(name, vars, consts, appearance);
    }
 
    private static YoGraphicLineSegment yoGraphicLineSegmentFromMessage(String name, YoVariable<?>[] vars, double[] consts, AppearanceDefinition appearance)
