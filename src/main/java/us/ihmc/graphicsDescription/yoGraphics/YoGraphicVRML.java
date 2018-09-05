@@ -6,7 +6,9 @@ import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.variable.YoFramePoint3D;
 import us.ihmc.yoVariables.variable.YoFramePoseUsingYawPitchRoll;
+import us.ihmc.yoVariables.variable.YoFrameYawPitchRoll;
 
 public class YoGraphicVRML extends YoGraphicCoordinateSystem
 {
@@ -39,6 +41,14 @@ public class YoGraphicVRML extends YoGraphicCoordinateSystem
       this.graphicRotation = graphicRotation;
       this.appearance = appearance;
       this.showCoordinateSystem = showCoordinateSystem;
+   }
+
+   public YoGraphicVRML(String name, ReferenceFrame referenceFrame, YoFramePoint3D position, YoFrameYawPitchRoll orientation, String modelFilePath,
+                        Vector3D graphicOffset, RotationMatrix graphicRotation, AppearanceDefinition appearance, boolean showCoordinateSystem,
+                        double coordinateAxisLength)
+   {
+      this(name, referenceFrame, new YoFramePoseUsingYawPitchRoll(position, orientation), modelFilePath, graphicOffset, graphicRotation, appearance,
+           showCoordinateSystem, coordinateAxisLength);
    }
 
    public YoGraphicVRML(String name, ReferenceFrame referenceFrame, YoFramePoseUsingYawPitchRoll yoFramePose, String modelFilePath, Vector3D graphicOffset,
@@ -80,7 +90,7 @@ public class YoGraphicVRML extends YoGraphicCoordinateSystem
    @Override
    public YoGraphicVRML duplicate(YoVariableRegistry newRegistry)
    {
-      return new YoGraphicVRML(getName(), referenceFrame, pose.duplicate(newRegistry), modelFilePath, graphicOffset, graphicRotation, appearance,
-                               showCoordinateSystem, scale);
+      return new YoGraphicVRML(getName(), referenceFrame, position.duplicate(newRegistry), yawPitchRoll.duplicate(newRegistry), modelFilePath, graphicOffset,
+                               graphicRotation, appearance, showCoordinateSystem, scale);
    }
 }
