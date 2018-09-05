@@ -31,7 +31,7 @@ public class YoGraphicEllipsoid extends YoGraphicCoordinateSystem
 
    public YoGraphicEllipsoid(String namePrefix, String nameSuffix, YoVariableRegistry registry, AppearanceDefinition appearance, Vector3DReadOnly radii)
    {
-      super(namePrefix, nameSuffix, registry, 1.0, appearance);
+      super(namePrefix, nameSuffix, registry, true, 1.0, appearance);
       this.appearance = appearance;
       this.radii.set(radii);
    }

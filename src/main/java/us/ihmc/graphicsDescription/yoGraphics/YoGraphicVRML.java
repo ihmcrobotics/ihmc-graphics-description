@@ -34,7 +34,7 @@ public class YoGraphicVRML extends YoGraphicCoordinateSystem
    public YoGraphicVRML(String name, ReferenceFrame referenceFrame, YoVariableRegistry registry, String modelFilePath, Vector3D graphicOffset,
                         RotationMatrix graphicRotation, AppearanceDefinition appearance, boolean showCoordinateSystem, double coordinateAxisLength)
    {
-      super(name, "", registry, coordinateAxisLength);
+      super(name, "", registry, true, coordinateAxisLength);
       this.referenceFrame = referenceFrame;
       this.modelFilePath = modelFilePath;
       this.graphicOffset = graphicOffset;
