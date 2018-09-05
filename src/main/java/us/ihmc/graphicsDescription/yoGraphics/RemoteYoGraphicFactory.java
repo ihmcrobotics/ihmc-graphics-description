@@ -136,15 +136,13 @@ public class RemoteYoGraphicFactory
    private static YoGraphicCoordinateSystem yoGraphicCoordinateSystemFromMessage(String name, YoVariable<?>[] vars, double[] consts,
                                                                                  AppearanceDefinition appearance)
    {
-      return new YoGraphicCoordinateSystem(name, (YoDouble) vars[0], (YoDouble) vars[1], (YoDouble) vars[2], (YoDouble) vars[3], (YoDouble) vars[4],
-                                           (YoDouble) vars[5], consts);
+      return YoGraphicCoordinateSystem.createAsRemoteYoGraphic(name, vars, consts);
    }
 
    private static YoGraphicReferenceFrame yoGraphicReferenceFrameFromMessage(String name, YoVariable<?>[] vars, double[] consts,
                                                                              AppearanceDefinition appearance)
    {
-      return new YoGraphicReferenceFrame(name, (YoDouble) vars[0], (YoDouble) vars[1], (YoDouble) vars[2], (YoDouble) vars[3], (YoDouble) vars[4],
-                                         (YoDouble) vars[5], consts);
+      return YoGraphicReferenceFrame.createAsRemoteYoGraphic(name, vars, consts);
    }
 
    private static YoGraphicPosition yoGraphicPositionFromMessage(String name, YoVariable<?>[] vars, double[] consts, AppearanceDefinition appearance)

@@ -19,9 +19,11 @@ import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoFramePoint3D;
 import us.ihmc.yoVariables.variable.YoFramePoseUsingYawPitchRoll;
 import us.ihmc.yoVariables.variable.YoFrameYawPitchRoll;
+import us.ihmc.yoVariables.variable.YoVariable;
 
 public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGraphic
 {
+   private static final ReferenceFrame worldFrame = ReferenceFrame.getWorldFrame();
    protected final YoFramePoseUsingYawPitchRoll pose;
    protected final double scale;
    protected AppearanceDefinition arrowColor = YoAppearance.Gray();
@@ -30,33 +32,11 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
 
    private final double[] tempYawPitchRoll = new double[3];
 
-   public YoGraphicCoordinateSystem(String name, YoDouble x, YoDouble y, YoDouble z, YoDouble yaw, YoDouble pitch, YoDouble roll, double scale)
-   {
-      super(name);
-
-      pose = new YoFramePoseUsingYawPitchRoll(new YoFramePoint3D(x, y, z, ReferenceFrame.getWorldFrame()),
-                                              new YoFrameYawPitchRoll(yaw, pitch, roll, ReferenceFrame.getWorldFrame()));
-      this.scale = scale;
-   }
-
-   YoGraphicCoordinateSystem(String name, YoDouble x, YoDouble y, YoDouble z, YoDouble yaw, YoDouble pitch, YoDouble roll, double[] constants)
-   {
-      super(name);
-
-      pose = new YoFramePoseUsingYawPitchRoll(new YoFramePoint3D(x, y, z, ReferenceFrame.getWorldFrame()),
-                                              new YoFrameYawPitchRoll(yaw, pitch, roll, ReferenceFrame.getWorldFrame()));
-
-      scale = constants[0];
-      // Ensuring backward compatibility
-      if (constants.length == 3)
-         setArrowColor(new YoAppearanceRGBColor(new Color((int) constants[1]), constants[2]));
-   }
-
    public YoGraphicCoordinateSystem(String name, YoFramePoint3D framePoint, YoFrameYawPitchRoll orientation, double scale)
    {
       super(name);
 
-      ReferenceFrame.getWorldFrame().checkReferenceFrameMatch(framePoint);
+      worldFrame.checkReferenceFrameMatch(framePoint);
       framePoint.checkReferenceFrameMatch(orientation.getReferenceFrame());
 
       pose = new YoFramePoseUsingYawPitchRoll(framePoint, orientation);
@@ -71,8 +51,8 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
 
    public YoGraphicCoordinateSystem(String namePrefix, String nameSuffix, YoVariableRegistry registry, double scale, AppearanceDefinition arrowColor)
    {
-      this(namePrefix + nameSuffix, new YoFramePoint3D(namePrefix, nameSuffix, ReferenceFrame.getWorldFrame(), registry),
-           new YoFrameYawPitchRoll(namePrefix, nameSuffix, ReferenceFrame.getWorldFrame(), registry), scale);
+      this(namePrefix + nameSuffix, new YoFramePoint3D(namePrefix, nameSuffix, worldFrame, registry),
+           new YoFrameYawPitchRoll(namePrefix, nameSuffix, worldFrame, registry), scale);
       setArrowColor(arrowColor);
    }
 
@@ -92,6 +72,33 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
       this(name, yoFramePose.getPosition(), yoFramePose.getOrientation(), scale, arrowColor);
    }
 
+   static YoGraphicCoordinateSystem createAsRemoteYoGraphic(String name, YoVariable<?>[] yoVariables, double[] constants)
+   {
+      return new YoGraphicCoordinateSystem(name, yoVariables, constants);
+   }
+
+   protected YoGraphicCoordinateSystem(String name, YoVariable<?>[] yoVariables, double[] constants)
+   {
+      super(name);
+
+      int yoIndex = 0;
+      YoDouble x = (YoDouble) yoVariables[yoIndex++];
+      YoDouble y = (YoDouble) yoVariables[yoIndex++];
+      YoDouble z = (YoDouble) yoVariables[yoIndex++];
+      YoDouble yaw = (YoDouble) yoVariables[yoIndex++];
+      YoDouble pitch = (YoDouble) yoVariables[yoIndex++];
+      YoDouble roll = (YoDouble) yoVariables[yoIndex++];
+      YoFramePoint3D position = new YoFramePoint3D(x, y, z, worldFrame);
+      YoFrameYawPitchRoll orientation = new YoFrameYawPitchRoll(yaw, pitch, roll, worldFrame);
+
+      pose = new YoFramePoseUsingYawPitchRoll(position, orientation);
+
+      scale = constants[0];
+      // Ensuring backward compatibility
+      if (constants.length == 3)
+         setArrowColor(new YoAppearanceRGBColor(new Color((int) constants[1]), constants[2]));
+   }
+
    private final RigidBodyTransform transformToWorld = new RigidBodyTransform();
 
    public void setToReferenceFrame(ReferenceFrame referenceFrame)
@@ -101,19 +108,19 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
          throw new RuntimeException("referenceFrame == null");
       }
 
-      referenceFrame.getTransformToDesiredFrame(transformToWorld, ReferenceFrame.getWorldFrame());
+      referenceFrame.getTransformToDesiredFrame(transformToWorld, worldFrame);
       setTransformToWorld(transformToWorld);
    }
 
    private final Vector3D translationToWorld = new Vector3D();
-   private final FrameQuaternion orientation = new FrameQuaternion(ReferenceFrame.getWorldFrame());
+   private final FrameQuaternion orientation = new FrameQuaternion(worldFrame);
 
    public void setTransformToWorld(RigidBodyTransform transformToWorld)
    {
       transformToWorld.getTranslation(translationToWorld);
 
       pose.setPosition(transformToWorld.getTranslationVector());
-      orientation.setIncludingFrame(ReferenceFrame.getWorldFrame(), transformToWorld.getRotationMatrix());
+      orientation.setIncludingFrame(worldFrame, transformToWorld.getRotationMatrix());
       setOrientation(orientation);
    }
 
@@ -223,7 +230,18 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
    @Override
    public YoDouble[] getVariables()
    {
-      return new YoDouble[] {pose.getYoX(), pose.getYoY(), pose.getYoZ(), pose.getYoYaw(), pose.getYoPitch(), pose.getYoRoll()};
+      YoDouble[] vars = new YoDouble[6];
+      int i = 0;
+
+      vars[i++] = pose.getYoX();
+      vars[i++] = pose.getYoY();
+      vars[i++] = pose.getYoZ();
+
+      vars[i++] = pose.getYoYaw();
+      vars[i++] = pose.getYoPitch();
+      vars[i++] = pose.getYoRoll();
+
+      return vars;
    }
 
    @Override

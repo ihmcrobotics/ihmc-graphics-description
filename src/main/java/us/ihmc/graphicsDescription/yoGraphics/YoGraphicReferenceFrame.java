@@ -4,7 +4,7 @@ import us.ihmc.euclid.referenceFrame.ReferenceFrame;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.graphicsDescription.appearance.YoAppearance;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoDouble;
+import us.ihmc.yoVariables.variable.YoVariable;
 
 public class YoGraphicReferenceFrame extends YoGraphicCoordinateSystem
 {
@@ -29,9 +29,14 @@ public class YoGraphicReferenceFrame extends YoGraphicCoordinateSystem
       this.referenceFrame = referenceFrame;
    }
 
-   YoGraphicReferenceFrame(String name, YoDouble x, YoDouble y, YoDouble z, YoDouble yaw, YoDouble pitch, YoDouble roll, double[] constants)
+   static YoGraphicReferenceFrame createAsRemoteYoGraphic(String name, YoVariable<?>[] yoVariables, double[] constants)
    {
-      super(name, x, y, z, yaw, pitch, roll, constants);
+      return new YoGraphicReferenceFrame(name, yoVariables, constants);
+   }
+
+   private YoGraphicReferenceFrame(String name, YoVariable<?>[] yoVariables, double[] constants)
+   {
+      super(name, yoVariables, constants);
       referenceFrame = null;
    }
 
