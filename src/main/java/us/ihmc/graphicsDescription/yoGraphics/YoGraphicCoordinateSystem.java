@@ -119,6 +119,16 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
       return new YoGraphicCoordinateSystem(name, yoVariables, constants);
    }
 
+   /**
+    * This constructor for creating a remote {@code YoGraphic} from deserialized
+    * {@code YoVariable}s. The expected number of {@code YoVariable}s is either 6 or 7 depending on
+    * whether the original {@code YoGraphic} was created using {@code YoFrameYawPitchRoll} or
+    * {@code YoFrameQuaternion} respectively.
+    * 
+    * @param name the name of the {@code YoGraphic}.
+    * @param yoVariables the deserialized variables.
+    * @param scale the scale to apply on the graphics.
+    */
    protected YoGraphicCoordinateSystem(String name, YoVariable<?>[] yoVariables, double[] constants)
    {
       super(name);

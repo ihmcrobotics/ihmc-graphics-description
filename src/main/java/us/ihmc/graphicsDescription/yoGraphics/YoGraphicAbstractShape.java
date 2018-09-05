@@ -54,6 +54,16 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
       this.scale = scale;
    }
 
+   /**
+    * This constructor for creating a remote {@code YoGraphic} from deserialized
+    * {@code YoVariable}s. The expected number of {@code YoVariable}s is either 6 or 7 depending on
+    * whether the original {@code YoGraphic} was created using {@code YoFrameYawPitchRoll} or
+    * {@code YoFrameQuaternion} respectively.
+    * 
+    * @param name the name of the {@code YoGraphic}.
+    * @param yoVariables the deserialized variables.
+    * @param scale the scale to apply on the graphics.
+    */
    protected YoGraphicAbstractShape(String name, YoVariable<?>[] yoVariables, double scale)
    {
       super(name);
