@@ -139,7 +139,8 @@ public class YoGraphicPolygon extends YoGraphicAbstractShape implements RemoteYo
 
       int constantIndex = 1; // 0 corresponds to the scale factor
       int vertexBufferSize = (int) constants[constantIndex++];
-      this.height = constants[constantIndex++];
+      // Ensuring backward compatibility
+      this.height = constants.length == 3 ? constants[constantIndex++] : DEFAULT_HEIGHT;
 
       int yoIndex = 0;
       YoInteger numberOfVertices = (YoInteger) yoVariables[yoIndex];
