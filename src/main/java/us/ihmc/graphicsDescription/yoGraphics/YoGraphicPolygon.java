@@ -135,7 +135,12 @@ public class YoGraphicPolygon extends YoGraphicAbstractShape implements RemoteYo
 
    private YoGraphicPolygon(String name, YoVariable<?>[] yoVariables, double[] constants, AppearanceDefinition appearance)
    {
-      super(name, Arrays.copyOfRange(yoVariables, (int) constants[1], yoVariables.length), constants[0]);
+      /*
+       * 2 * (int) constants[1] + 1 => constants[1] is the size of the 2D vertex
+       * buffer so we have 2 * YoVariables, the "+ 1" is for the YoInteger that
+       * keeps track of the actual polygon size.
+       */
+      super(name, Arrays.copyOfRange(yoVariables, 2 * (int) constants[1] + 1, yoVariables.length), constants[0]);
 
       int constantIndex = 1; // 0 corresponds to the scale factor
       int vertexBufferSize = (int) constants[constantIndex++];
@@ -143,7 +148,7 @@ public class YoGraphicPolygon extends YoGraphicAbstractShape implements RemoteYo
       this.height = constants.length == 3 ? constants[constantIndex++] : DEFAULT_HEIGHT;
 
       int yoIndex = 0;
-      YoInteger numberOfVertices = (YoInteger) yoVariables[yoIndex];
+      YoInteger numberOfVertices = (YoInteger) yoVariables[yoIndex++];
 
       List<YoFramePoint2D> yoFrameVertices = new ArrayList<>();
 
