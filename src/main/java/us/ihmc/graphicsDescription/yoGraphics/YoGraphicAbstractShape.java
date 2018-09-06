@@ -39,7 +39,7 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
       super(name);
       framePoint.checkReferenceFrameMatch(worldFrame);
 
-      if (!(frameYawPitchRoll == null ^ frameQuaternion == null))
+      if ((frameYawPitchRoll == null && frameQuaternion == null) || (frameYawPitchRoll != null && frameQuaternion != null))
          throw new IllegalArgumentException("Can only describe the orientation of this shape with either yaw-pitch-roll or quaternion.");
 
       if (frameYawPitchRoll != null)

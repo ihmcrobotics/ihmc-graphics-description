@@ -98,7 +98,7 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
       super(name);
 
       worldFrame.checkReferenceFrameMatch(position);
-      if (!(yawPitchRoll == null ^ quaternion == null))
+      if ((yawPitchRoll == null && quaternion == null) || (yawPitchRoll != null && quaternion != null))
          throw new IllegalArgumentException("Can only describe the orientation of this shape with either yaw-pitch-roll or quaternion.");
 
       if (yawPitchRoll != null)
