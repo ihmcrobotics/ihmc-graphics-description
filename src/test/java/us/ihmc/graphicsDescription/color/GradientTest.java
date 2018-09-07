@@ -6,17 +6,12 @@ import java.awt.Color;
 
 import org.junit.Test;
 
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationPlan;
-import us.ihmc.continuousIntegration.ContinuousIntegrationAnnotations.ContinuousIntegrationTest;
 import us.ihmc.graphicsDescription.color.Gradient;
 import us.ihmc.commons.Assertions;
 import us.ihmc.commons.RunnableThatThrows;
-import us.ihmc.continuousIntegration.IntegrationCategory;
 
-@ContinuousIntegrationPlan(categories = IntegrationCategory.FAST)
 public class GradientTest
 {
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testCreateGradient()
    {
@@ -29,7 +24,6 @@ public class GradientTest
       assertTrue("Color[" + 4 + "] not correct: " + gradient[4], gradient[4].equals(new Color(204, 204, 51)));
    }
    
-	@ContinuousIntegrationTest(estimatedDuration = 0.0)
    @Test(timeout = 30000)
    public void testCreateMultiGradient()
    {
