@@ -4,27 +4,97 @@ import us.ihmc.euclid.referenceFrame.FramePoint3D;
 import us.ihmc.euclid.referenceFrame.FramePose3D;
 import us.ihmc.euclid.referenceFrame.FrameQuaternion;
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
+import us.ihmc.euclid.referenceFrame.interfaces.FrameQuaternionReadOnly;
 import us.ihmc.euclid.transform.AffineTransform;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.graphicsDescription.plotting.artifact.Artifact;
+import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoFramePoint3D;
+import us.ihmc.yoVariables.variable.YoFrameQuaternion;
 import us.ihmc.yoVariables.variable.YoFrameYawPitchRoll;
+import us.ihmc.yoVariables.variable.YoVariable;
 
 public abstract class YoGraphicAbstractShape extends YoGraphic
 {
+   private static final ReferenceFrame worldFrame = ReferenceFrame.getWorldFrame();
    protected final YoFramePoint3D yoFramePoint;
-   protected final YoFrameYawPitchRoll yoFrameOrientation;
+   protected final YoFrameYawPitchRoll yoFrameYawPitchRoll;
+   protected final YoFrameQuaternion yoFrameQuaternion;
    protected final double scale;
-   private final Vector3D translationVector = new Vector3D();
+
+   protected YoGraphicAbstractShape(String name, YoFramePoint3D framePoint, YoFrameQuaternion frameOrientation, double scale)
+   {
+      this(name, framePoint, null, frameOrientation, scale);
+   }
 
    protected YoGraphicAbstractShape(String name, YoFramePoint3D framePoint, YoFrameYawPitchRoll frameOrientation, double scale)
    {
-      super(name);
-      framePoint.checkReferenceFrameMatch(ReferenceFrame.getWorldFrame());
+      this(name, framePoint, frameOrientation, null, scale);
+   }
 
-      this.yoFramePoint = framePoint;
-      this.yoFrameOrientation = frameOrientation;
+   protected YoGraphicAbstractShape(String name, YoFramePoint3D framePoint, YoFrameYawPitchRoll frameYawPitchRoll, YoFrameQuaternion frameQuaternion,
+                                    double scale)
+   {
+      super(name);
+      framePoint.checkReferenceFrameMatch(worldFrame);
+
+      if ((frameYawPitchRoll == null && frameQuaternion == null) || (frameYawPitchRoll != null && frameQuaternion != null))
+         throw new IllegalArgumentException("Can only describe the orientation of this shape with either yaw-pitch-roll or quaternion.");
+
+      if (frameYawPitchRoll != null)
+         frameYawPitchRoll.checkReferenceFrameMatch(worldFrame);
+      if (frameQuaternion != null)
+         frameQuaternion.checkReferenceFrameMatch(worldFrame);
+
+      yoFramePoint = framePoint;
+      yoFrameYawPitchRoll = frameYawPitchRoll;
+      yoFrameQuaternion = frameQuaternion;
+
+      this.scale = scale;
+   }
+
+   /**
+    * This constructor for creating a remote {@code YoGraphic} from deserialized
+    * {@code YoVariable}s. The expected number of {@code YoVariable}s is either 6 or 7 depending on
+    * whether the original {@code YoGraphic} was created using {@code YoFrameYawPitchRoll} or
+    * {@code YoFrameQuaternion} respectively.
+    * 
+    * @param name the name of the {@code YoGraphic}.
+    * @param yoVariables the deserialized variables.
+    * @param scale the scale to apply on the graphics.
+    */
+   protected YoGraphicAbstractShape(String name, YoVariable<?>[] yoVariables, double scale)
+   {
+      super(name);
+
+      int yoIndex = 0;
+      YoDouble x = (YoDouble) yoVariables[yoIndex++];
+      YoDouble y = (YoDouble) yoVariables[yoIndex++];
+      YoDouble z = (YoDouble) yoVariables[yoIndex++];
+      yoFramePoint = new YoFramePoint3D(x, y, z, worldFrame);
+
+      if (yoVariables.length == 6)
+      {
+         YoDouble yaw = (YoDouble) yoVariables[yoIndex++];
+         YoDouble pitch = (YoDouble) yoVariables[yoIndex++];
+         YoDouble roll = (YoDouble) yoVariables[yoIndex++];
+         yoFrameYawPitchRoll = new YoFrameYawPitchRoll(yaw, pitch, roll, worldFrame);
+         yoFrameQuaternion = null;
+      }
+      else if (yoVariables.length == 7)
+      {
+         YoDouble qx = (YoDouble) yoVariables[yoIndex++];
+         YoDouble qy = (YoDouble) yoVariables[yoIndex++];
+         YoDouble qz = (YoDouble) yoVariables[yoIndex++];
+         YoDouble qs = (YoDouble) yoVariables[yoIndex++];
+         yoFrameYawPitchRoll = null;
+         yoFrameQuaternion = new YoFrameQuaternion(qx, qy, qz, qs, worldFrame);
+      }
+      else
+      {
+         throw new RuntimeException("Unexpected number of YoVariables. Expected either 6 or 7 but had: " + yoVariables.length);
+      }
 
       this.scale = scale;
    }
@@ -33,7 +103,10 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
    {
       yoFramePoint.checkReferenceFrameMatch(framePose.getReferenceFrame());
       yoFramePoint.set(framePose.getPosition());
-      yoFrameOrientation.set(framePose.getOrientation());
+      if (isUsingYawPitchRoll())
+         yoFrameYawPitchRoll.set(framePose.getOrientation());
+      else
+         yoFrameQuaternion.set(framePose.getOrientation());
    }
 
    public void setPosition(double x, double y, double z)
@@ -53,31 +126,32 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
 
    public void getOrientation(FrameQuaternion orientationToPack)
    {
-      this.yoFrameOrientation.getFrameOrientationIncludingFrame(orientationToPack);
+      if (isUsingYawPitchRoll())
+         yoFrameYawPitchRoll.getFrameOrientationIncludingFrame(orientationToPack);
+      else
+         orientationToPack.setIncludingFrame(yoFrameQuaternion);
    }
 
-   public void setOrientation(FrameQuaternion orientation)
+   public void setOrientation(FrameQuaternionReadOnly orientation)
    {
-      this.yoFrameOrientation.set(orientation);
+      if (isUsingYawPitchRoll())
+         yoFrameYawPitchRoll.set(orientation);
+      else
+         yoFrameQuaternion.set(orientation);
    }
 
    public void setYawPitchRoll(double yaw, double pitch, double roll)
    {
-      this.yoFrameOrientation.setYawPitchRoll(yaw, pitch, roll);
+      if (isUsingYawPitchRoll())
+         yoFrameYawPitchRoll.setYawPitchRoll(yaw, pitch, roll);
+      else
+         yoFrameQuaternion.setYawPitchRoll(yaw, pitch, roll);
    }
 
    public void setTransformToWorld(RigidBodyTransform transformToWorld)
    {
-      Vector3D translationToWorld = new Vector3D();
-
-      transformToWorld.getTranslation(translationToWorld);
-
-      this.yoFramePoint.set(translationToWorld);
-      FrameQuaternion orientation = new FrameQuaternion(ReferenceFrame.getWorldFrame(), transformToWorld.getRotationMatrix());
-
-      double[] yawPitchRoll = new double[3];
-      orientation.getYawPitchRoll(yawPitchRoll);
-      yoFrameOrientation.setYawPitchRoll(yawPitchRoll[0], yawPitchRoll[1], yawPitchRoll[2]);
+      yoFramePoint.set(transformToWorld.getTranslationVector());
+      yoFrameYawPitchRoll.set(transformToWorld.getRotationMatrix());
    }
 
    public void setToReferenceFrame(ReferenceFrame referenceFrame)
@@ -115,11 +189,16 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
    protected void computeRotationTranslation(AffineTransform transform3D)
    {
       transform3D.setIdentity();
-      translationVector.set(yoFramePoint.getX(), yoFramePoint.getY(), yoFramePoint.getZ());
-      yoFrameOrientation.getEulerAngles(rotationEulerVector);
-
-      transform3D.setRotationEuler(rotationEulerVector);
-      transform3D.setTranslation(translationVector);
+      if (isUsingYawPitchRoll())
+      {
+         yoFrameYawPitchRoll.getEulerAngles(rotationEulerVector);
+         transform3D.setRotationEuler(rotationEulerVector);
+      }
+      else
+      {
+         transform3D.setRotation(yoFrameQuaternion);
+      }
+      transform3D.setTranslation(yoFramePoint);
       transform3D.setScale(scale);
    }
 
@@ -132,7 +211,10 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
    public void setPoseToNaN()
    {
       yoFramePoint.setToNaN();
-      yoFrameOrientation.setToNaN();
+      if (isUsingYawPitchRoll())
+         yoFrameYawPitchRoll.setToNaN();
+      else
+         yoFrameQuaternion.setToNaN();
    }
 
    @Override
@@ -140,9 +222,40 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
    {
       if (yoFramePoint.containsNaN())
          return true;
-      if (yoFrameOrientation.containsNaN())
+      if (isUsingYawPitchRoll() ? yoFrameYawPitchRoll.containsNaN() : yoFrameQuaternion.containsNaN())
          return true;
 
       return false;
+   }
+
+   public YoVariable<?>[] getVariables()
+   {
+      YoVariable<?>[] vars = new YoVariable[isUsingYawPitchRoll() ? 6 : 7];
+      int i = 0;
+
+      vars[i++] = yoFramePoint.getYoX();
+      vars[i++] = yoFramePoint.getYoY();
+      vars[i++] = yoFramePoint.getYoZ();
+
+      if (isUsingYawPitchRoll())
+      {
+         vars[i++] = yoFrameYawPitchRoll.getYaw();
+         vars[i++] = yoFrameYawPitchRoll.getPitch();
+         vars[i++] = yoFrameYawPitchRoll.getRoll();
+      }
+      else
+      {
+         vars[i++] = yoFrameQuaternion.getYoQx();
+         vars[i++] = yoFrameQuaternion.getYoQy();
+         vars[i++] = yoFrameQuaternion.getYoQz();
+         vars[i++] = yoFrameQuaternion.getYoQs();
+      }
+
+      return vars;
+   }
+
+   public boolean isUsingYawPitchRoll()
+   {
+      return yoFrameYawPitchRoll != null;
    }
 }
