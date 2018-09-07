@@ -2,13 +2,16 @@ package us.ihmc.graphicsDescription.yoGraphics;
 
 import java.awt.Color;
 
-import us.ihmc.euclid.referenceFrame.FramePoint3D;
-import us.ihmc.euclid.referenceFrame.FramePose3D;
-import us.ihmc.euclid.referenceFrame.FrameQuaternion;
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
+import us.ihmc.euclid.referenceFrame.interfaces.FramePoint3DReadOnly;
+import us.ihmc.euclid.referenceFrame.interfaces.FramePose3DReadOnly;
+import us.ihmc.euclid.referenceFrame.interfaces.FrameQuaternionReadOnly;
 import us.ihmc.euclid.transform.AffineTransform;
 import us.ihmc.euclid.transform.RigidBodyTransform;
-import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Tuple3DBasics;
+import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
+import us.ihmc.euclid.tuple4D.interfaces.QuaternionBasics;
+import us.ihmc.euclid.tuple4D.interfaces.QuaternionReadOnly;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.graphicsDescription.appearance.YoAppearance;
@@ -17,79 +20,151 @@ import us.ihmc.graphicsDescription.plotting.artifact.Artifact;
 import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoFramePoint3D;
+import us.ihmc.yoVariables.variable.YoFramePose3D;
 import us.ihmc.yoVariables.variable.YoFramePoseUsingYawPitchRoll;
+import us.ihmc.yoVariables.variable.YoFrameQuaternion;
 import us.ihmc.yoVariables.variable.YoFrameYawPitchRoll;
+import us.ihmc.yoVariables.variable.YoVariable;
 
 public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGraphic
 {
-   protected final YoFramePoseUsingYawPitchRoll pose;
+   protected static final AppearanceDefinition DEFAULT_APPEARANCE = YoAppearance.Gray();
+   private static final ReferenceFrame worldFrame = ReferenceFrame.getWorldFrame();
+
+   protected final YoFramePoint3D position;
+   protected final YoFrameYawPitchRoll yawPitchRoll;
+   protected final YoFrameQuaternion quaternion;
    protected final double scale;
-   protected AppearanceDefinition arrowColor = YoAppearance.Gray();
+   protected AppearanceDefinition arrowColor = DEFAULT_APPEARANCE;
    private double colorRGB32BitInt = arrowColor.getAwtColor().getRGB();
    private double transparency = arrowColor.getTransparency();
 
-   private final double[] tempYawPitchRoll = new double[3];
-
-   public YoGraphicCoordinateSystem(String name, YoDouble x, YoDouble y, YoDouble z, YoDouble yaw, YoDouble pitch, YoDouble roll, double scale)
+   public YoGraphicCoordinateSystem(String namePrefix, String nameSuffix, YoVariableRegistry registry, boolean useYawPitchRoll, double scale)
    {
-      super(name);
-
-      pose = new YoFramePoseUsingYawPitchRoll(new YoFramePoint3D(x, y, z, ReferenceFrame.getWorldFrame()),
-                                              new YoFrameYawPitchRoll(yaw, pitch, roll, ReferenceFrame.getWorldFrame()));
-      this.scale = scale;
+      this(namePrefix, nameSuffix, registry, useYawPitchRoll, scale, DEFAULT_APPEARANCE);
    }
 
-   YoGraphicCoordinateSystem(String name, YoDouble x, YoDouble y, YoDouble z, YoDouble yaw, YoDouble pitch, YoDouble roll, double[] constants)
+   public YoGraphicCoordinateSystem(String namePrefix, String nameSuffix, YoVariableRegistry registry, boolean useYawPitchRoll, double scale,
+                                    AppearanceDefinition arrowAppearance)
+   {
+      this(namePrefix + nameSuffix, new YoFramePoint3D(namePrefix, nameSuffix, worldFrame, registry),
+           useYawPitchRoll ? new YoFrameYawPitchRoll(namePrefix, nameSuffix, worldFrame, registry) : null,
+           useYawPitchRoll ? null : new YoFrameQuaternion(namePrefix, nameSuffix, worldFrame, registry), scale, arrowAppearance);
+   }
+
+   public YoGraphicCoordinateSystem(String name, YoFramePose3D yoFramePose, double scale)
+   {
+      this(name, yoFramePose, scale, DEFAULT_APPEARANCE);
+   }
+
+   public YoGraphicCoordinateSystem(String name, YoFramePose3D yoFramePose, double scale, AppearanceDefinition arrowAppearance)
+   {
+      this(name, yoFramePose.getPosition(), yoFramePose.getOrientation(), scale, arrowAppearance);
+   }
+
+   public YoGraphicCoordinateSystem(String name, YoFramePoint3D framePoint, YoFrameQuaternion orientation, double scale)
+   {
+      this(name, framePoint, orientation, scale, DEFAULT_APPEARANCE);
+   }
+
+   public YoGraphicCoordinateSystem(String name, YoFramePoint3D framePoint, YoFrameQuaternion orientation, double scale, AppearanceDefinition arrowAppearance)
+   {
+      this(name, framePoint, null, orientation, scale, arrowAppearance);
+   }
+
+   public YoGraphicCoordinateSystem(String name, YoFramePoseUsingYawPitchRoll yoFramePose, double scale)
+   {
+      this(name, yoFramePose, scale, DEFAULT_APPEARANCE);
+   }
+
+   public YoGraphicCoordinateSystem(String name, YoFramePoseUsingYawPitchRoll yoFramePose, double scale, AppearanceDefinition arrowAppearance)
+   {
+      this(name, yoFramePose.getPosition(), yoFramePose.getOrientation(), scale, arrowAppearance);
+   }
+
+   public YoGraphicCoordinateSystem(String name, YoFramePoint3D framePoint, YoFrameYawPitchRoll orientation, double scale)
+   {
+      this(name, framePoint, orientation, scale, DEFAULT_APPEARANCE);
+   }
+
+   public YoGraphicCoordinateSystem(String name, YoFramePoint3D framePoint, YoFrameYawPitchRoll orientation, double scale, AppearanceDefinition arrowAppearance)
+   {
+      this(name, framePoint, orientation, null, scale, arrowAppearance);
+   }
+
+   protected YoGraphicCoordinateSystem(String name, YoFramePoint3D position, YoFrameYawPitchRoll yawPitchRoll, YoFrameQuaternion quaternion, double scale,
+                                       AppearanceDefinition arrowAppearance)
    {
       super(name);
 
-      pose = new YoFramePoseUsingYawPitchRoll(new YoFramePoint3D(x, y, z, ReferenceFrame.getWorldFrame()),
-                                              new YoFrameYawPitchRoll(yaw, pitch, roll, ReferenceFrame.getWorldFrame()));
+      worldFrame.checkReferenceFrameMatch(position);
+      if ((yawPitchRoll == null && quaternion == null) || (yawPitchRoll != null && quaternion != null))
+         throw new IllegalArgumentException("Can only describe the orientation of this shape with either yaw-pitch-roll or quaternion.");
+
+      if (yawPitchRoll != null)
+         worldFrame.checkReferenceFrameMatch(yawPitchRoll);
+      if (quaternion != null)
+         worldFrame.checkReferenceFrameMatch(quaternion);
+
+      this.position = position;
+      this.yawPitchRoll = yawPitchRoll;
+      this.quaternion = quaternion;
+
+      this.scale = scale;
+      setArrowColor(arrowAppearance);
+   }
+
+   static YoGraphicCoordinateSystem createAsRemoteYoGraphic(String name, YoVariable<?>[] yoVariables, double[] constants)
+   {
+      return new YoGraphicCoordinateSystem(name, yoVariables, constants);
+   }
+
+   /**
+    * This constructor for creating a remote {@code YoGraphic} from deserialized
+    * {@code YoVariable}s. The expected number of {@code YoVariable}s is either 6 or 7 depending on
+    * whether the original {@code YoGraphic} was created using {@code YoFrameYawPitchRoll} or
+    * {@code YoFrameQuaternion} respectively.
+    * 
+    * @param name the name of the {@code YoGraphic}.
+    * @param yoVariables the deserialized variables.
+    * @param scale the scale to apply on the graphics.
+    */
+   protected YoGraphicCoordinateSystem(String name, YoVariable<?>[] yoVariables, double[] constants)
+   {
+      super(name);
+
+      int yoIndex = 0;
+      YoDouble x = (YoDouble) yoVariables[yoIndex++];
+      YoDouble y = (YoDouble) yoVariables[yoIndex++];
+      YoDouble z = (YoDouble) yoVariables[yoIndex++];
+      position = new YoFramePoint3D(x, y, z, worldFrame);
+
+      if (yoVariables.length == 6)
+      {
+         YoDouble yaw = (YoDouble) yoVariables[yoIndex++];
+         YoDouble pitch = (YoDouble) yoVariables[yoIndex++];
+         YoDouble roll = (YoDouble) yoVariables[yoIndex++];
+         yawPitchRoll = new YoFrameYawPitchRoll(yaw, pitch, roll, worldFrame);
+         quaternion = null;
+      }
+      else if (yoVariables.length == 7)
+      {
+         YoDouble qx = (YoDouble) yoVariables[yoIndex++];
+         YoDouble qy = (YoDouble) yoVariables[yoIndex++];
+         YoDouble qz = (YoDouble) yoVariables[yoIndex++];
+         YoDouble qs = (YoDouble) yoVariables[yoIndex++];
+         yawPitchRoll = null;
+         quaternion = new YoFrameQuaternion(qx, qy, qz, qs, worldFrame);
+      }
+      else
+      {
+         throw new RuntimeException("Unexpected number of YoVariables. Expected either 6 or 7 but had: " + yoVariables.length);
+      }
 
       scale = constants[0];
       // Ensuring backward compatibility
       if (constants.length == 3)
          setArrowColor(new YoAppearanceRGBColor(new Color((int) constants[1]), constants[2]));
-   }
-
-   public YoGraphicCoordinateSystem(String name, YoFramePoint3D framePoint, YoFrameYawPitchRoll orientation, double scale)
-   {
-      super(name);
-
-      ReferenceFrame.getWorldFrame().checkReferenceFrameMatch(framePoint);
-      framePoint.checkReferenceFrameMatch(orientation.getReferenceFrame());
-
-      pose = new YoFramePoseUsingYawPitchRoll(framePoint, orientation);
-
-      this.scale = scale;
-   }
-
-   public YoGraphicCoordinateSystem(String namePrefix, String nameSuffix, YoVariableRegistry registry, double scale)
-   {
-      this(namePrefix, nameSuffix, registry, scale, YoAppearance.Gray());
-   }
-
-   public YoGraphicCoordinateSystem(String namePrefix, String nameSuffix, YoVariableRegistry registry, double scale, AppearanceDefinition arrowColor)
-   {
-      this(namePrefix + nameSuffix, new YoFramePoint3D(namePrefix, nameSuffix, ReferenceFrame.getWorldFrame(), registry),
-           new YoFrameYawPitchRoll(namePrefix, nameSuffix, ReferenceFrame.getWorldFrame(), registry), scale);
-      setArrowColor(arrowColor);
-   }
-
-   public YoGraphicCoordinateSystem(String name, YoFramePoint3D framePoint, YoFrameYawPitchRoll orientation, double scale, AppearanceDefinition arrowColor)
-   {
-      this(name, framePoint, orientation, scale);
-      setArrowColor(arrowColor);
-   }
-
-   public YoGraphicCoordinateSystem(String name, YoFramePoseUsingYawPitchRoll yoFramePose, double scale)
-   {
-      this(name, yoFramePose.getPosition(), yoFramePose.getOrientation(), scale);
-   }
-
-   public YoGraphicCoordinateSystem(String name, YoFramePoseUsingYawPitchRoll yoFramePose, double scale, AppearanceDefinition arrowColor)
-   {
-      this(name, yoFramePose.getPosition(), yoFramePose.getOrientation(), scale, arrowColor);
    }
 
    private final RigidBodyTransform transformToWorld = new RigidBodyTransform();
@@ -101,20 +176,17 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
          throw new RuntimeException("referenceFrame == null");
       }
 
-      referenceFrame.getTransformToDesiredFrame(transformToWorld, ReferenceFrame.getWorldFrame());
+      referenceFrame.getTransformToDesiredFrame(transformToWorld, worldFrame);
       setTransformToWorld(transformToWorld);
    }
 
-   private final Vector3D translationToWorld = new Vector3D();
-   private final FrameQuaternion orientation = new FrameQuaternion(ReferenceFrame.getWorldFrame());
-
    public void setTransformToWorld(RigidBodyTransform transformToWorld)
    {
-      transformToWorld.getTranslation(translationToWorld);
-
-      pose.setPosition(transformToWorld.getTranslationVector());
-      orientation.setIncludingFrame(ReferenceFrame.getWorldFrame(), transformToWorld.getRotationMatrix());
-      setOrientation(orientation);
+      position.set(transformToWorld.getTranslationVector());
+      if (isUsingYawPitchRoll())
+         yawPitchRoll.set(transformToWorld.getRotationMatrix());
+      else
+         quaternion.set(transformToWorld.getRotationMatrix());
    }
 
    public double getScale()
@@ -122,49 +194,78 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
       return scale;
    }
 
-   public void getPosition(Vector3D position)
+   public void getPosition(Tuple3DBasics position)
    {
-      position.setX(pose.getX());
-      position.setY(pose.getY());
-      position.setZ(pose.getZ());
+      position.set(this.position);
    }
 
-   public void getYawPitchRoll(Vector3D yawPitchRoll)
+   public void getYawPitchRoll(double[] yawPitchRollToPack)
    {
-      yawPitchRoll.setX(pose.getYaw());
-      yawPitchRoll.setY(pose.getPitch());
-      yawPitchRoll.setZ(pose.getRoll());
+      if (isUsingYawPitchRoll())
+         yawPitchRoll.getYawPitchRoll(yawPitchRollToPack);
+      else
+         quaternion.getYawPitchRoll(yawPitchRollToPack);
+   }
+
+   public void getOrientation(QuaternionBasics quaternionToPack)
+   {
+      if (isUsingYawPitchRoll())
+         yawPitchRoll.getQuaternion(quaternionToPack);
+      else
+         quaternionToPack.set(quaternion);
    }
 
    public void setPosition(double x, double y, double z)
    {
-      pose.setPosition(x, y, z);
+      position.set(x, y, z);
    }
 
-   public void setPosition(FramePoint3D position)
+   public void setPosition(Tuple3DReadOnly position)
    {
-      pose.setPosition(position);
+      this.position.set(position);
    }
 
-   public void setOrientation(FrameQuaternion orientation)
+   public void setPosition(FramePoint3DReadOnly position)
    {
-      orientation.getYawPitchRoll(tempYawPitchRoll);
-      setYawPitchRoll(tempYawPitchRoll);
+      this.position.set(position);
+   }
+
+   public void setOrientation(QuaternionReadOnly orientation)
+   {
+      if (isUsingYawPitchRoll())
+         yawPitchRoll.set(orientation);
+      else
+         quaternion.set(orientation);
+   }
+
+   public void setOrientation(FrameQuaternionReadOnly orientation)
+   {
+      if (isUsingYawPitchRoll())
+         yawPitchRoll.set(orientation);
+      else
+         quaternion.set(orientation);
    }
 
    public void setYawPitchRoll(double[] yawPitchRoll)
    {
-      setYawPitchRoll(yawPitchRoll[0], yawPitchRoll[1], yawPitchRoll[2]);
+      if (isUsingYawPitchRoll())
+         this.yawPitchRoll.setYawPitchRoll(yawPitchRoll);
+      else
+         quaternion.setYawPitchRoll(yawPitchRoll);
    }
 
    public void setYawPitchRoll(double yaw, double pitch, double roll)
    {
-      pose.setYawPitchRoll(yaw, pitch, roll);
+      if (isUsingYawPitchRoll())
+         yawPitchRoll.setYawPitchRoll(yaw, pitch, roll);
+      else
+         quaternion.setYawPitchRoll(yaw, pitch, roll);
    }
 
-   public void setPose(FramePose3D pose)
+   public void setPose(FramePose3DReadOnly pose)
    {
-      this.pose.set(pose);
+      setPosition(pose.getPosition());
+      setOrientation(pose.getOrientation());
    }
 
    public void setArrowColor(AppearanceDefinition arrowColor)
@@ -176,7 +277,11 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
 
    public void hide()
    {
-      pose.setToNaN();
+      position.setToNaN();
+      if (isUsingYawPitchRoll())
+         yawPitchRoll.setToNaN();
+      else
+         quaternion.setToNaN();
    }
 
    @Override
@@ -189,13 +294,10 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
       return linkGraphics;
    }
 
-   protected Vector3D translationVector = new Vector3D();
-
    @Override
    protected void computeRotationTranslation(AffineTransform transform3D)
    {
       transform3D.setIdentity();
-      translationVector.set(pose.getX(), pose.getY(), pose.getZ());
 
       double globalScale = 1.0;
       if (globalScaleProvider != null)
@@ -204,14 +306,23 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
       }
 
       transform3D.setScale(scale * globalScale);
-      transform3D.setRotationEuler(pose.getRoll(), pose.getPitch(), pose.getYaw());
-      transform3D.setTranslation(translationVector);
+      if (isUsingYawPitchRoll())
+         transform3D.setRotationYawPitchRoll(yawPitchRoll.getYaw().getValue(), yawPitchRoll.getPitch().getValue(), yawPitchRoll.getRoll().getValue());
+      else
+         transform3D.setRotation(quaternion);
+      transform3D.setTranslation(position);
    }
 
    @Override
    public boolean containsNaN()
    {
-      return pose.containsNaN();
+      if (position.containsNaN())
+         return true;
+
+      if (isUsingYawPitchRoll())
+         return yawPitchRoll.containsNaN();
+      else
+         return quaternion.containsNaN();
    }
 
    @Override
@@ -223,7 +334,28 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
    @Override
    public YoDouble[] getVariables()
    {
-      return new YoDouble[] {pose.getYoX(), pose.getYoY(), pose.getYoZ(), pose.getYoYaw(), pose.getYoPitch(), pose.getYoRoll()};
+      YoDouble[] vars = new YoDouble[isUsingYawPitchRoll() ? 6 : 7];
+      int i = 0;
+
+      vars[i++] = position.getYoX();
+      vars[i++] = position.getYoY();
+      vars[i++] = position.getYoZ();
+
+      if (isUsingYawPitchRoll())
+      {
+         vars[i++] = yawPitchRoll.getYaw();
+         vars[i++] = yawPitchRoll.getPitch();
+         vars[i++] = yawPitchRoll.getRoll();
+      }
+      else
+      {
+         vars[i++] = quaternion.getYoQx();
+         vars[i++] = quaternion.getYoQy();
+         vars[i++] = quaternion.getYoQz();
+         vars[i++] = quaternion.getYoQs();
+      }
+
+      return vars;
    }
 
    @Override
@@ -235,12 +367,20 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
    @Override
    public YoGraphicCoordinateSystem duplicate(YoVariableRegistry newRegistry)
    {
-      return new YoGraphicCoordinateSystem(getName(), pose.duplicate(newRegistry), scale, arrowColor);
+      if (isUsingYawPitchRoll())
+         return new YoGraphicCoordinateSystem(getName(), position.duplicate(newRegistry), yawPitchRoll.duplicate(newRegistry), scale, arrowColor);
+      else
+         return new YoGraphicCoordinateSystem(getName(), position.duplicate(newRegistry), quaternion.duplicate(newRegistry), scale, arrowColor);
    }
 
    @Override
    public AppearanceDefinition getAppearance()
    {
       return arrowColor;
+   }
+
+   public boolean isUsingYawPitchRoll()
+   {
+      return yawPitchRoll != null;
    }
 }

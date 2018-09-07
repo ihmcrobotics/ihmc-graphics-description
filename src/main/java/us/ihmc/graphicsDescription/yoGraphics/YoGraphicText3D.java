@@ -51,6 +51,6 @@ public class YoGraphicText3D extends YoGraphicAbstractShape
    @Override
    public YoGraphic duplicate(YoVariableRegistry newRegistry)
    {
-      return new YoGraphicText3D(getName(), text, yoFramePoint.duplicate(newRegistry), yoFrameOrientation.duplicate(newRegistry), scale, appearance);
+      return new YoGraphicText3D(getName(), text, yoFramePoint.duplicate(newRegistry), yoFrameYawPitchRoll.duplicate(newRegistry), scale, appearance);
    }
 }
