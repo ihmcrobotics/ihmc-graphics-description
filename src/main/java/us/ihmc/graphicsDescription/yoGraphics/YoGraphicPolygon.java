@@ -8,6 +8,7 @@ import us.ihmc.euclid.geometry.interfaces.ConvexPolygon2DReadOnly;
 import us.ihmc.euclid.geometry.interfaces.Vertex2DSupplier;
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
 import us.ihmc.euclid.referenceFrame.interfaces.FrameConvexPolygon2DReadOnly;
+import us.ihmc.euclid.tuple2D.interfaces.Point2DReadOnly;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.GraphicsUpdatable;
 import us.ihmc.graphicsDescription.MeshDataGenerator;
@@ -38,6 +39,7 @@ public class YoGraphicPolygon extends YoGraphicAbstractShape implements RemoteYo
    private final Graphics3DAddMeshDataInstruction instruction;
 
    private final AppearanceDefinition appearance;
+   private final List<Point2DReadOnly> verticesToDisplay;
 
    public YoGraphicPolygon(String name, YoFramePose3D framePose, int maxNumberOfVertices, YoVariableRegistry registry, double scale,
                            AppearanceDefinition appearance)
@@ -119,6 +121,7 @@ public class YoGraphicPolygon extends YoGraphicAbstractShape implements RemoteYo
       this.yoFrameConvexPolygon2d = yoFrameConvexPolygon2d;
       this.appearance = appearance;
       this.height = height;
+      verticesToDisplay = new ArrayList<>(yoFrameConvexPolygon2d.getMaxNumberOfVertices());
 
       graphics3dObject = new Graphics3DObject();
       graphics3dObject.setChangeable(true);
@@ -160,6 +163,7 @@ public class YoGraphicPolygon extends YoGraphicAbstractShape implements RemoteYo
       }
 
       yoFrameConvexPolygon2d = new YoFrameConvexPolygon2D(yoFrameVertices, numberOfVertices, worldFrame);
+      verticesToDisplay = new ArrayList<>(yoFrameConvexPolygon2d.getMaxNumberOfVertices());
 
       this.appearance = appearance;
 
@@ -180,7 +184,21 @@ public class YoGraphicPolygon extends YoGraphicAbstractShape implements RemoteYo
    @Override
    public void update()
    {
-      instruction.setMesh(MeshDataGenerator.ExtrudedPolygon(yoFrameConvexPolygon2d, height));
+      verticesToDisplay.clear();
+
+      for (int i = yoFrameConvexPolygon2d.getNumberOfVertices() - 1; i >= 0; i--)
+      {
+         /*
+          * Using the unsafe getter as this instance of the polygon might not be
+          * recognized as up-to-date. This can occur when displaying a remote
+          * YoGraphic. In such scenario, the coordinates of the vertices are
+          * updated under the hood and this polygon only serves as a data
+          * holder.
+          */
+         verticesToDisplay.add(yoFrameConvexPolygon2d.getVertexUnsafe(i));
+      }
+
+      instruction.setMesh(MeshDataGenerator.ExtrudedPolygon(verticesToDisplay, height));
    }
 
    public void updateAppearance(AppearanceDefinition appearance)
