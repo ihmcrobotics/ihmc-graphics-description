@@ -24,8 +24,6 @@ import java.awt.image.renderable.RenderableImage;
 import java.text.AttributedCharacterIterator;
 import java.util.Map;
 
-import us.ihmc.commons.Conversions;
-import us.ihmc.commons.PrintTools;
 import us.ihmc.euclid.geometry.ConvexPolygon2D;
 import us.ihmc.euclid.geometry.Line2D;
 import us.ihmc.euclid.geometry.LineSegment2D;
@@ -34,6 +32,7 @@ import us.ihmc.euclid.tuple2D.Vector2D;
 import us.ihmc.graphicsDescription.plotting.frames.MetersReferenceFrame;
 import us.ihmc.graphicsDescription.plotting.frames.PixelsReferenceFrame;
 import us.ihmc.graphicsDescription.plotting.frames.PlotterReferenceFrame;
+import us.ihmc.log.LogTools;
 
 @SuppressWarnings("unused") // it's a wrapper, unused is fine
 /**
@@ -293,7 +292,7 @@ public class Plotter2DAdapter
       {
          if (i == pointBin.length)
          {
-            PrintTools.warn("You are attempting to draw a polygon with too many points: " + convexPolygon2d.getNumberOfVertices() + " points but graphics only allows " + pointBin.length);
+            LogTools.warn("You are attempting to draw a polygon with too many points: " + convexPolygon2d.getNumberOfVertices() + " points but graphics only allows " + pointBin.length);
             return false;
          }
          pointBin[i].setIncludingFrame(frame, convexPolygon2d.getVertex(i));
