@@ -1,6 +1,6 @@
 package us.ihmc.graphicsDescription.exceptions;
 
-import us.ihmc.euclid.geometry.Shape3D;
+import us.ihmc.euclid.shape.Shape3D;
 
 @SuppressWarnings("serial")
 public class ShapeNotSupportedException extends Exception
