@@ -1,10 +1,10 @@
 package us.ihmc.graphicsDescription.color;
 
-import static org.junit.Assert.assertTrue;
+import static us.ihmc.robotics.Assert.*;
 
 import java.awt.Color;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import us.ihmc.graphicsDescription.color.Gradient;
 import us.ihmc.commons.Assertions;
@@ -12,7 +12,7 @@ import us.ihmc.commons.RunnableThatThrows;
 
 public class GradientTest
 {
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testCreateGradient()
    {
       Color[] gradient = Gradient.createGradient(Color.BLUE, Color.YELLOW, 5);
@@ -24,7 +24,7 @@ public class GradientTest
       assertTrue("Color[" + 4 + "] not correct: " + gradient[4], gradient[4].equals(new Color(204, 204, 51)));
    }
    
-   @Test(timeout = 30000)
+   @Test// timeout = 30000
    public void testCreateMultiGradient()
    {
       Color[] gradient = Gradient.createMultiGradient(new Color[]{Color.BLUE, Color.YELLOW}, 5);
