@@ -240,7 +240,7 @@ public class MeshDataGenerator
       int reverseIndex = convexPolygon.getNumberOfVertices();
       for (int i = 0; i < convexPolygon.getNumberOfVertices(); i++)
       {
-         Point2DReadOnly vertex = convexPolygon.getVertex(--reverseIndex);
+         Point2DReadOnly vertex = convexPolygon.getVertexBufferView().get(--reverseIndex);
          points[i] = new Point3D32((float) vertex.getX(), (float) vertex.getY(), 0.0f);
       }
 
@@ -260,7 +260,7 @@ public class MeshDataGenerator
       int reverseIndex = convexPolygon.getNumberOfVertices();
       for (int i = 0; i < convexPolygon.getNumberOfVertices(); i++)
       {
-         Point2DReadOnly vertex = convexPolygon.getVertex(--reverseIndex);
+         Point2DReadOnly vertex = convexPolygon.getVertexBufferView().get(--reverseIndex);
          points[i] = new Point3D32((float) vertex.getX(), (float) vertex.getY(), 0.0f);
          polygonTransformToWorld.transform(points[i]);
       }
@@ -319,7 +319,7 @@ public class MeshDataGenerator
       int reverseIndex = convexPolygon2d.getNumberOfVertices();
       for (int i = 0; i < convexPolygon2d.getNumberOfVertices(); i++)
       {
-         points[i] = new Point2D(convexPolygon2d.getVertex(--reverseIndex));
+         points[i] = new Point2D(convexPolygon2d.getVertexBufferView().get(--reverseIndex));
       }
 
       return ExtrudedPolygon(points, extrusionHeight);
