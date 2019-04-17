@@ -79,7 +79,7 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
 
    public YoGraphicCoordinateSystem(String name, YoFramePoseUsingYawPitchRoll yoFramePose, double scale, AppearanceDefinition arrowAppearance)
    {
-      this(name, yoFramePose.getPosition(), yoFramePose.getOrientation(), scale, arrowAppearance);
+      this(name, yoFramePose.getPosition(), yoFramePose.getYawPitchRoll(), scale, arrowAppearance);
    }
 
    public YoGraphicCoordinateSystem(String name, YoFramePoint3D framePoint, YoFrameYawPitchRoll orientation, double scale)
@@ -307,7 +307,7 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
 
       transform3D.setScale(scale * globalScale);
       if (isUsingYawPitchRoll())
-         transform3D.setRotationYawPitchRoll(yawPitchRoll.getYaw().getValue(), yawPitchRoll.getPitch().getValue(), yawPitchRoll.getRoll().getValue());
+         transform3D.setRotationYawPitchRoll(yawPitchRoll.getYaw(), yawPitchRoll.getPitch(), yawPitchRoll.getRoll());
       else
          transform3D.setRotation(quaternion);
       transform3D.setTranslation(position);
@@ -343,9 +343,9 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
 
       if (isUsingYawPitchRoll())
       {
-         vars[i++] = yawPitchRoll.getYaw();
-         vars[i++] = yawPitchRoll.getPitch();
-         vars[i++] = yawPitchRoll.getRoll();
+         vars[i++] = yawPitchRoll.getYoYaw();
+         vars[i++] = yawPitchRoll.getYoPitch();
+         vars[i++] = yawPitchRoll.getYoRoll();
       }
       else
       {
