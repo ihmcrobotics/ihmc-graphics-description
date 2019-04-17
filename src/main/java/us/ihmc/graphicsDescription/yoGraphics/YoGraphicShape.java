@@ -14,7 +14,7 @@ public class YoGraphicShape extends YoGraphicAbstractShape
 
    public YoGraphicShape(String name, Graphics3DObject linkGraphics, YoFramePoseUsingYawPitchRoll framePose, double scale)
    {
-      this(name, linkGraphics, framePose.getPosition(), framePose.getOrientation(), scale);
+      this(name, linkGraphics, framePose.getPosition(), framePose.getYawPitchRoll(), scale);
    }
 
    public YoGraphicShape(String name, Graphics3DObject linkGraphics, YoFramePoint3D framePoint, YoFrameYawPitchRoll frameOrientation, double scale)

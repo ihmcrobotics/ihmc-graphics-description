@@ -81,7 +81,7 @@ public class YoGraphicPolygon extends YoGraphicAbstractShape implements RemoteYo
    public YoGraphicPolygon(String name, YoFrameConvexPolygon2D yoFrameConvexPolygon2d, YoFramePoseUsingYawPitchRoll framePose, double scale,
                            AppearanceDefinition appearance)
    {
-      this(name, yoFrameConvexPolygon2d, framePose.getPosition(), framePose.getOrientation(), scale, appearance);
+      this(name, yoFrameConvexPolygon2d, framePose.getPosition(), framePose.getYawPitchRoll(), scale, appearance);
    }
 
    public YoGraphicPolygon(String name, int maxNumberOfVertices, YoVariableRegistry registry, boolean useYawPitchRoll, double scale,

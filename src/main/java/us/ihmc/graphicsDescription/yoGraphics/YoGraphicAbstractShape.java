@@ -191,7 +191,7 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
       transform3D.setIdentity();
       if (isUsingYawPitchRoll())
       {
-         yoFrameYawPitchRoll.getEulerAngles(rotationEulerVector);
+         yoFrameYawPitchRoll.getEuler(rotationEulerVector);
          transform3D.setRotationEuler(rotationEulerVector);
       }
       else
@@ -239,9 +239,9 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
 
       if (isUsingYawPitchRoll())
       {
-         vars[i++] = yoFrameYawPitchRoll.getYaw();
-         vars[i++] = yoFrameYawPitchRoll.getPitch();
-         vars[i++] = yoFrameYawPitchRoll.getRoll();
+         vars[i++] = yoFrameYawPitchRoll.getYoYaw();
+         vars[i++] = yoFrameYawPitchRoll.getYoPitch();
+         vars[i++] = yoFrameYawPitchRoll.getYoRoll();
       }
       else
       {

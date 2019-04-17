@@ -46,7 +46,7 @@ public class YoGraphicEllipsoid extends YoGraphicCoordinateSystem
    {
       transform3D.setIdentity();
       transform3D.setScale(scale * radii.getX(), scale * radii.getY(), scale * radii.getZ());
-      transform3D.setRotationYawPitchRoll(yawPitchRoll.getYaw().getValue(), yawPitchRoll.getPitch().getValue(), yawPitchRoll.getRoll().getValue());
+      transform3D.setRotationYawPitchRoll(yawPitchRoll.getYaw(), yawPitchRoll.getPitch(), yawPitchRoll.getRoll());
       transform3D.setTranslation(position);
    }
 
