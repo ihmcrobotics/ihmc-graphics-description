@@ -7,7 +7,6 @@ import us.ihmc.graphicsDescription.plotting.frames.MetersReferenceFrame;
 import us.ihmc.graphicsDescription.plotting.frames.PixelsReferenceFrame;
 import us.ihmc.graphicsDescription.plotting.frames.PlotterReferenceFrame;
 
-@SuppressWarnings("serial")
 public class PlotterPoint2d extends FramePoint2D
 {
    public PlotterPoint2d(PlotterPoint2d frameTuple2d)

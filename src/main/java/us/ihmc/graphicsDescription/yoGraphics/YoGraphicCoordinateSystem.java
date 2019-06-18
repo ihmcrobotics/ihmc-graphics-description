@@ -182,11 +182,11 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
 
    public void setTransformToWorld(RigidBodyTransform transformToWorld)
    {
-      position.set(transformToWorld.getTranslationVector());
+      position.set(transformToWorld.getTranslation());
       if (isUsingYawPitchRoll())
-         yawPitchRoll.set(transformToWorld.getRotationMatrix());
+         yawPitchRoll.set(transformToWorld.getRotation());
       else
-         quaternion.set(transformToWorld.getRotationMatrix());
+         quaternion.set(transformToWorld.getRotation());
    }
 
    public double getScale()
@@ -210,7 +210,7 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
    public void getOrientation(QuaternionBasics quaternionToPack)
    {
       if (isUsingYawPitchRoll())
-         yawPitchRoll.getQuaternion(quaternionToPack);
+         quaternionToPack.set(yawPitchRoll);
       else
          quaternionToPack.set(quaternion);
    }
@@ -307,7 +307,7 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
 
       transform3D.setScale(scale * globalScale);
       if (isUsingYawPitchRoll())
-         transform3D.setRotationYawPitchRoll(yawPitchRoll.getYaw(), yawPitchRoll.getPitch(), yawPitchRoll.getRoll());
+         transform3D.setRotation(yawPitchRoll);
       else
          transform3D.setRotation(quaternion);
       transform3D.setTranslation(position);
