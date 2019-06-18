@@ -11,8 +11,8 @@ import us.ihmc.euclid.geometry.ConvexPolygon2D;
 import us.ihmc.euclid.geometry.interfaces.ConvexPolygon2DReadOnly;
 import us.ihmc.euclid.matrix.Matrix3D;
 import us.ihmc.euclid.matrix.RotationMatrix;
-import us.ihmc.euclid.shape.Shape3D;
-import us.ihmc.euclid.shape.Sphere3D;
+import us.ihmc.euclid.shape.primitives.Sphere3D;
+import us.ihmc.euclid.shape.primitives.interfaces.Shape3DReadOnly;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple2D.Point2D;
 import us.ihmc.euclid.tuple2D.interfaces.Point2DReadOnly;
@@ -66,12 +66,12 @@ public class Graphics3DObject
 
    private boolean changeable = false;
 
-   public Graphics3DObject(Shape3D<?> shape, AppearanceDefinition appearance)
+   public Graphics3DObject(Shape3DReadOnly shape, AppearanceDefinition appearance)
    {
       this(shape, appearance, null);
    }
 
-   public Graphics3DObject(Shape3D<?> shape)
+   public Graphics3DObject(Shape3DReadOnly shape)
    {
       this(shape, null, null);
    }
@@ -81,7 +81,7 @@ public class Graphics3DObject
       this(null, null, graphics3DInstructions);
    }
 
-   private Graphics3DObject(Shape3D<?> shape, AppearanceDefinition appearance, ArrayList<Graphics3DPrimitiveInstruction> graphics3DInstructions)
+   private Graphics3DObject(Shape3DReadOnly shape, AppearanceDefinition appearance, ArrayList<Graphics3DPrimitiveInstruction> graphics3DInstructions)
    {
       if (graphics3DInstructions != null)
       {
@@ -217,11 +217,11 @@ public class Graphics3DObject
       RotationMatrix rot = new RotationMatrix();
 
       if (rotationAxis == Axis.X)
-         rot.setToRollMatrix(rotationAngle);
+         rot.setToRollOrientation(rotationAngle);
       else if (rotationAxis == Axis.Y)
-         rot.setToPitchMatrix(rotationAngle);
+         rot.setToPitchOrientation(rotationAngle);
       else if (rotationAxis == Axis.Z)
-         rot.setToYawMatrix(rotationAngle);
+         rot.setToYawOrientation(rotationAngle);
 
       rotate(rot);
    }
@@ -476,12 +476,12 @@ public class Graphics3DObject
       addArrow(length, YoAppearance.Blue(), arrowAppearance);
    }
 
-   public PrimitiveGraphics3DInstruction add(Shape3D<?> shape)
+   public PrimitiveGraphics3DInstruction add(Shape3DReadOnly shape)
    {
       return add(shape, DEFAULT_APPEARANCE);
    }
 
-   public PrimitiveGraphics3DInstruction add(Shape3D<?> shape, AppearanceDefinition app)
+   public PrimitiveGraphics3DInstruction add(Shape3DReadOnly shape, AppearanceDefinition app)
    {
       if (shape instanceof Sphere3D)
       {

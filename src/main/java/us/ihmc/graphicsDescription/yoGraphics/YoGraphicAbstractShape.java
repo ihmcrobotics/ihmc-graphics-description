@@ -127,7 +127,7 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
    public void getOrientation(FrameQuaternion orientationToPack)
    {
       if (isUsingYawPitchRoll())
-         yoFrameYawPitchRoll.getFrameOrientationIncludingFrame(orientationToPack);
+         orientationToPack.setIncludingFrame(yoFrameYawPitchRoll);
       else
          orientationToPack.setIncludingFrame(yoFrameQuaternion);
    }
@@ -150,8 +150,8 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
 
    public void setTransformToWorld(RigidBodyTransform transformToWorld)
    {
-      yoFramePoint.set(transformToWorld.getTranslationVector());
-      yoFrameYawPitchRoll.set(transformToWorld.getRotationMatrix());
+      yoFramePoint.set(transformToWorld.getTranslation());
+      yoFrameYawPitchRoll.set(transformToWorld.getRotation());
    }
 
    public void setToReferenceFrame(ReferenceFrame referenceFrame)
