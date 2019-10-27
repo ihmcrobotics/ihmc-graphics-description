@@ -259,8 +259,8 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
     * @throws RuntimeException if the number of {@link Polynomial3DVariableHolder}s differs from the
     *                          number of waypoint times.
     */
-   public YoGraphicPolynomial3D(String name, List<Polynomial3DVariableHolder> yoPolynomial3Ds, List<YoDouble> waypointTimes, double radius, int resolution,
-                                int radialResolution, YoVariableRegistry registry)
+   public YoGraphicPolynomial3D(String name, List<? extends Polynomial3DVariableHolder> yoPolynomial3Ds, List<YoDouble> waypointTimes, double radius,
+                                int resolution, int radialResolution, YoVariableRegistry registry)
    {
       this(name, null, yoPolynomial3Ds, waypointTimes, radius, resolution, radialResolution, registry);
    }
@@ -331,7 +331,7 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
     * @throws RuntimeException if the number of {@link Polynomial3DVariableHolder}s differs from the
     *                          number of waypoint times.
     */
-   public YoGraphicPolynomial3D(String name, YoFramePose3D poseFromTrajectoryFrameToWorldFrame, List<Polynomial3DVariableHolder> yoPolynomial3Ds,
+   public YoGraphicPolynomial3D(String name, YoFramePose3D poseFromTrajectoryFrameToWorldFrame, List<? extends Polynomial3DVariableHolder> yoPolynomial3Ds,
                                 List<YoDouble> waypointTimes, double radius, int resolution, int radialResolution, YoVariableRegistry registry)
    {
       this(name, poseFromTrajectoryFrameToWorldFrame, yoPolynomial3Ds.toArray(new Polynomial3DVariableHolder[0]), toArray(waypointTimes), radius, resolution,
@@ -892,29 +892,19 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
       throw new RuntimeException("Implement Me!");
    }
 
-   private static class Polynomial3DVariables implements Polynomial3DVariableHolder
+   static class Polynomial3DVariables implements Polynomial3DVariableHolder
    {
       private final PolynomialVariables xPolynomial, yPolynomial, zPolynomial;
       private final Point3DReadOnly position;
       private final Vector3DReadOnly velocity;
       private final Vector3DReadOnly acceleration;
 
-      private Polynomial3DVariables(YoDouble[] xCoeffs, YoDouble[] yCoeffs, YoDouble[] zCoeffs, YoInteger nCoeffs)
-      {
-         this(xCoeffs, nCoeffs, yCoeffs, nCoeffs, zCoeffs, nCoeffs);
-      }
-
-      private Polynomial3DVariables(YoDouble[] xCoeffs, YoInteger xNCoeffs, YoDouble[] yCoeffs, YoInteger yNCoeffs, YoDouble[] zCoeffs, YoInteger zNCoeffs)
-      {
-         this(new PolynomialVariables(xCoeffs, xNCoeffs), new PolynomialVariables(yCoeffs, yNCoeffs), new PolynomialVariables(zCoeffs, zNCoeffs));
-      }
-
       private Polynomial3DVariables(Polynomial3DVariableHolder holder)
       {
          this(holder.getYoPolynomialX(), holder.getYoPolynomialY(), holder.getYoPolynomialZ());
       }
 
-      private Polynomial3DVariables(PolynomialVariableHolder xPolynomial, PolynomialVariableHolder yPolynomial, PolynomialVariableHolder zPolynomial)
+      Polynomial3DVariables(PolynomialVariableHolder xPolynomial, PolynomialVariableHolder yPolynomial, PolynomialVariableHolder zPolynomial)
       {
          this(new PolynomialVariables(xPolynomial), new PolynomialVariables(yPolynomial), new PolynomialVariables(zPolynomial));
       }
@@ -983,7 +973,7 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
       }
    }
 
-   private static class PolynomialVariables implements PolynomialVariableHolder
+   static class PolynomialVariables implements PolynomialVariableHolder
    {
       private final YoDouble[] coefficients;
       private final YoInteger numberOfCoefficients;
@@ -993,6 +983,19 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
       private PolynomialVariables(PolynomialVariableHolder holder)
       {
          this(holder.getYoCoefficients(), holder.getYoNumberOfCoefficients());
+      }
+
+      PolynomialVariables(String name, int maximumNumberOfCoefficients, YoVariableRegistry registry)
+      {
+         coefficients = new YoDouble[maximumNumberOfCoefficients];
+
+         numberOfCoefficients = new YoInteger(name + "_nCoeffs", registry);
+
+         for (int i = 0; i < maximumNumberOfCoefficients; i++)
+         {
+            coefficients[i] = new YoDouble(name + "_a" + i, registry);
+         }
+         xPowers = new double[coefficients.length];
       }
 
       private PolynomialVariables(YoDouble[] coefficients, YoInteger numberOfCoefficients)
