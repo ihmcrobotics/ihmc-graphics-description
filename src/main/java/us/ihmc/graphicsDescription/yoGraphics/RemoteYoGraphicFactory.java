@@ -54,6 +54,7 @@ public class RemoteYoGraphicFactory
       registerBuilder(YoArtifactLineSegment2d.class, (name, vars, consts, appearance) -> yoArtifactLineSegment2DFromMessage(name, vars, consts, appearance));
       registerBuilder(YoArtifactPolygon.class, (name, vars, consts, appearance) -> yoArtifactPolygonFromMessage(name, vars, consts, appearance));
       registerBuilder(YoGraphicReferenceFrame.class, (name, vars, consts, appearance) -> yoGraphicReferenceFrameFromMessage(name, vars, consts, appearance));
+      registerBuilder(YoGraphicPolynomial3D.class, (name, vars, consts, appearance) -> YoGraphicPolynomial3D.createAsRemoteYoGraphic(name, vars, consts));
    }
 
    public <T extends RemoteYoGraphic> void registerBuilder(Class<T> clazz, YoGraphicFromMessageBuilder<T> builder)
