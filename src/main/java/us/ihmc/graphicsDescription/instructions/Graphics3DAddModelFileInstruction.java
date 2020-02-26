@@ -1,6 +1,7 @@
 package us.ihmc.graphicsDescription.instructions;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
@@ -35,7 +36,7 @@ public class Graphics3DAddModelFileInstruction extends Graphics3DInstruction
 
    public Graphics3DAddModelFileInstruction(String fileName, AppearanceDefinition appearance)
    {
-      this(fileName, null, false, appearance, null, null);
+      this(fileName, null, false, appearance, Collections.emptyList(), null);
    }
 
    public String getFileName()
