@@ -432,18 +432,23 @@ public class Graphics3DObject
    }
 
    public Graphics3DAddModelFileInstruction addModelFile(String fileName, String submesh, boolean centerSubmesh, List<String> resourceDirectories,
-         AppearanceDefinition app)
+                                                         ClassLoader resourceClassLoader, AppearanceDefinition app)
    {
-      Graphics3DAddModelFileInstruction graphics3dAddModelFileInstruction = new Graphics3DAddModelFileInstruction(fileName, submesh, centerSubmesh, app,
-            resourceDirectories);
+      Graphics3DAddModelFileInstruction graphics3dAddModelFileInstruction = new Graphics3DAddModelFileInstruction(fileName,
+                                                                                                                  submesh,
+                                                                                                                  centerSubmesh,
+                                                                                                                  app,
+                                                                                                                  resourceDirectories,
+                                                                                                                  resourceClassLoader);
       graphics3DInstructions.add(graphics3dAddModelFileInstruction);
 
       return graphics3dAddModelFileInstruction;
    }
 
-   public Graphics3DAddModelFileInstruction addModelFile(String fileName, ArrayList<String> resourceDirectories, AppearanceDefinition app)
+   public Graphics3DAddModelFileInstruction addModelFile(String fileName, ArrayList<String> resourceDirectories, ClassLoader resourceClassLoader,
+                                                         AppearanceDefinition app)
    {
-      return addModelFile(fileName, null, false, resourceDirectories, app);
+      return addModelFile(fileName, null, false, resourceDirectories, resourceClassLoader, app);
    }
 
    public void addCoordinateSystem(double length)
