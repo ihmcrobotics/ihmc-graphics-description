@@ -78,10 +78,8 @@ public class PolygonArtifact extends Artifact
       setLevel(2);
       FILL_POLYGON = fill;
       this.color = color;
-      Point2D minPoint = new Point2D();
-      boundingBox2d.getMinPoint(minPoint);
-      Point2D maxPoint = new Point2D();
-      boundingBox2d.getMaxPoint(maxPoint);
+      Point2D minPoint = boundingBox2d.getMinPoint();
+      Point2D maxPoint = boundingBox2d.getMaxPoint();
       Point2D leftUpper = new Point2D(minPoint.getX(), maxPoint.getY());
       Point2D rightLower = new Point2D(maxPoint.getX(), minPoint.getY());
       ArrayList<Point2D> points = new ArrayList<Point2D>();
