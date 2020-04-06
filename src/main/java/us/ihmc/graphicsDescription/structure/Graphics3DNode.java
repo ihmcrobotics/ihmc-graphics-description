@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import us.ihmc.euclid.Axis;
+import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.transform.AffineTransform;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.tuple3D.Vector3D;
@@ -68,17 +68,17 @@ public class Graphics3DNode
       this.transform.set(transform);
    }
 
-   public void translate(double distance, Axis axis)
+   public void translate(double distance, Axis3D axis)
    {
-      if (axis == Axis.X)
+      if (axis == Axis3D.X)
       {
          translate(distance, 0, 0);
       }
-      else if (axis == Axis.Y)
+      else if (axis == Axis3D.Y)
       {
          translate(0, distance, 0);
       }
-      else if (axis == Axis.Z)
+      else if (axis == Axis3D.Z)
       {
          translate(0, 0, distance);
       }
@@ -102,7 +102,7 @@ public class Graphics3DNode
       transform.setTranslation(translation);
    }
 
-   public void rotate(double angle, Axis axis)
+   public void rotate(double angle, Axis3D axis)
    {
       switch (axis)
       {
