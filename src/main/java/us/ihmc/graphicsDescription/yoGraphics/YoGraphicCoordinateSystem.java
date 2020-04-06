@@ -199,14 +199,6 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
       position.set(this.position);
    }
 
-   public void getYawPitchRoll(double[] yawPitchRollToPack)
-   {
-      if (isUsingYawPitchRoll())
-         yawPitchRoll.getYawPitchRoll(yawPitchRollToPack);
-      else
-         quaternion.getYawPitchRoll(yawPitchRollToPack);
-   }
-
    public void getOrientation(QuaternionBasics quaternionToPack)
    {
       if (isUsingYawPitchRoll())
@@ -244,14 +236,6 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
          yawPitchRoll.set(orientation);
       else
          quaternion.set(orientation);
-   }
-
-   public void setYawPitchRoll(double[] yawPitchRoll)
-   {
-      if (isUsingYawPitchRoll())
-         this.yawPitchRoll.setYawPitchRoll(yawPitchRoll);
-      else
-         quaternion.setYawPitchRoll(yawPitchRoll);
    }
 
    public void setYawPitchRoll(double yaw, double pitch, double roll)

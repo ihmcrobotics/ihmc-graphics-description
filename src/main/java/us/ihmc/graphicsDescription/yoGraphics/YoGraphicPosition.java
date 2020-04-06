@@ -3,7 +3,7 @@ package us.ihmc.graphicsDescription.yoGraphics;
 import java.awt.Color;
 import java.util.ArrayList;
 
-import us.ihmc.euclid.Axis;
+import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.referenceFrame.FramePoint3D;
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
 import us.ihmc.euclid.referenceFrame.interfaces.FramePoint3DReadOnly;
@@ -226,12 +226,12 @@ public class YoGraphicPosition extends YoGraphic implements RemoteYoGraphic
 
          linkGraphicInstructions.add(linkGraphics.addArcTorus(0.0, 2.0 * Math.PI, R, r, appearance));
 
-         linkGraphics.rotate(Math.PI / 2.0, Axis.X);
+         linkGraphics.rotate(Math.PI / 2.0, Axis3D.X);
          linkGraphics.translate(0.0, 0.0, -R);
          linkGraphicInstructions.add(linkGraphics.addCylinder(2.0 * R, r, appearance));
 
          linkGraphics.identity();
-         linkGraphics.rotate(Math.PI / 2.0, Axis.Y);
+         linkGraphics.rotate(Math.PI / 2.0, Axis3D.Y);
          linkGraphics.translate(0.0, 0.0, -R);
          linkGraphicInstructions.add(linkGraphics.addCylinder(2.0 * R, r, appearance));
          break;
@@ -244,14 +244,14 @@ public class YoGraphicPosition extends YoGraphic implements RemoteYoGraphic
 
          linkGraphicInstructions.add(linkGraphics.addArcTorus(0.0, 2.0 * Math.PI, R, r, appearance));
 
-         linkGraphics.rotate(Math.PI / 4.0, Axis.Z);
-         linkGraphics.rotate(Math.PI / 2.0, Axis.X);
+         linkGraphics.rotate(Math.PI / 4.0, Axis3D.Z);
+         linkGraphics.rotate(Math.PI / 2.0, Axis3D.X);
          linkGraphics.translate(0.0, 0.0, -R);
          linkGraphicInstructions.add(linkGraphics.addCylinder(2.0 * R, r, appearance));
 
          linkGraphics.identity();
-         linkGraphics.rotate(Math.PI / 4.0, Axis.Z);
-         linkGraphics.rotate(Math.PI / 2.0, Axis.Y);
+         linkGraphics.rotate(Math.PI / 4.0, Axis3D.Z);
+         linkGraphics.rotate(Math.PI / 2.0, Axis3D.Y);
          linkGraphics.translate(0.0, 0.0, -R);
          linkGraphicInstructions.add(linkGraphics.addCylinder(2.0 * R, r, appearance));
          break;

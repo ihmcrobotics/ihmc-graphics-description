@@ -5,7 +5,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import us.ihmc.euclid.Axis;
+import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.axisAngle.AxisAngle;
 import us.ihmc.euclid.geometry.ConvexPolygon2D;
 import us.ihmc.euclid.geometry.interfaces.ConvexPolygon2DReadOnly;
@@ -212,15 +212,15 @@ public class Graphics3DObject
     * @param rotationAxis Axis around which to rotate. Either Link.X, Link.Y or Link.Z
     */
 
-   public void rotate(double rotationAngle, Axis rotationAxis)
+   public void rotate(double rotationAngle, Axis3D rotationAxis)
    {
       RotationMatrix rot = new RotationMatrix();
 
-      if (rotationAxis == Axis.X)
+      if (rotationAxis == Axis3D.X)
          rot.setToRollOrientation(rotationAngle);
-      else if (rotationAxis == Axis.Y)
+      else if (rotationAxis == Axis3D.Y)
          rot.setToPitchOrientation(rotationAngle);
-      else if (rotationAxis == Axis.Z)
+      else if (rotationAxis == Axis3D.Z)
          rot.setToYawOrientation(rotationAngle);
 
       rotate(rot);
@@ -472,12 +472,12 @@ public class Graphics3DObject
    public void addCoordinateSystem(double length, AppearanceDefinition xAxisAppearance, AppearanceDefinition yAxisAppearance,
          AppearanceDefinition zAxisAppearance, AppearanceDefinition arrowAppearance)
    {
-      rotate(Math.PI / 2.0, Axis.Y);
+      rotate(Math.PI / 2.0, Axis3D.Y);
       addArrow(length, YoAppearance.Red(), arrowAppearance);
-      rotate(-Math.PI / 2.0, Axis.Y);
-      rotate(-Math.PI / 2.0, Axis.X);
+      rotate(-Math.PI / 2.0, Axis3D.Y);
+      rotate(-Math.PI / 2.0, Axis3D.X);
       addArrow(length, YoAppearance.White(), arrowAppearance);
-      rotate(Math.PI / 2.0, Axis.X);
+      rotate(Math.PI / 2.0, Axis3D.X);
       addArrow(length, YoAppearance.Blue(), arrowAppearance);
    }
 

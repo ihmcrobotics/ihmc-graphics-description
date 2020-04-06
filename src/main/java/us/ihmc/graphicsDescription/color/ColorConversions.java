@@ -20,14 +20,4 @@ public class ColorConversions
       int blue = (rgb) & 0xFF;
       return new java.awt.Color(red, green, blue);
    }
-
-   public static java.awt.Color jfxToAwt(javafx.scene.paint.Color jfxColor)
-   {
-      return new java.awt.Color((float) jfxColor.getRed(), (float) jfxColor.getGreen(), (float) jfxColor.getBlue(), (float) jfxColor.getOpacity());
-   }
-   
-   public static javafx.scene.paint.Color awtToJfx(java.awt.Color awtColor)
-   {
-      return javafx.scene.paint.Color.rgb(awtColor.getRed(), awtColor.getGreen(), awtColor.getBlue(), awtColor.getAlpha() / 255.0);
-   }
 }
