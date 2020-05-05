@@ -1,8 +1,11 @@
 package us.ihmc.graphicsDescription;
 
 import us.ihmc.commons.Epsilons;
-import us.ihmc.euclid.matrix.Matrix3D;
+import us.ihmc.euclid.geometry.tools.EuclidGeometryTools;
+import us.ihmc.euclid.matrix.RotationMatrix;
 import us.ihmc.euclid.matrix.interfaces.Matrix3DReadOnly;
+import us.ihmc.euclid.matrix.interfaces.RotationMatrixBasics;
+import us.ihmc.euclid.matrix.interfaces.RotationMatrixReadOnly;
 import us.ihmc.euclid.tuple3D.Point3D32;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.Vector3D32;
@@ -23,7 +26,6 @@ import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
  * </p>
  *
  * @author Sylvain Bertrand
- *
  */
 public final class SegmentedLine3DMeshDataGenerator
 {
@@ -46,10 +48,10 @@ public final class SegmentedLine3DMeshDataGenerator
     * </p>
     *
     * @param numberOfWaypoints the number of waypoints this segmented line will have to go through.
-    *           Necessary to evaluate the number of meshes needed for this generator.
-    * @param radialResolution refers to the quality of the cylinder rendering of the line section. A
-    *           high value will result in a smooth circle section, while a low value result in a
-    *           polygonized section.
+    *                          Necessary to evaluate the number of meshes needed for this generator.
+    * @param radialResolution  refers to the quality of the cylinder rendering of the line section. A
+    *                          high value will result in a smooth circle section, while a low value
+    *                          result in a polygonized section.
     */
    public SegmentedLine3DMeshDataGenerator(int numberOfWaypoints, int radialResolution)
    {
@@ -61,11 +63,11 @@ public final class SegmentedLine3DMeshDataGenerator
     * radius to use for the line.
     *
     * @param numberOfWaypoints the number of waypoints this segmented line will have to go through.
-    *           Necessary to evaluate the number of meshes necessary.
-    * @param radialResolution refers to the quality of the cylinder rendering of the line section. A
-    *           high value will result in a smooth circle section, while a low value result in a
-    *           polygonized section.
-    * @param radius the radius used when rendering the 3D line.
+    *                          Necessary to evaluate the number of meshes necessary.
+    * @param radialResolution  refers to the quality of the cylinder rendering of the line section. A
+    *                          high value will result in a smooth circle section, while a low value
+    *                          result in a polygonized section.
+    * @param radius            the radius used when rendering the 3D line.
     */
    public SegmentedLine3DMeshDataGenerator(int numberOfWaypoints, int radialResolution, double radius)
    {
@@ -81,8 +83,8 @@ public final class SegmentedLine3DMeshDataGenerator
    private final Vector3D previousDirection = new Vector3D();
 
    /**
-    * Update the meshes of this generator to represent a segmented line 3D that goes through the
-    * given set of waypoints.
+    * Update the meshes of this generator to represent a segmented line 3D that goes through the given
+    * set of waypoints.
     * <p>
     * The resulting meshes can be obtained using {@link #getMeshDataHolders()}.
     * </p>
@@ -95,27 +97,26 @@ public final class SegmentedLine3DMeshDataGenerator
       compute(waypointPositions, null);
    }
 
-   /** Using a Matrix3D instead of RotationMatrix to speed up calculation. */
-   private final Matrix3D rotation = new Matrix3D();
-   private final Matrix3D previousRotation = new Matrix3D();
+   private final RotationMatrix rotation = new RotationMatrix();
+   private final RotationMatrix previousRotation = new RotationMatrix();
 
    /**
-    * Update the meshes of this generator to represent a segmented line 3D that goes through the
-    * given set of waypoints.
+    * Update the meshes of this generator to represent a segmented line 3D that goes through the given
+    * set of waypoints.
     * <p>
     * The resulting meshes can be obtained using {@link #getMeshDataHolders()}.
     * </p>
     * <p>
     * The given {@code waypointDirections} are used as the section normals of the line at the
-    * waypoints. If it is {@code null}, it is computed internally based on the waypoint positions
-    * and spacing.
+    * waypoints. If it is {@code null}, it is computed internally based on the waypoint positions and
+    * spacing.
     * </p>
     *
-    * @param waypointPositions the positions through which the segmented line 3D has to go through.
+    * @param waypointPositions  the positions through which the segmented line 3D has to go through.
     * @param waypointDirections the positions through which the segmented line 3D has to go through.
     * @throws RuntimeException if {@code waypointPositions.length != this.getNumberOfWaypoints()} or
     * @throws RuntimeException if {@code waypointDirections != null} and that
-    *            {@code waypointDirections.length != this.getNumberOfWaypoints()}.
+    *                          {@code waypointDirections.length != this.getNumberOfWaypoints()}.
     */
    public void compute(Point3DReadOnly[] waypointPositions, Vector3DReadOnly[] waypointDirections)
    {
@@ -149,8 +150,7 @@ public final class SegmentedLine3DMeshDataGenerator
    /**
     * Changes the radius used when rendering the 3D line.
     * <p>
-    * One of the compute methods has to be called before the change is effective on the output
-    * meshes.
+    * One of the compute methods has to be called before the change is effective on the output meshes.
     * </p>
     *
     * @param radius the new radius to be used when rendering the 3D line.
@@ -161,8 +161,8 @@ public final class SegmentedLine3DMeshDataGenerator
    }
 
    /**
-    * Gets the number of waypoints the segmented line 3D goes through (including the origin and the
-    * end of the line).
+    * Gets the number of waypoints the segmented line 3D goes through (including the origin and the end
+    * of the line).
     *
     * @return the number of waypoints.
     */
@@ -208,13 +208,13 @@ public final class SegmentedLine3DMeshDataGenerator
    /**
     * Creates the output {@code MeshDataHolder}s.
     * <p>
-    * WARNING: the {@code MeshDataHolder[]} and {@code CircleMeshVertices[]} share the same
-    * instances for the vertices and normals, such that this generator actually modifies the meshes
-    * by simply updating the circles. This is for improved performance.
+    * WARNING: the {@code MeshDataHolder[]} and {@code CircleMeshVertices[]} share the same instances
+    * for the vertices and normals, such that this generator actually modifies the meshes by simply
+    * updating the circles. This is for improved performance.
     * </p>
     *
     * @param circles the circles from which the output meshes will be created. Not modified, but
-    *           references to the vertices and normals are stored in the resulting meshes.
+    *                references to the vertices and normals are stored in the resulting meshes.
     * @return the array of {@code MeshDataHolder} that this generator will update.
     */
    private static MeshDataHolder[] createMeshDataHolders(CircleVertices[] circles)
@@ -269,36 +269,23 @@ public final class SegmentedLine3DMeshDataGenerator
       return meshDataHolders;
    }
 
-   private final Vector3D xAxis = new Vector3D();
-   private final Vector3D yAxis = new Vector3D();
-
    /**
-    * Computes the rotation of current section with respect to zUp and which is the closest rotation from the previous section.
+    * Computes the rotation of current section with respect to zUp and which is the closest rotation
+    * from the previous section.
     * <p>
     * If the two sections are parallel, {@code rotationToPack} is set to {@code previousRotation}.
     * </p>
     *
     * @param previousDirection the direction of the previous section. Not modified.
-    * @param sectionDirection the direction of the section to compute the rotation of. Not modified.
-    * @param previousRotation the rotation of the previous section. Not modified.
-    * @param rotationToPack the rotation of this section. Modified.
+    * @param sectionDirection  the direction of the section to compute the rotation of. Not modified.
+    * @param previousRotation  the rotation of the previous section. Not modified.
+    * @param rotationToPack    the rotation of this section. Modified.
     */
-   private void computeRotation(Vector3DReadOnly previousDirection, Vector3DReadOnly sectionDirection, Matrix3DReadOnly previousRotation, Matrix3D rotationToPack)
+   private void computeRotation(Vector3DReadOnly previousDirection, Vector3DReadOnly sectionDirection, RotationMatrixReadOnly previousRotation,
+                                RotationMatrixBasics rotationToPack)
    {
-      xAxis.cross(previousDirection, sectionDirection);
-      double length = xAxis.length();
-
-      if (length < 1.0e-8)
-      {
-         rotationToPack.set(previousRotation);
-         return;
-      }
-
-      xAxis.normalize();
-      yAxis.cross(sectionDirection, xAxis);
-      rotationToPack.setColumn(0, xAxis);
-      rotationToPack.setColumn(1, yAxis);
-      rotationToPack.setColumn(2, sectionDirection);
+      EuclidGeometryTools.orientation3DFromFirstToSecondVector3D(previousDirection, sectionDirection, rotationToPack);
+      rotationToPack.preMultiply(previousRotation);
    }
 
    private final Vector3D tempDirection = new Vector3D();
