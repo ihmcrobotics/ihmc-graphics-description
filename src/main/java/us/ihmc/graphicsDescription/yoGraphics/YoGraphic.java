@@ -2,6 +2,7 @@ package us.ihmc.graphicsDescription.yoGraphics;
 
 import us.ihmc.euclid.transform.AffineTransform;
 import us.ihmc.euclid.transform.RigidBodyTransform;
+import us.ihmc.euclid.transform.interfaces.RigidBodyTransformReadOnly;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.plotting.artifact.Artifact;
 import us.ihmc.yoVariables.providers.DoubleProvider;
@@ -64,7 +65,7 @@ public abstract class YoGraphic
       return name;
    }
 
-   public void setRootTransform(RigidBodyTransform transform)
+   public void setRootTransform(RigidBodyTransformReadOnly transform)
    {
       rootTransform.set(transform);
    }

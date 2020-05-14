@@ -9,12 +9,11 @@ import java.util.Map;
 import java.util.Set;
 
 import us.ihmc.commons.MathTools;
-import us.ihmc.euclid.geometry.LineSegment3D;
 import us.ihmc.euclid.geometry.interfaces.ConvexPolygon2DReadOnly;
-import us.ihmc.euclid.transform.RigidBodyTransform;
+import us.ihmc.euclid.geometry.interfaces.LineSegment3DReadOnly;
+import us.ihmc.euclid.transform.interfaces.RigidBodyTransformReadOnly;
 import us.ihmc.euclid.tuple2D.Point2D;
 import us.ihmc.euclid.tuple2D.interfaces.Point2DReadOnly;
-import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Point3D32;
 import us.ihmc.euclid.tuple3D.Vector3D32;
 import us.ihmc.euclid.tuple3D.interfaces.Point3DReadOnly;
@@ -214,7 +213,7 @@ public class MeshDataGenerator
     * @param ccwOrderedConvexPolygonPoints the counter-clockwise-ordered vertices of the polygon.
     * @return the created triangle mesh.
     */
-   public static MeshDataHolder Polygon(RigidBodyTransform polygonTransformToWorld, List<? extends Point2DReadOnly> ccwOrderedConvexPolygonPoints)
+   public static MeshDataHolder Polygon(RigidBodyTransformReadOnly polygonTransformToWorld, List<? extends Point2DReadOnly> ccwOrderedConvexPolygonPoints)
    {
       Point3D32[] points = new Point3D32[ccwOrderedConvexPolygonPoints.size()];
       int reverseIndex = ccwOrderedConvexPolygonPoints.size();
@@ -254,7 +253,7 @@ public class MeshDataGenerator
     * @param convexPolygon           the polygon to create a mesh from.
     * @return the created triangle mesh.
     */
-   public static MeshDataHolder Polygon(RigidBodyTransform polygonTransformToWorld, ConvexPolygon2DReadOnly convexPolygon)
+   public static MeshDataHolder Polygon(RigidBodyTransformReadOnly polygonTransformToWorld, ConvexPolygon2DReadOnly convexPolygon)
    {
       Point3D32[] points = new Point3D32[convexPolygon.getNumberOfVertices()];
       int reverseIndex = convexPolygon.getNumberOfVertices();
@@ -1650,7 +1649,7 @@ public class MeshDataGenerator
       return new MeshDataHolder(points, textPoints, polygonIndices, normals);
    }
 
-   public static MeshDataHolder Line(LineSegment3D lineSegment3d, double width)
+   public static MeshDataHolder Line(LineSegment3DReadOnly lineSegment3d, double width)
    {
       return Line(lineSegment3d.getFirstEndpoint(), lineSegment3d.getSecondEndpoint(), width);
    }
@@ -2059,7 +2058,7 @@ public class MeshDataGenerator
       return points3f;
    }
 
-   public static Vector3D32[] findNormalsPerVertex(int[] indices, Point3D32[] vertices)
+   public static Vector3D32[] findNormalsPerVertex(int[] indices, Point3DReadOnly[] vertices)
    {
       Map<Integer, Set<Integer>> participatingFacesPerVertex = new LinkedHashMap<>();
 
@@ -2101,13 +2100,13 @@ public class MeshDataGenerator
       return normalsPerVertex;
    }
 
-   private static Vector3D32[] findNormalsPerFace(int[] indices, Point3D32[] vertices)
+   private static Vector3D32[] findNormalsPerFace(int[] indices, Point3DReadOnly[] vertices)
    {
       Vector3D32[] normalsPerFace = new Vector3D32[indices.length / 3]; // Abuse integer division.
 
       Vector3D32 firstVector = new Vector3D32();
       Vector3D32 secondVector = new Vector3D32();
-      Point3D32[] faceVertices = new Point3D32[3];
+      Point3DReadOnly[] faceVertices = new Point3DReadOnly[3];
 
       for (int face = 0; face < normalsPerFace.length; face++)
       {
@@ -2131,7 +2130,7 @@ public class MeshDataGenerator
       return normalsPerFace;
    }
 
-   public static MeshDataHolder createFromVerticesAndStripCounts(Point3D[] vertices, int[] polygonStripCounts)
+   public static MeshDataHolder createFromVerticesAndStripCounts(Point3DReadOnly[] vertices, int[] polygonStripCounts)
    {
       Point3D32[] verticesWithFloats = new Point3D32[vertices.length];
 

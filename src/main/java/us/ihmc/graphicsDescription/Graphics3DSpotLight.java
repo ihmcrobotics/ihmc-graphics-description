@@ -4,6 +4,8 @@ import java.awt.Color;
 
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Vector3D;
+import us.ihmc.euclid.tuple3D.interfaces.Point3DReadOnly;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 
 public class Graphics3DSpotLight
 {
@@ -19,7 +21,7 @@ public class Graphics3DSpotLight
       return position;
    }
 
-   public void setPosition(Point3D position)
+   public void setPosition(Point3DReadOnly position)
    {
       this.position.set(position);
    }
@@ -29,7 +31,7 @@ public class Graphics3DSpotLight
       return direction;
    }
 
-   public void setDirection(Vector3D direction)
+   public void setDirection(Vector3DReadOnly direction)
    {
       this.direction.set(direction);
    }

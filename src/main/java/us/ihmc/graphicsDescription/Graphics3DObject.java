@@ -7,14 +7,22 @@ import java.util.List;
 
 import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.axisAngle.AxisAngle;
-import us.ihmc.euclid.geometry.ConvexPolygon2D;
 import us.ihmc.euclid.geometry.interfaces.ConvexPolygon2DReadOnly;
-import us.ihmc.euclid.matrix.Matrix3D;
+import us.ihmc.euclid.geometry.tools.EuclidGeometryTools;
 import us.ihmc.euclid.matrix.RotationMatrix;
-import us.ihmc.euclid.shape.primitives.Sphere3D;
+import us.ihmc.euclid.matrix.interfaces.Matrix3DReadOnly;
+import us.ihmc.euclid.orientation.interfaces.Orientation3DReadOnly;
+import us.ihmc.euclid.shape.primitives.interfaces.Box3DReadOnly;
+import us.ihmc.euclid.shape.primitives.interfaces.Capsule3DReadOnly;
+import us.ihmc.euclid.shape.primitives.interfaces.Cylinder3DReadOnly;
+import us.ihmc.euclid.shape.primitives.interfaces.Ellipsoid3DReadOnly;
+import us.ihmc.euclid.shape.primitives.interfaces.PointShape3DReadOnly;
+import us.ihmc.euclid.shape.primitives.interfaces.Ramp3DReadOnly;
 import us.ihmc.euclid.shape.primitives.interfaces.Shape3DReadOnly;
+import us.ihmc.euclid.shape.primitives.interfaces.Sphere3DReadOnly;
+import us.ihmc.euclid.shape.primitives.interfaces.Torus3DReadOnly;
 import us.ihmc.euclid.transform.RigidBodyTransform;
-import us.ihmc.euclid.tuple2D.Point2D;
+import us.ihmc.euclid.transform.interfaces.RigidBodyTransformReadOnly;
 import us.ihmc.euclid.tuple2D.interfaces.Point2DReadOnly;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Point3D32;
@@ -22,6 +30,7 @@ import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.Vector3D32;
 import us.ihmc.euclid.tuple3D.interfaces.Point3DReadOnly;
 import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
+import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.euclid.tuple4D.interfaces.QuaternionReadOnly;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.graphicsDescription.appearance.YoAppearance;
@@ -42,7 +51,6 @@ import us.ihmc.graphicsDescription.instructions.Graphics3DInstruction;
 import us.ihmc.graphicsDescription.instructions.Graphics3DPrimitiveInstruction;
 import us.ihmc.graphicsDescription.instructions.HemiEllipsoidGraphics3DInstruction;
 import us.ihmc.graphicsDescription.instructions.PolygonGraphics3DInstruction;
-import us.ihmc.graphicsDescription.instructions.PrimitiveGraphics3DInstruction;
 import us.ihmc.graphicsDescription.instructions.PyramidCubeGraphics3DInstruction;
 import us.ihmc.graphicsDescription.instructions.SphereGraphics3DInstruction;
 import us.ihmc.graphicsDescription.instructions.TruncatedConeGraphics3DInstruction;
@@ -61,8 +69,8 @@ public class Graphics3DObject
    private static final int RESOLUTION = 25;
    private static final int CAPSULE_RESOLUTION = 24;
 
-   private ArrayList<Graphics3DPrimitiveInstruction> graphics3DInstructions;
-   private ArrayList<SelectedListener> selectedListeners;
+   private List<Graphics3DPrimitiveInstruction> graphics3DInstructions;
+   private List<SelectedListener> selectedListeners;
 
    private boolean changeable = false;
 
@@ -76,12 +84,12 @@ public class Graphics3DObject
       this(shape, null, null);
    }
 
-   public Graphics3DObject(ArrayList<Graphics3DPrimitiveInstruction> graphics3DInstructions)
+   public Graphics3DObject(List<Graphics3DPrimitiveInstruction> graphics3DInstructions)
    {
       this(null, null, graphics3DInstructions);
    }
 
-   private Graphics3DObject(Shape3DReadOnly shape, AppearanceDefinition appearance, ArrayList<Graphics3DPrimitiveInstruction> graphics3DInstructions)
+   private Graphics3DObject(Shape3DReadOnly shape, AppearanceDefinition appearance, List<Graphics3DPrimitiveInstruction> graphics3DInstructions)
    {
       if (graphics3DInstructions != null)
       {
@@ -113,7 +121,7 @@ public class Graphics3DObject
       this(null, null, null);
    }
 
-   public ArrayList<Graphics3DPrimitiveInstruction> getGraphics3DInstructions()
+   public List<Graphics3DPrimitiveInstruction> getGraphics3DInstructions()
    {
       return graphics3DInstructions;
    }
@@ -135,12 +143,12 @@ public class Graphics3DObject
       graphics3DInstructions.addAll(graphics3DObject.getGraphics3DInstructions());
    }
 
-   public void combine(Graphics3DObject Graphics3DObject, Vector3D offset)
+   public void combine(Graphics3DObject Graphics3DObject, Vector3DReadOnly offset)
    {
       identity();
       this.translate(offset);
 
-      ArrayList<Graphics3DPrimitiveInstruction> graphics3dInstructionsToAdd = Graphics3DObject.getGraphics3DInstructions();
+      List<Graphics3DPrimitiveInstruction> graphics3dInstructionsToAdd = Graphics3DObject.getGraphics3DInstructions();
 
       for (Graphics3DPrimitiveInstruction graphics3dInstructionToAdd : graphics3dInstructionsToAdd)
       {
@@ -161,14 +169,10 @@ public class Graphics3DObject
       graphics3DInstructions.add(instruction);
    }
 
-   public void transform(RigidBodyTransform transform)
+   public void transform(RigidBodyTransformReadOnly transform)
    {
-      RotationMatrix rotation = new RotationMatrix();
-      Vector3D translation = new Vector3D();
-      transform.get(rotation, translation);
-
-      translate(translation);
-      rotate(rotation);
+      translate(transform.getTranslation());
+      rotate(transform.getRotation());
    }
 
    /**
@@ -232,11 +236,9 @@ public class Graphics3DObject
     * @param rotationAngle the angle to rotate around the specified axis in radians.
     * @param rotationAxis  Vector3d describing the axis of rotation.
     */
-   public void rotate(double rotationAngle, Vector3D rotationAxis)
+   public void rotate(double rotationAngle, Vector3DReadOnly rotationAxis)
    {
-      AxisAngle rotationAxisAngle = new AxisAngle(rotationAxis, rotationAngle);
-
-      rotate(rotationAxisAngle);
+      rotate(new AxisAngle(rotationAxis, rotationAngle));
    }
 
    /**
@@ -245,18 +247,11 @@ public class Graphics3DObject
     * centered on the origin of the current system as described by the translations and rotations
     * applied since its creation at the joint origin.
     *
-    * @param rotationMatrix Matrix3d describing the rotation to be applied.
+    * @param orientation Matrix3d describing the rotation to be applied.
     */
-   public void rotate(RotationMatrix rotationMatrix)
+   public void rotate(Orientation3DReadOnly orientation)
    {
-      graphics3DInstructions.add(new Graphics3DRotateInstruction(rotationMatrix));
-   }
-
-   public void rotate(AxisAngle rotationAxisAngle)
-   {
-      RotationMatrix rotation = new RotationMatrix();
-      rotation.set(rotationAxisAngle);
-      rotate(rotation);
+      graphics3DInstructions.add(new Graphics3DRotateInstruction(new RotationMatrix(orientation)));
    }
 
    /**
@@ -282,7 +277,7 @@ public class Graphics3DObject
     * @param scaleFactors Vector3d describing the scaling factors in each dimension.
     * @return
     */
-   public Graphics3DScaleInstruction scale(Vector3D scaleFactors)
+   public Graphics3DScaleInstruction scale(Vector3DReadOnly scaleFactors)
    {
       Graphics3DScaleInstruction graphics3DScale = new Graphics3DScaleInstruction(scaleFactors);
       graphics3DInstructions.add(graphics3DScale);
@@ -314,7 +309,7 @@ public class Graphics3DObject
    public void preScale(Vector3D scaleFactors)
    {
 
-      ArrayList<Graphics3DPrimitiveInstruction> newInstructions = new ArrayList<>();
+      List<Graphics3DPrimitiveInstruction> newInstructions = new ArrayList<>();
       newInstructions.add(new Graphics3DScaleInstruction(scaleFactors));
 
       for (int i = 0; i < graphics3DInstructions.size(); i++)
@@ -324,7 +319,6 @@ public class Graphics3DObject
          if (instruction instanceof Graphics3DIdentityInstruction)
          {
             newInstructions.add(new Graphics3DScaleInstruction(scaleFactors));
-
          }
       }
 
@@ -434,7 +428,7 @@ public class Graphics3DObject
       return graphics3dAddModelFileInstruction;
    }
 
-   public Graphics3DAddModelFileInstruction addModelFile(String fileName, ArrayList<String> resourceDirectories, ClassLoader resourceClassLoader,
+   public Graphics3DAddModelFileInstruction addModelFile(String fileName, List<String> resourceDirectories, ClassLoader resourceClassLoader,
                                                          AppearanceDefinition app)
    {
       return addModelFile(fileName, null, false, resourceDirectories, resourceClassLoader, app);
@@ -471,29 +465,72 @@ public class Graphics3DObject
       addArrow(length, YoAppearance.Blue(), arrowAppearance);
    }
 
-   public PrimitiveGraphics3DInstruction add(Shape3DReadOnly shape)
+   public void add(Shape3DReadOnly shape)
    {
-      return add(shape, DEFAULT_APPEARANCE);
+      add(shape, DEFAULT_APPEARANCE);
    }
 
-   public PrimitiveGraphics3DInstruction add(Shape3DReadOnly shape, AppearanceDefinition app)
+   public void add(Shape3DReadOnly shape, AppearanceDefinition shapeAppearance)
    {
-      if (shape instanceof Sphere3D)
+      if (shape instanceof Box3DReadOnly)
       {
-         return addSphere(((Sphere3D) shape).getRadius(), app);
+         Box3DReadOnly box = (Box3DReadOnly) shape;
+         transform(box.getPose());
+         addCube(box.getSizeX(), box.getSizeY(), box.getSizeZ(), true, shapeAppearance);
+      }
+      else if (shape instanceof Capsule3DReadOnly)
+      {
+         Capsule3DReadOnly capsule = (Capsule3DReadOnly) shape;
+         translate(capsule.getPosition());
+         rotate(EuclidGeometryTools.axisAngleFromZUpToVector3D(capsule.getAxis()));
+         addCapsule(capsule.getRadius(),
+                    capsule.getLength() + 2.0 * capsule.getRadius(), // the 2nd term is removed internally.
+                    shapeAppearance);
+      }
+      else if (shape instanceof Cylinder3DReadOnly)
+      {
+         Cylinder3DReadOnly cylinder = (Cylinder3DReadOnly) shape;
+         translate(cylinder.getPosition());
+         rotate(EuclidGeometryTools.axisAngleFromZUpToVector3D(cylinder.getAxis()));
+         translate(0.0, 0.0, -cylinder.getHalfLength());
+         addCylinder(cylinder.getLength(), cylinder.getRadius(), shapeAppearance);
+      }
+      else if (shape instanceof Ellipsoid3DReadOnly)
+      {
+         Ellipsoid3DReadOnly ellipsoid = (Ellipsoid3DReadOnly) shape;
+         transform(ellipsoid.getPose());
+         addEllipsoid(ellipsoid.getRadiusX(), ellipsoid.getRadiusY(), ellipsoid.getRadiusZ(), shapeAppearance);
+      }
+      else if (shape instanceof PointShape3DReadOnly)
+      {
+         PointShape3DReadOnly pointShape = (PointShape3DReadOnly) shape;
+         translate(pointShape);
+         addSphere(0.005, shapeAppearance); // Arbitrary radius
+      }
+      else if (shape instanceof Ramp3DReadOnly)
+      {
+         Ramp3DReadOnly ramp = (Ramp3DReadOnly) shape;
+         transform(ramp.getPose());
+         translate(-0.5 * ramp.getSizeX(), 0.0, 0.0);
+         addWedge(ramp.getSizeX(), ramp.getSizeY(), ramp.getSizeZ(), shapeAppearance);
+      }
+      else if (shape instanceof Sphere3DReadOnly)
+      {
+         Sphere3DReadOnly sphere = (Sphere3DReadOnly) shape;
+         translate(sphere.getPosition());
+         addSphere(sphere.getRadius(), shapeAppearance);
+      }
+      else if (shape instanceof Torus3DReadOnly)
+      {
+         Torus3DReadOnly torus = (Torus3DReadOnly) shape;
+         translate(torus.getPosition());
+         rotate(EuclidGeometryTools.axisAngleFromZUpToVector3D(torus.getAxis()));
+         addArcTorus(0.0, 2.0 * Math.PI, torus.getRadius(), torus.getTubeRadius(), shapeAppearance);
       }
       else
       {
-         try
-         {
-            throw new ShapeNotSupportedException(shape);
-         }
-         catch (ShapeNotSupportedException e)
-         {
-            e.printStackTrace();
-         }
-
-         return null;
+         // TODO Implement for ConvexPolytope3D
+         throw new ShapeNotSupportedException(shape);
       }
    }
 
@@ -1073,7 +1110,7 @@ public class Graphics3DObject
       return pyradmidCubeInstruction;
    }
 
-   public PolygonGraphics3DInstruction addPolygon(ArrayList<Point3D> polygonPoints)
+   public PolygonGraphics3DInstruction addPolygon(List<? extends Point3DReadOnly> polygonPoints)
    {
       return addPolygon(polygonPoints, DEFAULT_APPEARANCE);
    }
@@ -1087,7 +1124,7 @@ public class Graphics3DObject
     * @param yoAppearance  Appearance to be used with the new polygon. See {@link YoAppearance
     *                      YoAppearance} for implementations.
     */
-   public PolygonGraphics3DInstruction addPolygon(ArrayList<Point3D> polygonPoints, AppearanceDefinition yoAppearance)
+   public PolygonGraphics3DInstruction addPolygon(List<? extends Point3DReadOnly> polygonPoints, AppearanceDefinition yoAppearance)
    {
       PolygonGraphics3DInstruction graphicsInstruction = new PolygonGraphics3DInstruction(polygonPoints);
       graphicsInstruction.setAppearance(yoAppearance);
@@ -1103,9 +1140,9 @@ public class Graphics3DObject
     * @param yoAppearance    Appearance to be used with the new polygon. See {@link YoAppearance
     *                        YoAppearance} for implementations.
     */
-   public PolygonGraphics3DInstruction addPolygon(ConvexPolygon2D convexPolygon2d, AppearanceDefinition yoAppearance)
+   public PolygonGraphics3DInstruction addPolygon(ConvexPolygon2DReadOnly convexPolygon2d, AppearanceDefinition yoAppearance)
    {
-      ArrayList<Point3D> polygonPoints = new ArrayList<>();
+      List<Point3D> polygonPoints = new ArrayList<>();
       int numPoints = convexPolygon2d.getNumberOfVertices();
 
       for (int i = 0; i < numPoints; i++)
@@ -1117,17 +1154,17 @@ public class Graphics3DObject
       return addPolygon(polygonPoints, yoAppearance);
    }
 
-   public PolygonGraphics3DInstruction addPolygon(ConvexPolygon2D convexPolygon2d)
+   public PolygonGraphics3DInstruction addPolygon(ConvexPolygon2DReadOnly convexPolygon2d)
    {
       return addPolygon(convexPolygon2d, DEFAULT_APPEARANCE);
    }
 
-   public void addPolygons(RigidBodyTransform transform, List<? extends ConvexPolygon2DReadOnly> convexPolygon2D)
+   public void addPolygons(RigidBodyTransformReadOnly transform, List<? extends ConvexPolygon2DReadOnly> convexPolygon2D)
    {
       addPolygons(transform, convexPolygon2D, YoAppearance.Black());
    }
 
-   public void addPolygons(RigidBodyTransform transform, List<? extends ConvexPolygon2DReadOnly> convexPolygon2D, AppearanceDefinition appearance)
+   public void addPolygons(RigidBodyTransformReadOnly transform, List<? extends ConvexPolygon2DReadOnly> convexPolygon2D, AppearanceDefinition appearance)
    {
       transform(transform);
 
@@ -1138,9 +1175,9 @@ public class Graphics3DObject
          addInstruction(new Graphics3DAddMeshDataInstruction(meshDataHolder, appearance));
       }
 
-      transform = new RigidBodyTransform(transform);
-      transform.invert();
-      transform(transform);
+      RigidBodyTransform transformLocal = new RigidBodyTransform(transform);
+      transformLocal.invert();
+      transform(transformLocal);
    }
 
    /**
@@ -1150,7 +1187,7 @@ public class Graphics3DObject
     *
     * @param polygonPoint Array containing Point3D's to be used when generating the shape.
     */
-   public Graphics3DAddMeshDataInstruction addPolygon(Point3D[] polygonPoint)
+   public Graphics3DAddMeshDataInstruction addPolygon(Point3DReadOnly[] polygonPoint)
    {
       return addPolygon(polygonPoint, DEFAULT_APPEARANCE);
    }
@@ -1176,14 +1213,14 @@ public class Graphics3DObject
       return addPolygon(polygonPoints, yoAppearance);
    }
 
-   public ExtrudedPolygonGraphics3DInstruction addExtrudedPolygon(ConvexPolygon2D convexPolygon2d, double height)
+   public ExtrudedPolygonGraphics3DInstruction addExtrudedPolygon(ConvexPolygon2DReadOnly convexPolygon2d, double height)
    {
       return addExtrudedPolygon(convexPolygon2d, height, DEFAULT_APPEARANCE);
    }
 
-   public ExtrudedPolygonGraphics3DInstruction addExtrudedPolygon(ConvexPolygon2D convexPolygon2d, double height, AppearanceDefinition appearance)
+   public ExtrudedPolygonGraphics3DInstruction addExtrudedPolygon(ConvexPolygon2DReadOnly convexPolygon2d, double height, AppearanceDefinition appearance)
    {
-      ArrayList<Point2DReadOnly> polygonPoints = new ArrayList<>();
+      List<Point2DReadOnly> polygonPoints = new ArrayList<>();
       for (int i = 0; i < convexPolygon2d.getNumberOfVertices(); i++)
       {
          polygonPoints.add(convexPolygon2d.getVertex(i));
@@ -1195,12 +1232,12 @@ public class Graphics3DObject
       return extrudedPolygonInstruction;
    }
 
-   public ExtrudedPolygonGraphics3DInstruction addExtrudedPolygon(List<Point2D> polygonPoints, double height)
+   public ExtrudedPolygonGraphics3DInstruction addExtrudedPolygon(List<? extends Point2DReadOnly> polygonPoints, double height)
    {
       return addExtrudedPolygon(polygonPoints, height, DEFAULT_APPEARANCE);
    }
 
-   public ExtrudedPolygonGraphics3DInstruction addExtrudedPolygon(List<Point2D> polygonPoints, double height, AppearanceDefinition appearance)
+   public ExtrudedPolygonGraphics3DInstruction addExtrudedPolygon(List<? extends Point2DReadOnly> polygonPoints, double height, AppearanceDefinition appearance)
    {
       ExtrudedPolygonGraphics3DInstruction graphicsInstruction = new ExtrudedPolygonGraphics3DInstruction(polygonPoints, height);
       graphicsInstruction.setAppearance(appearance);
@@ -1232,7 +1269,7 @@ public class Graphics3DObject
       return instruction;
    }
 
-   public void createInertiaEllipsoid(Matrix3D momentOfInertia, Vector3D comOffset, double mass, AppearanceDefinition appearance)
+   public void createInertiaEllipsoid(Matrix3DReadOnly momentOfInertia, Vector3DReadOnly comOffset, double mass, AppearanceDefinition appearance)
    {
       double Ixx = momentOfInertia.getM00();
       double Iyy = momentOfInertia.getM11();

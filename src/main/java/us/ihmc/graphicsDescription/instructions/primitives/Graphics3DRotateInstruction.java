@@ -1,18 +1,18 @@
 package us.ihmc.graphicsDescription.instructions.primitives;
 
-import us.ihmc.euclid.matrix.RotationMatrix;
+import us.ihmc.euclid.matrix.interfaces.RotationMatrixReadOnly;
 import us.ihmc.graphicsDescription.instructions.Graphics3DPrimitiveInstruction;
 
 public class Graphics3DRotateInstruction implements Graphics3DPrimitiveInstruction
 {
-   private RotationMatrix rot;
+   private RotationMatrixReadOnly rot;
 
-   public Graphics3DRotateInstruction(RotationMatrix rot)
+   public Graphics3DRotateInstruction(RotationMatrixReadOnly rot)
    {
       this.rot = rot;
    }
 
-   public RotationMatrix getRotationMatrix()
+   public RotationMatrixReadOnly getRotationMatrix()
    {
       return rot;
    }

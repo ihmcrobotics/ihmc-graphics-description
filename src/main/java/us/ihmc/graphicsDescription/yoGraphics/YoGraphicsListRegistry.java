@@ -16,8 +16,8 @@ public class YoGraphicsListRegistry
    private final ArrayList<ArtifactList> artifactLists = new ArrayList<>();
 
    private Object graphicsConch = null;
-   private final ArrayList<GraphicsUpdatable> graphicsUpdatables = new ArrayList<>();
-   private final ArrayList<GraphicsUpdatable> graphicsUpdatablesToUpdateInAPlaybackListener = new ArrayList<>();
+   private final List<GraphicsUpdatable> graphicsUpdatables = new ArrayList<>();
+   private final List<GraphicsUpdatable> graphicsUpdatablesToUpdateInAPlaybackListener = new ArrayList<>();
 
    private boolean updateInSimulationThread = false;
    private boolean alreadyAddedToSimulationConstructionSet = false;
@@ -41,7 +41,7 @@ public class YoGraphicsListRegistry
 
    private void setGlobalScaleProvider(YoGraphicsList yoGraphicsList, DoubleProvider globalScaleProvider)
    {
-      ArrayList<YoGraphic> yoGraphics = yoGraphicsList.getYoGraphics();
+      List<YoGraphic> yoGraphics = yoGraphicsList.getYoGraphics();
 
       for (YoGraphic yoGraphic : yoGraphics)
       {
@@ -51,7 +51,7 @@ public class YoGraphicsListRegistry
 
    private void checkForRepeatNames(YoGraphicsList yoGraphicsList)
    {
-      ArrayList<YoGraphic> yoGraphics = yoGraphicsList.getYoGraphics();
+      List<YoGraphic> yoGraphics = yoGraphicsList.getYoGraphics();
 
       for (YoGraphic yoGraphic : yoGraphics)
       {
@@ -64,7 +64,7 @@ public class YoGraphicsListRegistry
 
    private void checkForRepeatNames(ArtifactList artifactList)
    {
-      ArrayList<Artifact> artifacts = artifactList.getArtifacts();
+      List<Artifact> artifacts = artifactList.getArtifacts();
 
       for (Artifact artifact : artifacts)
       {
@@ -79,7 +79,7 @@ public class YoGraphicsListRegistry
    {
       for (YoGraphicsList yoGraphicsList : yoGraphicsLists)
       {
-         ArrayList<YoGraphic> yoGraphics = yoGraphicsList.getYoGraphics();
+         List<YoGraphic> yoGraphics = yoGraphicsList.getYoGraphics();
          for (YoGraphic yoGraphic : yoGraphics)
          {
             String name = yoGraphic.getName();
@@ -98,7 +98,7 @@ public class YoGraphicsListRegistry
    {
       for (ArtifactList artifactList : artifactLists)
       {
-         ArrayList<Artifact> artifacts = artifactList.getArtifacts();
+         List<Artifact> artifacts = artifactList.getArtifacts();
          for (Artifact artifact : artifacts)
          {
             String name = artifact.getID();
@@ -130,7 +130,7 @@ public class YoGraphicsListRegistry
          if (list.getLabel().equals(yoGraphicsList.getLabel()))
          {
             // Combine them:
-            ArrayList<YoGraphic> yoGraphics = yoGraphicsList.getYoGraphics();
+            List<YoGraphic> yoGraphics = yoGraphicsList.getYoGraphics();
             list.addAll(yoGraphics);
             return;
          }
@@ -165,12 +165,12 @@ public class YoGraphicsListRegistry
       artifactLists.add(artifactList);
    }
 
-   public void getRegisteredYoGraphicsLists(ArrayList<YoGraphicsList> yoGraphicsLists)
+   public void getRegisteredYoGraphicsLists(List<YoGraphicsList> yoGraphicsLists)
    {
       yoGraphicsLists.addAll(this.yoGraphicsLists);
    }
 
-   public void getRegisteredArtifactLists(ArrayList<ArtifactList> artifactLists)
+   public void getRegisteredArtifactLists(List<ArtifactList> artifactLists)
    {
       artifactLists.addAll(this.artifactLists);
    }
@@ -185,7 +185,7 @@ public class YoGraphicsListRegistry
       graphicsUpdatablesToUpdateInAPlaybackListener.add(graphicsUpdatable);
    }
 
-   public ArrayList<GraphicsUpdatable> getGraphicsUpdatablesToUpdateInAPlaybackListener()
+   public List<GraphicsUpdatable> getGraphicsUpdatablesToUpdateInAPlaybackListener()
    {
       return graphicsUpdatablesToUpdateInAPlaybackListener;
    }
@@ -253,7 +253,7 @@ public class YoGraphicsListRegistry
 
    }
 
-   public void registerYoGraphicsLists(ArrayList<YoGraphicsList> yoGraphicsLists)
+   public void registerYoGraphicsLists(List<YoGraphicsList> yoGraphicsLists)
    {
       for (YoGraphicsList yoGraphicsList : yoGraphicsLists)
       {
@@ -273,13 +273,13 @@ public class YoGraphicsListRegistry
       registerYoGraphicsList(list);
    }
 
-   public void registerYoGraphics(String listName, ArrayList<? extends YoGraphic> yoGraphics)
+   public void registerYoGraphics(String listName, List<? extends YoGraphic> yoGraphics)
    {
       YoGraphicsList list = new YoGraphicsList(listName, yoGraphics);
       registerYoGraphicsList(list);
    }
 
-   public void registerArtifactLists(ArrayList<ArtifactList> artifactLists)
+   public void registerArtifactLists(List<ArtifactList> artifactLists)
    {
       for (ArtifactList artifactList : artifactLists)
       {
@@ -299,7 +299,7 @@ public class YoGraphicsListRegistry
       registerArtifactList(list);
    }
 
-   public void registerArtifacts(String listName, ArrayList<Artifact> artifacts)
+   public void registerArtifacts(String listName, List<Artifact> artifacts)
    {
       ArtifactList list = new ArtifactList(listName, artifacts);
       registerArtifactList(list);
@@ -415,5 +415,4 @@ public class YoGraphicsListRegistry
          updateRootTransform();
       }
    }
-
 }

@@ -2,8 +2,8 @@ package us.ihmc.graphicsDescription.plotting.artifact;
 
 import java.awt.BasicStroke;
 
-import us.ihmc.euclid.geometry.Line2D;
 import us.ihmc.euclid.geometry.LineSegment2D;
+import us.ihmc.euclid.geometry.interfaces.Line2DReadOnly;
 import us.ihmc.euclid.tuple2D.Point2D;
 import us.ihmc.euclid.tuple2D.interfaces.Point2DReadOnly;
 import us.ihmc.euclid.tuple2D.interfaces.Vector2DReadOnly;
@@ -27,7 +27,7 @@ public class LineArtifact extends Artifact
    /**
     * Set to normalized line. Length = 1.
     */
-   public LineArtifact(String id, Line2D line)
+   public LineArtifact(String id, Line2DReadOnly line)
    {
       super(id);
       setLine(line);
@@ -40,7 +40,7 @@ public class LineArtifact extends Artifact
       this.point2.set(point2);
    }
 
-   public void setLine(Line2D line)
+   public void setLine(Line2DReadOnly line)
    {
       line.getTwoPointsOnLine(point1, point2);
    }

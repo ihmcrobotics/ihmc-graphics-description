@@ -3,13 +3,11 @@ package us.ihmc.graphicsDescription;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import us.ihmc.euclid.axisAngle.AxisAngle;
-import us.ihmc.euclid.geometry.ConvexPolygon2D;
-import us.ihmc.euclid.transform.RigidBodyTransform;
-import us.ihmc.euclid.tuple2D.Point2D;
+import us.ihmc.euclid.geometry.interfaces.ConvexPolygon2DReadOnly;
+import us.ihmc.euclid.orientation.interfaces.Orientation3DReadOnly;
+import us.ihmc.euclid.transform.interfaces.RigidBodyTransformReadOnly;
 import us.ihmc.euclid.tuple2D.interfaces.Point2DReadOnly;
 import us.ihmc.euclid.tuple3D.Point3D;
-import us.ihmc.euclid.tuple3D.Point3D32;
 import us.ihmc.euclid.tuple3D.interfaces.Point3DReadOnly;
 import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 
@@ -96,7 +94,7 @@ public class MeshDataBuilder
     * @param orientation axis-angle describing the cone orientation with respect to world. Not
     *                    modified.
     */
-   public void addCone(double height, double radius, Tuple3DReadOnly offset, AxisAngle orientation)
+   public void addCone(double height, double radius, Tuple3DReadOnly offset, Orientation3DReadOnly orientation)
    {
       addMesh(MeshDataGenerator.Cone(height, radius, DEFAULT_RES), offset, orientation);
    }
@@ -171,7 +169,7 @@ public class MeshDataBuilder
     * @param orientation axis-angle describing the cylinder orientation with respect to world. Not
     *                    modified.
     */
-   public void addCylinder(double height, double radius, Tuple3DReadOnly offset, AxisAngle orientation)
+   public void addCylinder(double height, double radius, Tuple3DReadOnly offset, Orientation3DReadOnly orientation)
    {
       addMesh(MeshDataGenerator.Cylinder(radius, height, DEFAULT_RES), offset, orientation);
    }
@@ -283,7 +281,7 @@ public class MeshDataBuilder
     * @param orientation    the axis-angle describing the rotation to apply to the given mesh. Not
     *                       modified.
     */
-   public void addMesh(MeshDataHolder meshDataHolder, Tuple3DReadOnly offset, AxisAngle orientation)
+   public void addMesh(MeshDataHolder meshDataHolder, Tuple3DReadOnly offset, Orientation3DReadOnly orientation)
    {
       addMesh(MeshDataHolder.rotate(meshDataHolder, orientation), offset);
    }
@@ -297,7 +295,7 @@ public class MeshDataBuilder
     * @param close     whether the end of the given array of points should be connected to the
     *                  beginning or not.
     */
-   public void addMultiLine(RigidBodyTransform transform, List<? extends Point2DReadOnly> points, double lineWidth, boolean close)
+   public void addMultiLine(RigidBodyTransformReadOnly transform, List<? extends Point2DReadOnly> points, double lineWidth, boolean close)
    {
       List<Point3D> point3Ds = points.stream().map(Point3D::new).collect(Collectors.toList());
       point3Ds.forEach(transform::transform);
@@ -367,7 +365,7 @@ public class MeshDataBuilder
     * @param transformToWorld to polygon's transform to world. Not modified.
     * @param polygon          the polygon's 2D vertices. Not modified.
     */
-   public void addPolygon(RigidBodyTransform transformToWorld, List<Point2D> polygon)
+   public void addPolygon(RigidBodyTransformReadOnly transformToWorld, List<? extends Point2DReadOnly> polygon)
    {
       addMesh(MeshDataGenerator.Polygon(transformToWorld, polygon));
    }
@@ -379,7 +377,7 @@ public class MeshDataBuilder
     *                         modified.
     * @param polygon          the polygon to render.
     */
-   public void addPolygon(RigidBodyTransform transformToWorld, ConvexPolygon2D polygon)
+   public void addPolygon(RigidBodyTransformReadOnly transformToWorld, ConvexPolygon2DReadOnly polygon)
    {
       addMesh(MeshDataGenerator.Polygon(transformToWorld, polygon));
    }
@@ -422,9 +420,9 @@ public class MeshDataBuilder
     * @param radius  the radius of the spheres. Not modified.
     * @param offsets the coordinates of each sphere. Not modified.
     */
-   public void addSpheres(float radius, Point3D32[] offsets)
+   public void addSpheres(float radius, Point3DReadOnly[] offsets)
    {
-      for (Point3D32 point : offsets)
+      for (Point3DReadOnly point : offsets)
          addSphere(radius, point);
    }
 
