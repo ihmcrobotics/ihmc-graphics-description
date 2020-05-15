@@ -8,13 +8,11 @@ import org.apache.commons.lang3.NotImplementedException;
 
 import us.ihmc.graphicsDescription.color.MutableColor;
 
-
 public class SDFAppearance extends YoAppearanceTransparency
 {
    private final ArrayList<String> urls;
    private final String name;
-   private final ArrayList<String> resourceDirectories = new ArrayList<String>();
-
+   private final ArrayList<String> resourceDirectories = new ArrayList<>();
 
    public SDFAppearance(ArrayList<String> urls, String name, List<String> resourceDirectories)
    {
@@ -33,7 +31,7 @@ public class SDFAppearance extends YoAppearanceTransparency
    {
       return name;
    }
-   
+
    public ArrayList<String> getResourceDirectories()
    {
       return resourceDirectories;
@@ -42,12 +40,12 @@ public class SDFAppearance extends YoAppearanceTransparency
    @Override
    public MutableColor getColor()
    {
-     throw new NotImplementedException("getColor() is not implemented");
+      throw new NotImplementedException("getColor() is not implemented");
    }
 
    @Override
    public Color getAwtColor()
    {
-     throw new NotImplementedException("getAwtColor() is not implemented");
+      throw new NotImplementedException("getAwtColor() is not implemented");
    }
 }

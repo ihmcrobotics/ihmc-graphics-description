@@ -12,18 +12,17 @@ import us.ihmc.yoVariables.providers.DoubleProvider;
 
 public class YoGraphicsListRegistry
 {
-   private final ArrayList<YoGraphicsList> yoGraphicsLists = new ArrayList<YoGraphicsList>();
-   private final ArrayList<ArtifactList> artifactLists = new ArrayList<ArtifactList>();
-   
+   private final ArrayList<YoGraphicsList> yoGraphicsLists = new ArrayList<>();
+   private final ArrayList<ArtifactList> artifactLists = new ArrayList<>();
+
    private Object graphicsConch = null;
-   private final ArrayList<GraphicsUpdatable> graphicsUpdatables = new ArrayList<GraphicsUpdatable>();
-   private final ArrayList<GraphicsUpdatable> graphicsUpdatablesToUpdateInAPlaybackListener = new ArrayList<GraphicsUpdatable>();
-   
+   private final ArrayList<GraphicsUpdatable> graphicsUpdatables = new ArrayList<>();
+   private final ArrayList<GraphicsUpdatable> graphicsUpdatablesToUpdateInAPlaybackListener = new ArrayList<>();
+
    private boolean updateInSimulationThread = false;
    private boolean alreadyAddedToSimulationConstructionSet = false;
    private boolean alreadyAddedToPlotter = false;
-   
-   
+
    private final RigidBodyTransform rootTransform = new RigidBodyTransform();
    private final RigidBodyTransform simulatedRootToWorldTransform = new RigidBodyTransform();
    private final RigidBodyTransform controllerWorldToRootTransform = new RigidBodyTransform();
@@ -177,20 +176,20 @@ public class YoGraphicsListRegistry
    }
 
    //TODO: Merge these graphics updatable things and get it to all work nicely.
-   
+
    public void registerGraphicsUpdatableToUpdateInAPlaybackListener(GraphicsUpdatable graphicsUpdatable)
    {
-      if (this.graphicsUpdatablesToUpdateInAPlaybackListener.contains(graphicsUpdatable))
+      if (graphicsUpdatablesToUpdateInAPlaybackListener.contains(graphicsUpdatable))
          throw new RuntimeException("Already registered graphics updateable!");
-      
-      this.graphicsUpdatablesToUpdateInAPlaybackListener.add(graphicsUpdatable);
+
+      graphicsUpdatablesToUpdateInAPlaybackListener.add(graphicsUpdatable);
    }
-   
+
    public ArrayList<GraphicsUpdatable> getGraphicsUpdatablesToUpdateInAPlaybackListener()
    {
       return graphicsUpdatablesToUpdateInAPlaybackListener;
    }
-   
+
    public void addGraphicsUpdatable(GraphicsUpdatable graphicsUpdatable)
    {
       if (graphicsUpdatables.contains(graphicsUpdatable))
@@ -355,7 +354,7 @@ public class YoGraphicsListRegistry
 
    public void setYoGraphicsUpdatedRemotely(boolean updatedRemotely)
    {
-      this.updateInSimulationThread = updatedRemotely;
+      updateInSimulationThread = updatedRemotely;
    }
 
    public List<YoGraphicsList> getYoGraphicsLists()
@@ -372,29 +371,29 @@ public class YoGraphicsListRegistry
    {
       return alreadyAddedToSimulationConstructionSet;
    }
-   
-   
+
    private void updateRootTransform()
-   {  
+   {
       rootTransform.set(simulatedRootToWorldTransform);
       rootTransform.multiply(controllerWorldToRootTransform);
-      
-      for(int i = 0; i < yoGraphicsLists.size(); i++)
+
+      for (int i = 0; i < yoGraphicsLists.size(); i++)
       {
          yoGraphicsLists.get(i).setRootTransform(rootTransform);
       }
    }
-   
+
    /**
-    * Set the transform from the root joint joint of the robot to the world, as known by the simulation. If both 
-    * this and the controller transform are set, all elements are adjusted for the difference. 
-    * 
+    * Set the transform from the root joint joint of the robot to the world, as known by the
+    * simulation. If both this and the controller transform are set, all elements are adjusted for the
+    * difference.
+    *
     * @param transformToWorld
     */
    public void setSimulationTransformToWorld(RigidBodyTransform transformToWorld)
    {
-      this.simulatedRootToWorldTransform.set(transformToWorld);
-      if(updateInSimulationThread)
+      simulatedRootToWorldTransform.set(transformToWorld);
+      if (updateInSimulationThread)
       {
          // This is cheap enough to do twice. This way, guarantee that data from the same tick is used.
          updateRootTransform();
@@ -402,15 +401,16 @@ public class YoGraphicsListRegistry
    }
 
    /**
-    * Set the transform from the root joint joint of the robot to the world, as known by the controller. If both 
-    * this and the simulation transform are set, all elements are adjusted for the difference.
-    * 
+    * Set the transform from the root joint joint of the robot to the world, as known by the
+    * controller. If both this and the simulation transform are set, all elements are adjusted for the
+    * difference.
+    *
     * @param transformToWorld
     */
    public void setControllerTransformToWorld(RigidBodyTransform transformToWorld)
    {
-      this.controllerWorldToRootTransform.setAndInvert(transformToWorld);
-      if(updateInSimulationThread)
+      controllerWorldToRootTransform.setAndInvert(transformToWorld);
+      if (updateInSimulationThread)
       {
          updateRootTransform();
       }

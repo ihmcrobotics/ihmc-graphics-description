@@ -11,13 +11,12 @@ import us.ihmc.euclid.tuple2D.Point2D;
 import us.ihmc.euclid.tuple2D.Vector2D;
 
 /**
- * This is a public interface for drawing geometry in the Plotter.
- * All geometry is in meters frame.
+ * This is a public interface for drawing geometry in the Plotter. All geometry is in meters frame.
  */
 public class Graphics2DAdapter
 {
    private final Plotter2DAdapter plotter2dAdapter;
-   
+
    public Graphics2DAdapter(Plotter2DAdapter plotter2dAdapter)
    {
       this.plotter2dAdapter = plotter2dAdapter;

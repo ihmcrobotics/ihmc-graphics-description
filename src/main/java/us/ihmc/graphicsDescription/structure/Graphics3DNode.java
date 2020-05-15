@@ -24,8 +24,8 @@ public class Graphics3DNode
    private Graphics3DObject graphicsObject;
    private boolean hasGraphicsObjectChanged = false;
 
-   private final ArrayList<Graphics3DNode> childeren = new ArrayList<Graphics3DNode>();
-   private final ArrayList<SelectedListener> selectedListeners = new ArrayList<SelectedListener>();
+   private final ArrayList<Graphics3DNode> childeren = new ArrayList<>();
+   private final ArrayList<SelectedListener> selectedListeners = new ArrayList<>();
 
    public Graphics3DNode(String name, Graphics3DNodeType nodeType, Graphics3DObject graphicsObject)
    {
@@ -95,7 +95,7 @@ public class Graphics3DNode
    {
       translateTo(new Vector3D(x, y, z));
    }
-   
+
    public void translateTo(Vector3D translation)
    {
       transform.setIdentity();
@@ -106,17 +106,17 @@ public class Graphics3DNode
    {
       switch (axis)
       {
-      case X:
-         transform.appendRollRotation(angle);
-         break;
-      case Y:
-         transform.appendPitchRotation(angle);
-         break;
-      case Z:
-         transform.appendYawRotation(angle);
-         break;
-      default:
-         throw new RuntimeException("Unhandled value of Axis: " + axis);
+         case X:
+            transform.appendRollRotation(angle);
+            break;
+         case Y:
+            transform.appendPitchRotation(angle);
+            break;
+         case Z:
+            transform.appendYawRotation(angle);
+            break;
+         default:
+            throw new RuntimeException("Unhandled value of Axis: " + axis);
       }
    }
 
@@ -183,7 +183,8 @@ public class Graphics3DNode
       return nodeType;
    }
 
-   public void notifySelectedListeners(ModifierKeyInterface modifierKeys, Point3DReadOnly location, Point3DReadOnly cameraPosition, QuaternionReadOnly cameraRotation)
+   public void notifySelectedListeners(ModifierKeyInterface modifierKeys, Point3DReadOnly location, Point3DReadOnly cameraPosition,
+                                       QuaternionReadOnly cameraRotation)
    {
       for (SelectedListener selectedListener : selectedListeners)
       {

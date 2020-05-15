@@ -957,16 +957,19 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
          }
       }
 
+      @Override
       public PolynomialVariables getYoPolynomialX()
       {
          return xPolynomial;
       }
 
+      @Override
       public PolynomialVariables getYoPolynomialY()
       {
          return yPolynomial;
       }
 
+      @Override
       public PolynomialVariables getYoPolynomialZ()
       {
          return zPolynomial;

@@ -12,11 +12,11 @@ import us.ihmc.graphicsDescription.plotting.Plotter2DAdapter;
 public class ShapeArtifact extends Artifact
 {
    private static final double LEGEND_RADIUS = 20.0;
-   
+
    private Point2D pose;
    private double height;
    private double width;
-   
+
    private final Point2D tempCenter = new Point2D();
    private final Vector2D tempRadii = new Vector2D();
 
@@ -48,7 +48,7 @@ public class ShapeArtifact extends Artifact
    {
       if (pose == null)
       {
-         System.out.println("problem...shape with null pose:" + this.getID());
+         System.out.println("problem...shape with null pose:" + getID());
 
          return;
       }
@@ -56,7 +56,7 @@ public class ShapeArtifact extends Artifact
       graphics.setColor(color);
       tempCenter.set(pose.getX(), pose.getY());
       tempRadii.set(width / 2.0, height / 2.0);
-      
+
       if (getType().equals("fillcircle"))
       {
          graphics.drawOvalFilled(tempCenter, tempRadii);
@@ -132,8 +132,8 @@ public class ShapeArtifact extends Artifact
 
    public ShapeArtifact getCopy()
    {
-      ShapeArtifact shapeCopy = new ShapeArtifact(this.getID(), this.getType(), height, width, this.getPose());
-      shapeCopy.setColor(this.getColor());
+      ShapeArtifact shapeCopy = new ShapeArtifact(getID(), getType(), height, width, getPose());
+      shapeCopy.setColor(getColor());
 
       return shapeCopy;
    }

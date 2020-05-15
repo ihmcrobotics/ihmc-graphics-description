@@ -273,7 +273,12 @@ public class YoGraphicVector extends YoGraphic implements RemoteYoGraphic, Graph
    @Override
    public YoGraphicVector duplicate(YoVariableRegistry newRegistry)
    {
-      return new YoGraphicVector(getName(), base.duplicate(newRegistry), vector.duplicate(newRegistry), scaleFactor, appearance, drawArrowhead,
+      return new YoGraphicVector(getName(),
+                                 base.duplicate(newRegistry),
+                                 vector.duplicate(newRegistry),
+                                 scaleFactor,
+                                 appearance,
+                                 drawArrowhead,
                                  lineRadiusWhenOneMeterLong);
    }
 }

@@ -3,8 +3,9 @@ package us.ihmc.graphicsDescription.plotting;
 import java.awt.Color;
 
 /**
- * Future improvements should be influenced by http://www.kennethmoreland.com/color-maps/ColorMapsExpanded.pdf
- * 
+ * Future improvements should be influenced by
+ * http://www.kennethmoreland.com/color-maps/ColorMapsExpanded.pdf
+ *
  * @author Duncan Calvert (dcalvert@ihmc.us)
  */
 public class PlotterColors
@@ -16,12 +17,12 @@ public class PlotterColors
    private Color gridEveryFiveColor;
    private Color gridEveryTenColor;
    private Color selectionColor;
-   
+
    private PlotterColors()
    {
       // Disallow public construction
    }
-   
+
    public static PlotterColors simulationConstructionSetStyle()
    {
       PlotterColors simulationConstructionSetStyle = new PlotterColors();
@@ -34,7 +35,7 @@ public class PlotterColors
       simulationConstructionSetStyle.setSelectionColor(Color.RED);
       return simulationConstructionSetStyle;
    }
-   
+
    public static PlotterColors javaFXStyle()
    {
       PlotterColors simulationConstructionSetStyle = new PlotterColors();

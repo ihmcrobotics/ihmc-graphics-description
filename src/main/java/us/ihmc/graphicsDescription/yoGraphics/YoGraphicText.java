@@ -84,7 +84,12 @@ public class YoGraphicText extends YoGraphicAbstractShape
    @Override
    public YoGraphic duplicate(YoVariableRegistry newRegistry)
    {
-      return new YoGraphicText(getName(), text, yoFramePoint.duplicate(newRegistry), yoFrameYawPitchRoll.duplicate(newRegistry), scale, backgroundColor,
+      return new YoGraphicText(getName(),
+                               text,
+                               yoFramePoint.duplicate(newRegistry),
+                               yoFrameYawPitchRoll.duplicate(newRegistry),
+                               scale,
+                               backgroundColor,
                                textAppearance);
    }
 }

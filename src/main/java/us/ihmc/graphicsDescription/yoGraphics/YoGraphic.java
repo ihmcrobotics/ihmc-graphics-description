@@ -63,7 +63,7 @@ public abstract class YoGraphic
    {
       return name;
    }
-   
+
    public void setRootTransform(RigidBodyTransform transform)
    {
       rootTransform.set(transform);
@@ -97,11 +97,10 @@ public abstract class YoGraphic
    }
 
    /**
-    * Overwrite the update method if an object needs special updating. But it is up to each user to update their objects. 
-    * The internals only update the position and orientation transform...
-    * 
-    * This is generally use to update YoGraphics based on non-yovariablized data (referenceframes etc). Not doing this
-    * will break rewind-playback.
+    * Overwrite the update method if an object needs special updating. But it is up to each user to
+    * update their objects. The internals only update the position and orientation transform... This is
+    * generally use to update YoGraphics based on non-yovariablized data (referenceframes etc). Not
+    * doing this will break rewind-playback.
     */
    public void update()
    {

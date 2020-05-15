@@ -5,9 +5,9 @@ import java.awt.event.InputEvent;
 public enum MouseButton
 {
    LEFT, RIGHT, MIDDLE, LEFTRIGHT;
-   
+
    public static final MouseButton[] values = values();
-   
+
    public int getInputEventMask()
    {
       if (equals(LEFT))
@@ -19,7 +19,7 @@ public enum MouseButton
       else
          return -1;
    }
-   
+
    public String toShortString()
    {
       if (equals(LEFT))

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import us.ihmc.euclid.transform.RigidBodyTransform;
 
-
 public class YoGraphicsList
 {
    private String label;
@@ -14,7 +13,7 @@ public class YoGraphicsList
    {
       checkLabelNonEmpty(label);
       this.label = label;
-      this.yoGraphics = new ArrayList<YoGraphic>(yoGraphics);
+      this.yoGraphics = new ArrayList<>(yoGraphics);
    }
 
    public YoGraphicsList(String label, YoGraphic[] yoGraphicsArray)
@@ -22,7 +21,7 @@ public class YoGraphicsList
       checkLabelNonEmpty(label);
       this.label = label;
 
-      ArrayList<YoGraphic> yoGraphics = new ArrayList<YoGraphic>(yoGraphicsArray.length);
+      ArrayList<YoGraphic> yoGraphics = new ArrayList<>(yoGraphicsArray.length);
 
       for (YoGraphic yoGraphic : yoGraphicsArray)
       {
@@ -31,10 +30,10 @@ public class YoGraphicsList
 
       this.yoGraphics = yoGraphics;
    }
-   
+
    public void setRootTransform(RigidBodyTransform rootTransform)
    {
-      for(int i = 0; i < yoGraphics.size(); i++)
+      for (int i = 0; i < yoGraphics.size(); i++)
       {
          yoGraphics.get(i).setRootTransform(rootTransform);
       }
@@ -45,7 +44,7 @@ public class YoGraphicsList
       checkLabelNonEmpty(label);
       this.label = label;
 
-      ArrayList<YoGraphic> yoGraphics = new ArrayList<YoGraphic>(1);
+      ArrayList<YoGraphic> yoGraphics = new ArrayList<>(1);
 
       yoGraphics.add(yoGraphic);
 
@@ -56,7 +55,7 @@ public class YoGraphicsList
    {
       checkLabelNonEmpty(label);
       this.label = label;
-      yoGraphics = new ArrayList<YoGraphic>();
+      yoGraphics = new ArrayList<>();
    }
 
    public String getLabel()

@@ -45,6 +45,6 @@ public class YoGraphicReferenceFrame extends YoGraphicCoordinateSystem
    public void update()
    {
       if (referenceFrame != null)
-         this.setToReferenceFrame(referenceFrame);
+         setToReferenceFrame(referenceFrame);
    }
 }

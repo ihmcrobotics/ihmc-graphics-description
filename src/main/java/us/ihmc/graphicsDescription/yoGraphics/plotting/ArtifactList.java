@@ -21,7 +21,7 @@ public class ArtifactList
    {
       this.label = label;
 
-      ArrayList<Artifact> artifacts = new ArrayList<Artifact>(artifactArray.length);
+      ArrayList<Artifact> artifacts = new ArrayList<>(artifactArray.length);
 
       for (Artifact artifact : artifactArray)
       {
@@ -37,7 +37,7 @@ public class ArtifactList
       this.label = label;
       updateLabel(artifact);
 
-      ArrayList<Artifact> artifacts = new ArrayList<Artifact>(1);
+      ArrayList<Artifact> artifacts = new ArrayList<>(1);
 
       artifacts.add(artifact);
 
@@ -47,7 +47,7 @@ public class ArtifactList
    public ArtifactList(String label)
    {
       this.label = label;
-      this.artifacts = new ArrayList<Artifact>();
+      artifacts = new ArrayList<>();
    }
 
    private void updateLabels(ArrayList<Artifact> artifacts)
@@ -76,7 +76,7 @@ public class ArtifactList
    public void add(Artifact artifact)
    {
       updateLabel(artifact);
-      this.artifacts.add(artifact);
+      artifacts.add(artifact);
    }
 
    public void addAll(ArrayList<Artifact> artifacts)

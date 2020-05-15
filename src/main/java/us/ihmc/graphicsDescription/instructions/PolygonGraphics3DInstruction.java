@@ -1,7 +1,8 @@
 package us.ihmc.graphicsDescription.instructions;
 
-import us.ihmc.euclid.tuple3D.Point3D;
 import java.util.List;
+
+import us.ihmc.euclid.tuple3D.Point3D;
 
 public class PolygonGraphics3DInstruction extends PrimitiveGraphics3DInstruction
 {

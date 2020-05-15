@@ -12,9 +12,10 @@ import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 import us.ihmc.euclid.tuple4D.interfaces.QuaternionReadOnly;
 
 /**
- * This class provides an immutable data structure for 3D graphic mesh that is independent from the graphics engine to be used.
- * It contains all the data necessary to create a mesh.
- * Using the corresponding mesh data interpreter, a {@link MeshDataHolder} can be translated into a specific mesh data type usable by a specific graphics engine such as JME or JavaFX.
+ * This class provides an immutable data structure for 3D graphic mesh that is independent from the
+ * graphics engine to be used. It contains all the data necessary to create a mesh. Using the
+ * corresponding mesh data interpreter, a {@link MeshDataHolder} can be translated into a specific
+ * mesh data type usable by a specific graphics engine such as JME or JavaFX.
  */
 public class MeshDataHolder implements Transformable
 {
@@ -26,10 +27,13 @@ public class MeshDataHolder implements Transformable
 
    /**
     * Default construct to create a mesh data.
-    * @param vertices the 3D coordinates of the mesh vertices.
-    * @param texturePoints the 2D texture coordinates to be used for each vertex of the mesh.
-    * @param triangleIndices a list of triplet indices. Each triplet describes the three indices used to pick the three vertex coordinates, texture coordinates, and normal coordinates to render a 3D triangle.
-    * @param vertexNormals the 3D normal coordinates to be used for each vertex of the mesh.
+    * 
+    * @param vertices        the 3D coordinates of the mesh vertices.
+    * @param texturePoints   the 2D texture coordinates to be used for each vertex of the mesh.
+    * @param triangleIndices a list of triplet indices. Each triplet describes the three indices used
+    *                        to pick the three vertex coordinates, texture coordinates, and normal
+    *                        coordinates to render a 3D triangle.
+    * @param vertexNormals   the 3D normal coordinates to be used for each vertex of the mesh.
     */
    public MeshDataHolder(Point3D32[] vertices, TexCoord2f[] texturePoints, int[] triangleIndices, Vector3D32[] vertexNormals)
    {
@@ -76,7 +80,9 @@ public class MeshDataHolder implements Transformable
    }
 
    /**
-    * @return a list of triplet indices. Each triplet describes the three indices used to pick the three vertex coordinates, texture coordinates, and normal coordinates to render a 3D triangle.
+    * @return a list of triplet indices. Each triplet describes the three indices used to pick the
+    *         three vertex coordinates, texture coordinates, and normal coordinates to render a 3D
+    *         triangle.
     */
    public int[] getTriangleIndices()
    {
@@ -123,7 +129,8 @@ public class MeshDataHolder implements Transformable
 
    /**
     * Utility method to rotate a given mesh using a given rotation matrix.
-    * @param input the mesh to rotate. Not modified.
+    * 
+    * @param input  the mesh to rotate. Not modified.
     * @param matrix the rotation to apply to the mesh. Not Modified.
     * @return the rotated mesh.
     */
@@ -149,7 +156,8 @@ public class MeshDataHolder implements Transformable
 
    /**
     * Utility method to rotate a given mesh using a given rotation matrix.
-    * @param input the mesh to rotate. Not modified.
+    * 
+    * @param input     the mesh to rotate. Not modified.
     * @param axisAngle the axis-angle describing the rotation to apply to the mesh. Not Modified.
     * @return the rotated mesh.
     */
@@ -160,7 +168,8 @@ public class MeshDataHolder implements Transformable
 
    /**
     * Utility method to rotate a given mesh using a given rotation matrix.
-    * @param input the mesh to rotate. Not modified.
+    * 
+    * @param input      the mesh to rotate. Not modified.
     * @param quaternion the quaternion describing the rotation to apply to the mesh. Not Modified.
     * @return the rotated mesh.
     */
@@ -171,7 +180,8 @@ public class MeshDataHolder implements Transformable
 
    /**
     * Utility method to translate a given mesh using a given translation.
-    * @param input the mesh to translate. Not modified.
+    * 
+    * @param input   the mesh to translate. Not modified.
     * @param offsetX translation along the x-axis to apply to the mesh.
     * @param offsetY translation along the y-axis to apply to the mesh.
     * @param offsetZ translation along the z-axis to apply to the mesh.
@@ -195,7 +205,8 @@ public class MeshDataHolder implements Transformable
 
    /**
     * Utility method to translate a given mesh using a given translation.
-    * @param input the mesh to translate. Not modified.
+    * 
+    * @param input  the mesh to translate. Not modified.
     * @param offset translation to apply to the mesh. Not modified.
     * @return the translated mesh.
     */
@@ -205,11 +216,14 @@ public class MeshDataHolder implements Transformable
    }
 
    /**
-    * Utility method to combine two meshes into one by concatenation: (pseudo-code) {@code result = [mesh1, mesh2]}.
-    * @param meshData1 the first mesh to combine. Not modified.
-    * @param meshData2 the second mesh to combine. Not modified.
-    * @param updateMeshData2TrianglesIndices whether the triangle indices of the second mesh should be updated during the operation.
-    *        Highly recommended, set it to false only if you what you are doing.
+    * Utility method to combine two meshes into one by concatenation: (pseudo-code)
+    * {@code result = [mesh1, mesh2]}.
+    * 
+    * @param meshData1                       the first mesh to combine. Not modified.
+    * @param meshData2                       the second mesh to combine. Not modified.
+    * @param updateMeshData2TrianglesIndices whether the triangle indices of the second mesh should be
+    *                                        updated during the operation. Highly recommended, set it
+    *                                        to false only if you what you are doing.
     * @return a new mesh resulting from the combination.
     */
    public static MeshDataHolder combine(MeshDataHolder meshData1, MeshDataHolder meshData2, boolean updateMeshData2TrianglesIndices)

@@ -13,12 +13,12 @@ import us.ihmc.graphicsDescription.plotting.Plotter2DAdapter;
 public class LineArtifact extends Artifact
 {
    private static final BasicStroke STROKE = new BasicStroke(1.0f);
-   
+
    private final Point2D point1 = new Point2D();
    private final Point2D point2 = new Point2D(0.01, 0.01);
 
    private final LineSegment2D tempLineSegment = new LineSegment2D();
-   
+
    public LineArtifact(String id)
    {
       super(id);
@@ -65,7 +65,7 @@ public class LineArtifact extends Artifact
    {
       graphics.setColor(color);
       graphics.setStroke(STROKE);
-      
+
       if (point1.equals(point2))
       {
          graphics.drawPoint(point1);

@@ -1,10 +1,9 @@
 package us.ihmc.graphicsDescription;
 
-
 public enum ModelFileType
 {
    COLLADA, _3DS, _STL, _VRML, _OBJ;
-   
+
    public static ModelFileType getModelTypeFromId(String resourceId)
    {
       String ext = resourceId.substring(resourceId.length() - 3);

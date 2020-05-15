@@ -15,12 +15,12 @@ public class CircleArtifact extends Artifact
 {
    private static final BasicStroke STROKE = new BasicStroke(1.0f);
    private static final double LEGEND_RADIUS = 20.0;
-   
+
    private double x;
    private double y;
    private double diameter;
    private boolean fill = true;
-   
+
    private final Point2D tempPoint = new Point2D();
    private final Vector2D tempRadii = new Vector2D();
 
@@ -37,7 +37,7 @@ public class CircleArtifact extends Artifact
    public CircleArtifact(String string, double x2, double y2, double d, boolean b, Color color)
    {
       this(string, x2, y2, d, b);
-      this.setColor(color);
+      setColor(color);
    }
 
    public void setPosition(double x, double y)
@@ -99,7 +99,6 @@ public class CircleArtifact extends Artifact
       }
    }
 
-
    public void save(PrintWriter printWriter)
    {
       printWriter.println(x + " " + y + " " + diameter + " " + fill + " " + id);
@@ -131,12 +130,12 @@ public class CircleArtifact extends Artifact
 
    public CircleArtifact getCopy()
    {
-      CircleArtifact cirlceCopy = new CircleArtifact(this.getID(), x, y, diameter, fill);
-      cirlceCopy.setColor(this.getColor());
+      CircleArtifact cirlceCopy = new CircleArtifact(getID(), x, y, diameter, fill);
+      cirlceCopy.setColor(getColor());
 
       return cirlceCopy;
    }
-   
+
    @Override
    public void drawHistory(Graphics2DAdapter graphics)
    {

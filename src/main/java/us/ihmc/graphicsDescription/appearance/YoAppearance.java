@@ -6,7 +6,6 @@ import java.util.Random;
 
 import us.ihmc.graphicsDescription.color.MutableColor;
 
-
 //http://www.wdvl.com/Graphics/Colour/  has some of the color names I'm using...
 // http://cloford.com/resources/colours/500col.htm
 
@@ -40,12 +39,12 @@ public class YoAppearance
 
    public static AppearanceDefinition[] getStandardRoyGBivRainbow()
    {
-      AppearanceDefinition[] rainbow = new AppearanceDefinition[] { YoAppearance.Red(), YoAppearance.OrangeRed(), YoAppearance.Yellow(),
-            YoAppearance.Green(), YoAppearance.Blue(), YoAppearance.Indigo(), YoAppearance.Purple()};
-      
+      AppearanceDefinition[] rainbow = new AppearanceDefinition[] {YoAppearance.Red(), YoAppearance.OrangeRed(), YoAppearance.Yellow(), YoAppearance.Green(),
+            YoAppearance.Blue(), YoAppearance.Indigo(), YoAppearance.Purple()};
+
       return rainbow;
    }
-   
+
    public static AppearanceDefinition PlaneMaterial()
    {
       YoAppearanceMaterial mat = new YoAppearanceMaterial();
@@ -89,7 +88,7 @@ public class YoAppearance
 
       return mat;
    }
-   
+
    public static AppearanceDefinition RGBColor(double red, double green, double blue, double transparency)
    {
       return new YoAppearanceRGBColor(red, green, blue, transparency);
@@ -107,13 +106,13 @@ public class YoAppearance
 
    public static AppearanceDefinition RGBColorFrom8BitInts(int red, int green, int blue)
    {
-      return RGBColor(((red)) / 255.0, ((green)) / 255.0, ((blue)) / 255.0);
+      return RGBColor(red / 255.0, green / 255.0, blue / 255.0);
    }
 
    public static AppearanceDefinition RGBColorFromHex(int hex)
    {
-      int red = (hex >> 16) & 0xff;
-      int green = (hex >> 8) & 0xff;
+      int red = hex >> 16 & 0xff;
+      int green = hex >> 8 & 0xff;
       int blue = hex & 0xff;
 
       return RGBColorFrom8BitInts(red, green, blue);
@@ -878,9 +877,6 @@ public class YoAppearance
       return RGBColorFromHex(0x9ACD32);
    }
 
-
-
-
    public static AppearanceDefinition Transparent()
    {
       return new YoAppearanceTransparent();
@@ -917,15 +913,11 @@ public class YoAppearance
    // }
 
    /*
-    * public static YoAppearanceDefinition Transparent() {
-    * YoAppearanceDefinition ret = new YoAppearanceDefinition(); Material mat =
-    * new Material(); mat.setAmbientColor(0.0f,0.0f,0.0f);
-    *
-    * TransparencyAttributes ta = new TransparencyAttributes();
-    * ta.setTransparency(0.5f);
-    * ta.setTransparencyMode(TransparencyAttributes.BLENDED);
-    *
-    * ret.setTransparencyAttributes(ta); ret.setMaterial(mat); return ret; }
+    * public static YoAppearanceDefinition Transparent() { YoAppearanceDefinition ret = new
+    * YoAppearanceDefinition(); Material mat = new Material(); mat.setAmbientColor(0.0f,0.0f,0.0f);
+    * TransparencyAttributes ta = new TransparencyAttributes(); ta.setTransparency(0.5f);
+    * ta.setTransparencyMode(TransparencyAttributes.BLENDED); ret.setTransparencyAttributes(ta);
+    * ret.setMaterial(mat); return ret; }
     */
 
    // public YoYoAppearanceDefinition()

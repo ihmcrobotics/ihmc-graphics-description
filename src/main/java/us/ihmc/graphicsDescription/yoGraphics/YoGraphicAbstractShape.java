@@ -39,7 +39,7 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
       super(name);
       framePoint.checkReferenceFrameMatch(worldFrame);
 
-      if ((frameYawPitchRoll == null && frameQuaternion == null) || (frameYawPitchRoll != null && frameQuaternion != null))
+      if (frameYawPitchRoll == null && frameQuaternion == null || frameYawPitchRoll != null && frameQuaternion != null)
          throw new IllegalArgumentException("Can only describe the orientation of this shape with either yaw-pitch-roll or quaternion.");
 
       if (frameYawPitchRoll != null)
@@ -55,14 +55,14 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
    }
 
    /**
-    * This constructor for creating a remote {@code YoGraphic} from deserialized
-    * {@code YoVariable}s. The expected number of {@code YoVariable}s is either 6 or 7 depending on
-    * whether the original {@code YoGraphic} was created using {@code YoFrameYawPitchRoll} or
-    * {@code YoFrameQuaternion} respectively.
-    * 
-    * @param name the name of the {@code YoGraphic}.
+    * This constructor for creating a remote {@code YoGraphic} from deserialized {@code YoVariable}s.
+    * The expected number of {@code YoVariable}s is either 6 or 7 depending on whether the original
+    * {@code YoGraphic} was created using {@code YoFrameYawPitchRoll} or {@code YoFrameQuaternion}
+    * respectively.
+    *
+    * @param name        the name of the {@code YoGraphic}.
     * @param yoVariables the deserialized variables.
-    * @param scale the scale to apply on the graphics.
+    * @param scale       the scale to apply on the graphics.
     */
    protected YoGraphicAbstractShape(String name, YoVariable<?>[] yoVariables, double scale)
    {

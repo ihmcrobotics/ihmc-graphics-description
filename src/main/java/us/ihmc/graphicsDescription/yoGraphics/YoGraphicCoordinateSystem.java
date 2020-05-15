@@ -98,7 +98,7 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
       super(name);
 
       worldFrame.checkReferenceFrameMatch(position);
-      if ((yawPitchRoll == null && quaternion == null) || (yawPitchRoll != null && quaternion != null))
+      if (yawPitchRoll == null && quaternion == null || yawPitchRoll != null && quaternion != null)
          throw new IllegalArgumentException("Can only describe the orientation of this shape with either yaw-pitch-roll or quaternion.");
 
       if (yawPitchRoll != null)
@@ -120,14 +120,14 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
    }
 
    /**
-    * This constructor for creating a remote {@code YoGraphic} from deserialized
-    * {@code YoVariable}s. The expected number of {@code YoVariable}s is either 6 or 7 depending on
-    * whether the original {@code YoGraphic} was created using {@code YoFrameYawPitchRoll} or
-    * {@code YoFrameQuaternion} respectively.
-    * 
-    * @param name the name of the {@code YoGraphic}.
+    * This constructor for creating a remote {@code YoGraphic} from deserialized {@code YoVariable}s.
+    * The expected number of {@code YoVariable}s is either 6 or 7 depending on whether the original
+    * {@code YoGraphic} was created using {@code YoFrameYawPitchRoll} or {@code YoFrameQuaternion}
+    * respectively.
+    *
+    * @param name        the name of the {@code YoGraphic}.
     * @param yoVariables the deserialized variables.
-    * @param scale the scale to apply on the graphics.
+    * @param scale       the scale to apply on the graphics.
     */
    protected YoGraphicCoordinateSystem(String name, YoVariable<?>[] yoVariables, double[] constants)
    {

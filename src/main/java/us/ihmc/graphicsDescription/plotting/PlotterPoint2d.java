@@ -33,7 +33,7 @@ public class PlotterPoint2d extends FramePoint2D
    {
       super(referenceFrame);
    }
-   
+
    public void changeFrame(MetersReferenceFrame metersReferenceFrame)
    {
       if (getReferenceFrame() instanceof PixelsReferenceFrame)
@@ -41,7 +41,7 @@ public class PlotterPoint2d extends FramePoint2D
          changeFrameAndProjectToXYPlane(ReferenceFrame.getWorldFrame());
          scale(metersReferenceFrame.getConversionToMeters().getX(), metersReferenceFrame.getConversionToMeters().getY());
       }
-      
+
       super.changeFrameAndProjectToXYPlane(metersReferenceFrame);
    }
 
@@ -52,7 +52,7 @@ public class PlotterPoint2d extends FramePoint2D
          changeFrameAndProjectToXYPlane(ReferenceFrame.getWorldFrame());
          scale(pixelsReferenceFrame.getConversionToPixels().getX(), pixelsReferenceFrame.getConversionToPixels().getY());
       }
-      
+
       super.changeFrameAndProjectToXYPlane(pixelsReferenceFrame);
    }
 }

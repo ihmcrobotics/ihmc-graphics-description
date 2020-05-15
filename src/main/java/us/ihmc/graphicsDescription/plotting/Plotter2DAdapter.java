@@ -146,7 +146,10 @@ public class Plotter2DAdapter
       radiiFrameVector.changeFrame(screenFrame);
       radiiFrameVector.set(Math.abs(radiiFrameVector.getX()), Math.abs(radiiFrameVector.getY()));
       centerFramePoint.sub(radiiFrameVector);
-      drawRectangle(pixelate(centerFramePoint.getX()), pixelate(centerFramePoint.getY()), pixelate(2.0 * radiiFrameVector.getX()), pixelate(2.0 * radiiFrameVector.getY()));
+      drawRectangle(pixelate(centerFramePoint.getX()),
+                    pixelate(centerFramePoint.getY()),
+                    pixelate(2.0 * radiiFrameVector.getX()),
+                    pixelate(2.0 * radiiFrameVector.getY()));
    }
 
    public void drawRectangle(PlotterReferenceFrame frame, double x, double y, double width, double height)
@@ -170,7 +173,10 @@ public class Plotter2DAdapter
       radiiFrameVector.changeFrame(screenFrame);
       radiiFrameVector.set(Math.abs(radiiFrameVector.getX()), Math.abs(radiiFrameVector.getY()));
       centerFramePoint.sub(radiiFrameVector);
-      drawRectangleFilled(pixelate(centerFramePoint.getX()), pixelate(centerFramePoint.getY()), pixelate(2.0 * radiiFrameVector.getX()), pixelate(2.0 * radiiFrameVector.getY()));
+      drawRectangleFilled(pixelate(centerFramePoint.getX()),
+                          pixelate(centerFramePoint.getY()),
+                          pixelate(2.0 * radiiFrameVector.getX()),
+                          pixelate(2.0 * radiiFrameVector.getY()));
    }
 
    public void drawOval(PlotterReferenceFrame frame, Point2D center, Vector2D radii)
@@ -183,7 +189,10 @@ public class Plotter2DAdapter
       radiiFrameVector.changeFrame(screenFrame);
       radiiFrameVector.set(Math.abs(radiiFrameVector.getX()), Math.abs(radiiFrameVector.getY()));
       centerFramePoint.sub(radiiFrameVector);
-      drawOval(pixelate(centerFramePoint.getX()), pixelate(centerFramePoint.getY()), pixelate(2.0 * radiiFrameVector.getX()), pixelate(2.0 * radiiFrameVector.getY()));
+      drawOval(pixelate(centerFramePoint.getX()),
+               pixelate(centerFramePoint.getY()),
+               pixelate(2.0 * radiiFrameVector.getX()),
+               pixelate(2.0 * radiiFrameVector.getY()));
    }
 
    public void drawOvalFilled(PlotterReferenceFrame frame, Point2D center, Vector2D radii)
@@ -196,7 +205,10 @@ public class Plotter2DAdapter
       radiiFrameVector.changeFrame(screenFrame);
       radiiFrameVector.set(Math.abs(radiiFrameVector.getX()), Math.abs(radiiFrameVector.getY()));
       centerFramePoint.sub(radiiFrameVector);
-      drawOvalFilled(pixelate(centerFramePoint.getX()), pixelate(centerFramePoint.getY()), pixelate(2.0 * radiiFrameVector.getX()), pixelate(2.0 * radiiFrameVector.getY()));
+      drawOvalFilled(pixelate(centerFramePoint.getX()),
+                     pixelate(centerFramePoint.getY()),
+                     pixelate(2.0 * radiiFrameVector.getX()),
+                     pixelate(2.0 * radiiFrameVector.getY()));
    }
 
    public void drawLineSegment(PlotterReferenceFrame frame, LineSegment2D lineSegment)
@@ -247,7 +259,10 @@ public class Plotter2DAdapter
       farPointNegative.setIncludingFrame(start);
       farPointPositive.add(far);
       farPointNegative.sub(far);
-      drawLineSegment(pixelate(farPointNegative.getX()), pixelate(farPointNegative.getY()), pixelate(farPointPositive.getX()), pixelate(farPointPositive.getY()));
+      drawLineSegment(pixelate(farPointNegative.getX()),
+                      pixelate(farPointNegative.getY()),
+                      pixelate(farPointPositive.getX()),
+                      pixelate(farPointPositive.getY()));
    }
 
    public void drawPolygonFilled(PlotterReferenceFrame frame, ConvexPolygon2D convexPolygon2d)
@@ -292,7 +307,8 @@ public class Plotter2DAdapter
       {
          if (i == pointBin.length)
          {
-            LogTools.warn("You are attempting to draw a polygon with too many points: " + convexPolygon2d.getNumberOfVertices() + " points but graphics only allows " + pointBin.length);
+            LogTools.warn("You are attempting to draw a polygon with too many points: " + convexPolygon2d.getNumberOfVertices()
+                  + " points but graphics only allows " + pointBin.length);
             return false;
          }
          pointBin[i].setIncludingFrame(frame, convexPolygon2d.getVertex(i));
@@ -311,21 +327,23 @@ public class Plotter2DAdapter
       drawString(string, pixelate(startPoint.getX()), pixelate(startPoint.getY()));
    }
 
-   public void drawImage(Image image, PlotterPoint2d firstCornerDestination, PlotterPoint2d secondCornerDesination,
-                                      PlotterPoint2d firstCornerSource, PlotterPoint2d secondCornerSource, ImageObserver observer)
+   public void drawImage(Image image, PlotterPoint2d firstCornerDestination, PlotterPoint2d secondCornerDesination, PlotterPoint2d firstCornerSource,
+                         PlotterPoint2d secondCornerSource, ImageObserver observer)
    {
       firstCornerDestination.changeFrame(screenFrame);
       secondCornerDesination.changeFrame(screenFrame);
       firstCornerSource.changeFrame(screenFrame);
       secondCornerSource.changeFrame(screenFrame);
-      drawImage(image, pixelate(firstCornerDestination.getX()),
-                       pixelate(firstCornerDestination.getY()),
-                       pixelate(secondCornerDesination.getX()),
-                       pixelate(secondCornerDesination.getY()),
-                       pixelate(firstCornerSource.getX()),
-                       pixelate(firstCornerSource.getY()),
-                       pixelate(secondCornerSource.getX()),
-                       pixelate(secondCornerSource.getY()), observer);
+      drawImage(image,
+                pixelate(firstCornerDestination.getX()),
+                pixelate(firstCornerDestination.getY()),
+                pixelate(secondCornerDesination.getX()),
+                pixelate(secondCornerDesination.getY()),
+                pixelate(firstCornerSource.getX()),
+                pixelate(firstCornerSource.getY()),
+                pixelate(secondCornerSource.getX()),
+                pixelate(secondCornerSource.getY()),
+                observer);
    }
 
    // Swing Graphics wrapper

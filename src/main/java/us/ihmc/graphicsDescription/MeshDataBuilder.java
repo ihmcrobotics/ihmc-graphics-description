@@ -13,10 +13,12 @@ import us.ihmc.euclid.tuple3D.Point3D32;
 import us.ihmc.euclid.tuple3D.interfaces.Point3DReadOnly;
 import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 
-
 /**
- * This class provides a simple way of combining several shapes/meshes into one mesh that can be then used in JavaFX or JME using the corresponding mesh data interpreter.
- * It can be used as a one-time tool or can be recycled by using the method {@link #clear()} every time a new mesh is to be created.
+ * This class provides a simple way of combining several shapes/meshes into one mesh that can be
+ * then used in JavaFX or JME using the corresponding mesh data interpreter. It can be used as a
+ * one-time tool or can be recycled by using the method {@link #clear()} every time a new mesh is to
+ * be created.
+ * 
  * @author Sylvain Bertrand
  */
 public class MeshDataBuilder
@@ -35,9 +37,10 @@ public class MeshDataBuilder
 
    /**
     * Add a box to this builder.
-    * @param lx box length along the x-axis.
-    * @param ly box length along the y-axis.
-    * @param lz box length along the z-axis.
+    * 
+    * @param lx     box length along the x-axis.
+    * @param ly     box length along the y-axis.
+    * @param lz     box length along the z-axis.
     * @param offset coordinate of the box center. Not modified.
     */
    public void addBox(double lx, double ly, double lz, Tuple3DReadOnly offset)
@@ -47,6 +50,7 @@ public class MeshDataBuilder
 
    /**
     * Add a box centered at (0, 0, 0) to this builder.
+    * 
     * @param lx box length along the x-axis.
     * @param ly box length along the y-axis.
     * @param lz box length along the z-axis.
@@ -58,9 +62,10 @@ public class MeshDataBuilder
 
    /**
     * Add a box to this builder.
-    * @param lx box length along the x-axis.
-    * @param ly box length along the y-axis.
-    * @param lz box length along the z-axis.
+    * 
+    * @param lx     box length along the x-axis.
+    * @param ly     box length along the y-axis.
+    * @param lz     box length along the z-axis.
     * @param offset coordinate of the box center. Not modified.
     */
    public void addBox(float lx, float ly, float lz, Tuple3DReadOnly offset)
@@ -69,7 +74,9 @@ public class MeshDataBuilder
    }
 
    /**
-    * Add a cone to this builder. Its axis is aligned with the z-axis and its top is the vertex with the highest z value.
+    * Add a cone to this builder. Its axis is aligned with the z-axis and its top is the vertex with
+    * the highest z value.
+    * 
     * @param height height along z of the cone.
     * @param radius radius of the cone's base.
     * @param offset coordinate of the cone's base center. Not modified.
@@ -80,11 +87,14 @@ public class MeshDataBuilder
    }
 
    /**
-    * Add a cone to this builder. Its axis is aligned with the z-axis and its top is the vertex with the highest z value in its local coordinate system.
-    * @param height height along z of the cone.
-    * @param radius radius of the cone's base.
-    * @param offset coordinate of the cone's base center. Not modified.
-    * @param orientation axis-angle describing the cone orientation with respect to world. Not modified.
+    * Add a cone to this builder. Its axis is aligned with the z-axis and its top is the vertex with
+    * the highest z value in its local coordinate system.
+    * 
+    * @param height      height along z of the cone.
+    * @param radius      radius of the cone's base.
+    * @param offset      coordinate of the cone's base center. Not modified.
+    * @param orientation axis-angle describing the cone orientation with respect to world. Not
+    *                    modified.
     */
    public void addCone(double height, double radius, Tuple3DReadOnly offset, AxisAngle orientation)
    {
@@ -92,7 +102,9 @@ public class MeshDataBuilder
    }
 
    /**
-    * Add a cone to this builder. Its axis is aligned with the z-axis and its top is the vertex with the highest z value.
+    * Add a cone to this builder. Its axis is aligned with the z-axis and its top is the vertex with
+    * the highest z value.
+    * 
     * @param height height along z of the cone.
     * @param radius radius of the cone's base.
     * @param offset coordinate of the cone's base center. Not modified.
@@ -104,7 +116,8 @@ public class MeshDataBuilder
 
    /**
     * Add a cube to this builder.
-    * @param size edge length of the cube.
+    * 
+    * @param size    edge length of the cube.
     * @param xOffset x-coordinate of the cube's center.
     * @param yOffset y-coordinate of the cube's center.
     * @param zOffset z-coordinate of the cube's center.
@@ -116,7 +129,8 @@ public class MeshDataBuilder
 
    /**
     * Add a cube to this builder.
-    * @param size edge length of the cube.
+    * 
+    * @param size       edge length of the cube.
     * @param cubeOffset coordinates of the cube's center. Not modified.
     */
    public void addCube(double size, Tuple3DReadOnly cubeOffset)
@@ -126,7 +140,8 @@ public class MeshDataBuilder
 
    /**
     * Add a cube to this builder.
-    * @param size edge length of the cube.
+    * 
+    * @param size       edge length of the cube.
     * @param cubeOffset coordinates of the cube's center. Not modified.
     */
    public void addCube(float size, Tuple3DReadOnly cubeOffset)
@@ -136,6 +151,7 @@ public class MeshDataBuilder
 
    /**
     * Add a cylinder to this builder. Its axis is aligned with the z-axis.
+    * 
     * @param height height along z of the cylinder.
     * @param radius the cylinder's radius.
     * @param offset coordinates of the cylinder's center. Not modified.
@@ -146,11 +162,14 @@ public class MeshDataBuilder
    }
 
    /**
-    * Add a cylinder to this builder. Its axis is aligned with the z-axis in its local coordinate system.
-    * @param height height along z of the cylinder.
-    * @param radius the cylinder's radius.
-    * @param offset coordinates of the cylinder's center. Not modified.
-    * @param orientation axis-angle describing the cylinder orientation with respect to world. Not modified.
+    * Add a cylinder to this builder. Its axis is aligned with the z-axis in its local coordinate
+    * system.
+    * 
+    * @param height      height along z of the cylinder.
+    * @param radius      the cylinder's radius.
+    * @param offset      coordinates of the cylinder's center. Not modified.
+    * @param orientation axis-angle describing the cylinder orientation with respect to world. Not
+    *                    modified.
     */
    public void addCylinder(double height, double radius, Tuple3DReadOnly offset, AxisAngle orientation)
    {
@@ -159,6 +178,7 @@ public class MeshDataBuilder
 
    /**
     * Add a cylinder to this builder. Its axis is aligned with the z-axis.
+    * 
     * @param height height along z of the cylinder.
     * @param radius the cylinder's radius.
     * @param offset coordinates of the cylinder's center. Not modified.
@@ -170,12 +190,13 @@ public class MeshDataBuilder
 
    /**
     * Add a 3D line to this builder.
-    * @param x0 x-coordinate of the line start.
-    * @param y0 y-coordinate of the line start.
-    * @param z0 z-coordinate of the line start.
-    * @param xf x-coordinate of the line end.
-    * @param yf y-coordinate of the line end.
-    * @param zf z-coordinate of the line end.
+    * 
+    * @param x0        x-coordinate of the line start.
+    * @param y0        y-coordinate of the line start.
+    * @param z0        z-coordinate of the line start.
+    * @param xf        x-coordinate of the line end.
+    * @param yf        y-coordinate of the line end.
+    * @param zf        z-coordinate of the line end.
     * @param lineWidth width of the line.
     */
    public void addLine(double x0, double y0, double z0, double xf, double yf, double zf, double lineWidth)
@@ -185,12 +206,13 @@ public class MeshDataBuilder
 
    /**
     * Add a 3D line to this builder.
-    * @param x0 x-coordinate of the line start.
-    * @param y0 y-coordinate of the line start.
-    * @param z0 z-coordinate of the line start.
-    * @param xf x-coordinate of the line end.
-    * @param yf y-coordinate of the line end.
-    * @param zf z-coordinate of the line end.
+    * 
+    * @param x0        x-coordinate of the line start.
+    * @param y0        y-coordinate of the line start.
+    * @param z0        z-coordinate of the line start.
+    * @param xf        x-coordinate of the line end.
+    * @param yf        y-coordinate of the line end.
+    * @param zf        z-coordinate of the line end.
     * @param lineWidth width of the line.
     */
    public void addLine(float x0, float y0, float z0, float xf, float yf, float zf, float lineWidth)
@@ -200,8 +222,9 @@ public class MeshDataBuilder
 
    /**
     * Add a 3D line to this builder.
-    * @param start start coordinate of the line. Not modified.
-    * @param end end coordinate of the line. Not modified.
+    * 
+    * @param start     start coordinate of the line. Not modified.
+    * @param end       end coordinate of the line. Not modified.
     * @param lineWidth width of the line.
     */
    public void addLine(Tuple3DReadOnly start, Tuple3DReadOnly end, double lineWidth)
@@ -211,8 +234,9 @@ public class MeshDataBuilder
 
    /**
     * Add a 3D line to this builder.
-    * @param start start coordinate of the line. Not modified.
-    * @param end end coordinate of the line. Not modified.
+    * 
+    * @param start     start coordinate of the line. Not modified.
+    * @param end       end coordinate of the line. Not modified.
     * @param lineWidth width of the line.
     */
    public void addLine(Tuple3DReadOnly start, Tuple3DReadOnly end, float lineWidth)
@@ -222,6 +246,7 @@ public class MeshDataBuilder
 
    /**
     * Combines the mesh contained in {@code other} with the mesh contained in this builder.
+    * 
     * @param other the other builder holding on the mesh to combine. Not Modified.
     */
    public void addMesh(MeshDataBuilder other)
@@ -231,6 +256,7 @@ public class MeshDataBuilder
 
    /**
     * Combines the given mesh with the mesh contained in this builder.
+    * 
     * @param meshDataHolder the mesh to combine. Not Modified.
     */
    public void addMesh(MeshDataHolder meshDataHolder)
@@ -240,8 +266,9 @@ public class MeshDataBuilder
 
    /**
     * Translates then combines the given mesh with the mesh contained in this builder.
+    * 
     * @param meshDataHolder the mesh to translate and combine. Not Modified.
-    * @param offset the translation to apply to the given mesh. Not modified.
+    * @param offset         the translation to apply to the given mesh. Not modified.
     */
    public void addMesh(MeshDataHolder meshDataHolder, Tuple3DReadOnly offset)
    {
@@ -250,9 +277,11 @@ public class MeshDataBuilder
 
    /**
     * Rotates, translates, then combines the given mesh with the mesh contained in this builder.
+    * 
     * @param meshDataHolder the mesh to translate and combine. Not Modified.
-    * @param offset the translation to apply to the given mesh. Not modified.
-    * @param orientation the axis-angle describing the rotation to apply to the given mesh. Not modified.
+    * @param offset         the translation to apply to the given mesh. Not modified.
+    * @param orientation    the axis-angle describing the rotation to apply to the given mesh. Not
+    *                       modified.
     */
    public void addMesh(MeshDataHolder meshDataHolder, Tuple3DReadOnly offset, AxisAngle orientation)
    {
@@ -261,10 +290,12 @@ public class MeshDataBuilder
 
    /**
     * Add a series of connected 3D lines to this builder.
-    * @param transform the transform to apply to the points. Not modified. 
-    * @param points coordinates of the line end points. Not modified. 
+    * 
+    * @param transform the transform to apply to the points. Not modified.
+    * @param points    coordinates of the line end points. Not modified.
     * @param lineWidth width of the lines.
-    * @param close whether the end of the given array of points should be connected to the beginning or not.
+    * @param close     whether the end of the given array of points should be connected to the
+    *                  beginning or not.
     */
    public void addMultiLine(RigidBodyTransform transform, List<? extends Point2DReadOnly> points, double lineWidth, boolean close)
    {
@@ -275,9 +306,11 @@ public class MeshDataBuilder
 
    /**
     * Add a series of connected 3D lines to this builder.
-    * @param points coordinates of the line end points. Not modified. 
+    * 
+    * @param points    coordinates of the line end points. Not modified.
     * @param lineWidth width of the lines.
-    * @param close whether the end of the given array of points should be connected to the beginning or not.
+    * @param close     whether the end of the given array of points should be connected to the
+    *                  beginning or not.
     */
    public void addMultiLine(List<? extends Point3DReadOnly> points, double lineWidth, boolean close)
    {
@@ -301,9 +334,11 @@ public class MeshDataBuilder
 
    /**
     * Add a series of connected 3D lines to this builder.
-    * @param points coordinates of the line end points. Not modified. 
+    * 
+    * @param points    coordinates of the line end points. Not modified.
     * @param lineWidth width of the lines.
-    * @param close whether the end of the given array of points should be connected to the beginning or not.
+    * @param close     whether the end of the given array of points should be connected to the
+    *                  beginning or not.
     */
    public void addMultiLine(Point3DReadOnly[] points, double lineWidth, boolean close)
    {
@@ -326,10 +361,11 @@ public class MeshDataBuilder
    }
 
    /**
-    * Add a polygon to this builder, given its 2D vertex coordinates and its transform to world.
-    * No check is performed on the ordering of the vertices.
+    * Add a polygon to this builder, given its 2D vertex coordinates and its transform to world. No
+    * check is performed on the ordering of the vertices.
+    * 
     * @param transformToWorld to polygon's transform to world. Not modified.
-    * @param polygon the polygon's 2D vertices. Not modified.
+    * @param polygon          the polygon's 2D vertices. Not modified.
     */
    public void addPolygon(RigidBodyTransform transformToWorld, List<Point2D> polygon)
    {
@@ -337,9 +373,11 @@ public class MeshDataBuilder
    }
 
    /**
-    * Add a 2D polygon to this builder. 
-    * @param transformToWorld the transform from the polygon's local coordinates to world. Not modified.
-    * @param polygon the polygon to render.
+    * Add a 2D polygon to this builder.
+    * 
+    * @param transformToWorld the transform from the polygon's local coordinates to world. Not
+    *                         modified.
+    * @param polygon          the polygon to render.
     */
    public void addPolygon(RigidBodyTransform transformToWorld, ConvexPolygon2D polygon)
    {
@@ -348,6 +386,7 @@ public class MeshDataBuilder
 
    /**
     * Add a sphere centered to this builder.
+    * 
     * @param radius the sphere radius.
     * @param offset the coordinate of the sphere. Not modified.
     */
@@ -358,6 +397,7 @@ public class MeshDataBuilder
 
    /**
     * Add a sphere centered at (0, 0, 0) to this builder.
+    * 
     * @param radius the sphere radius.
     */
    public void addSphere(float radius)
@@ -367,6 +407,7 @@ public class MeshDataBuilder
 
    /**
     * Add a sphere centered to this builder.
+    * 
     * @param radius the sphere radius.
     * @param offset the coordinate of the sphere. Not modified.
     */
@@ -377,7 +418,8 @@ public class MeshDataBuilder
 
    /**
     * Add an array of spheres to this builder.
-    * @param radius the radius of the spheres. Not modified.
+    * 
+    * @param radius  the radius of the spheres. Not modified.
     * @param offsets the coordinates of each sphere. Not modified.
     */
    public void addSpheres(float radius, Point3D32[] offsets)
@@ -388,8 +430,10 @@ public class MeshDataBuilder
 
    /**
     * Add a regular tetrahedron to this builder.
+    * 
     * @param edgeLength edge length of the tetrahedron.
-    * @param offset coordinates of the center of the tetrahedron's circumscribed sphere. Not modified.
+    * @param offset     coordinates of the center of the tetrahedron's circumscribed sphere. Not
+    *                   modified.
     */
    public void addTetrahedron(double edgeLength, Tuple3DReadOnly offset)
    {
@@ -398,8 +442,10 @@ public class MeshDataBuilder
 
    /**
     * Add a regular tetrahedron to this builder.
+    * 
     * @param edgeLength edge length of the tetrahedron.
-    * @param offset coordinates of the center of the tetrahedron's circumscribed sphere. Not modified.
+    * @param offset     coordinates of the center of the tetrahedron's circumscribed sphere. Not
+    *                   modified.
     */
    public void addTetrahedron(float edgeLength, Tuple3DReadOnly offset)
    {
@@ -415,7 +461,8 @@ public class MeshDataBuilder
    }
 
    /**
-    * @return the resulting mesh as an immutable mesh ready to be interpreted by the adequate mesh data interpreter. 
+    * @return the resulting mesh as an immutable mesh ready to be interpreted by the adequate mesh data
+    *         interpreter.
     */
    public MeshDataHolder generateMeshDataHolder()
    {

@@ -45,9 +45,9 @@ public class MutableColor
 
    public final void set(Color color)
    {
-      x = (float) color.getRed() / 255.0f;
-      y = (float) color.getGreen() / 255.0f;
-      z = (float) color.getBlue() / 255.0f;
+      x = color.getRed() / 255.0f;
+      y = color.getGreen() / 255.0f;
+      z = color.getBlue() / 255.0f;
    }
 
    public final Color get()

@@ -89,7 +89,7 @@ public class Graphics3DObject
       }
       else
       {
-         this.graphics3DInstructions = new ArrayList<Graphics3DPrimitiveInstruction>();
+         this.graphics3DInstructions = new ArrayList<>();
       }
 
       if (shape != null)
@@ -106,7 +106,7 @@ public class Graphics3DObject
    }
 
    /**
-    * Default no-arg constructor.  This creates a new empty Graphics3DObject component.
+    * Default no-arg constructor. This creates a new empty Graphics3DObject component.
     */
    public Graphics3DObject()
    {
@@ -131,20 +131,20 @@ public class Graphics3DObject
     */
    public void combine(Graphics3DObject graphics3DObject)
    {
-      this.identity();
-      this.graphics3DInstructions.addAll(graphics3DObject.getGraphics3DInstructions());
+      identity();
+      graphics3DInstructions.addAll(graphics3DObject.getGraphics3DInstructions());
    }
 
    public void combine(Graphics3DObject Graphics3DObject, Vector3D offset)
    {
-      this.identity();
+      identity();
       this.translate(offset);
 
       ArrayList<Graphics3DPrimitiveInstruction> graphics3dInstructionsToAdd = Graphics3DObject.getGraphics3DInstructions();
 
       for (Graphics3DPrimitiveInstruction graphics3dInstructionToAdd : graphics3dInstructionsToAdd)
       {
-         this.graphics3DInstructions.add(graphics3dInstructionToAdd);
+         graphics3DInstructions.add(graphics3dInstructionToAdd);
 
          // Somewhat hackish. Need to translate the offset after each identity instruction. Otherwise not.
          // But this won't do the correct thing for instructions that might do identity in them.
@@ -158,7 +158,7 @@ public class Graphics3DObject
 
    public void addInstruction(Graphics3DPrimitiveInstruction instruction)
    {
-      this.graphics3DInstructions.add(instruction);
+      graphics3DInstructions.add(instruction);
    }
 
    public void transform(RigidBodyTransform transform)
@@ -172,11 +172,10 @@ public class Graphics3DObject
    }
 
    /**
-    * Translates from the current position by the specified distances.  Graphic
-    * components added after translation will appear in the new location.  The coordinate
-    * system for these translations is based on those that preceded it.  Each new
-    * has its coordinates reset to the parent joint's origin.  {@link #identity Identity}
-    * resets back to the joint origin.
+    * Translates from the current position by the specified distances. Graphic components added after
+    * translation will appear in the new location. The coordinate system for these translations is
+    * based on those that preceded it. Each new has its coordinates reset to the parent joint's origin.
+    * {@link #identity Identity} resets back to the joint origin.
     *
     * @param tx distance translated in the x direction
     * @param ty distance translated in the y direction
@@ -188,11 +187,10 @@ public class Graphics3DObject
    }
 
    /**
-    * Translates from the current position by the specified distances.  Graphic
-    * components added after translation will appear in the new location.  The coordinate
-    * system for these translations is based on those that preceded it.  Each new
-    * has its coordinates reset to the parent joint's origin.  {@link #identity Identity}
-    * resets back to the joint origin.
+    * Translates from the current position by the specified distances. Graphic components added after
+    * translation will appear in the new location. The coordinate system for these translations is
+    * based on those that preceded it. Each new has its coordinates reset to the parent joint's origin.
+    * {@link #identity Identity} resets back to the joint origin.
     *
     * @param translation Tuple3d representing the translation.
     */
@@ -202,14 +200,13 @@ public class Graphics3DObject
    }
 
    /**
-    * Rotates the coordinate system counter clockwise around the specified axis by the given
-    * angle in radians.  This does not rotate existing graphics, instead it rotates a "cursor"
-    * when another object is added it will be centered on the origin of the current system
-    * as described by the translations and rotations applied since its creation at the joint
-    * origin.
+    * Rotates the coordinate system counter clockwise around the specified axis by the given angle in
+    * radians. This does not rotate existing graphics, instead it rotates a "cursor" when another
+    * object is added it will be centered on the origin of the current system as described by the
+    * translations and rotations applied since its creation at the joint origin.
     *
     * @param rotationAngle the angle to rotate around the specified axis in radians.
-    * @param rotationAxis Axis around which to rotate. Either Link.X, Link.Y or Link.Z
+    * @param rotationAxis  Axis around which to rotate. Either Link.X, Link.Y or Link.Z
     */
 
    public void rotate(double rotationAngle, Axis3D rotationAxis)
@@ -227,14 +224,13 @@ public class Graphics3DObject
    }
 
    /**
-    * Rotates the coordinate system counter clockwise around the specified axis by the given
-    * angle in radians.  This does not rotate existing graphics, instead it rotates a "cursor"
-    * When another object is added it will be centered on the origin of the current system
-    * as described by the translations and rotations applied since its creation at the joint
-    * origin.
+    * Rotates the coordinate system counter clockwise around the specified axis by the given angle in
+    * radians. This does not rotate existing graphics, instead it rotates a "cursor" When another
+    * object is added it will be centered on the origin of the current system as described by the
+    * translations and rotations applied since its creation at the joint origin.
     *
     * @param rotationAngle the angle to rotate around the specified axis in radians.
-    * @param rotationAxis Vector3d describing the axis of rotation.
+    * @param rotationAxis  Vector3d describing the axis of rotation.
     */
    public void rotate(double rotationAngle, Vector3D rotationAxis)
    {
@@ -244,11 +240,10 @@ public class Graphics3DObject
    }
 
    /**
-    * Rotates the coordinate system as described by the given rotation matrix.
-    * This does not rotate existing graphics, instead it rotates a "cursor".
-    * When another object is added it will be centered on the origin of the current system
-    * as described by the translations and rotations applied since its creation at the joint
-    * origin.
+    * Rotates the coordinate system as described by the given rotation matrix. This does not rotate
+    * existing graphics, instead it rotates a "cursor". When another object is added it will be
+    * centered on the origin of the current system as described by the translations and rotations
+    * applied since its creation at the joint origin.
     *
     * @param rotationMatrix Matrix3d describing the rotation to be applied.
     */
@@ -266,11 +261,11 @@ public class Graphics3DObject
 
    /**
     * Scales the coordinate system by the specified scale factor. This does not scale existing
-    * graphics, instead it scales the "current" coordinate system.  When another object is added
-    * it will be uniformly scaled by the specified factor.
+    * graphics, instead it scales the "current" coordinate system. When another object is added it will
+    * be uniformly scaled by the specified factor.
     *
-    * @param scaleFactor Factor by which the coordinate system is scaled.  For example, 0.5 would
-    * reduce future objects size by 50% whereas 2 would double it.
+    * @param scaleFactor Factor by which the coordinate system is scaled. For example, 0.5 would reduce
+    *                    future objects size by 50% whereas 2 would double it.
     * @return
     */
    public Graphics3DScaleInstruction scale(double scaleFactor)
@@ -280,9 +275,9 @@ public class Graphics3DObject
 
    /**
     * Scales the coordinate system by the specified scale factor. This does not scale existing
-    * graphics, instead it scales the "current" coordinate system.  When another object is added
-    * it will be uniformly scaled by the specified factor.  The components of the vector indicate
-    * scale factors in each dimension.
+    * graphics, instead it scales the "current" coordinate system. When another object is added it will
+    * be uniformly scaled by the specified factor. The components of the vector indicate scale factors
+    * in each dimension.
     *
     * @param scaleFactors Vector3d describing the scaling factors in each dimension.
     * @return
@@ -295,14 +290,12 @@ public class Graphics3DObject
       return graphics3DScale;
    }
 
-
    /**
     * Scales the origin coordinate system by the specified scale factor. This will scale existing
     * graphics and all graphics added after calling this function till identity() is called.
     *
-    *
-    * @param scaleFactor Factor by which the graphics object system is scaled.  For example, 0.5 would
-    * reduce future objects size by 50% whereas 2 would double it.
+    * @param scaleFactor Factor by which the graphics object system is scaled. For example, 0.5 would
+    *                    reduce future objects size by 50% whereas 2 would double it.
     * @return
     */
    public void preScale(double scaleFactor)
@@ -312,8 +305,8 @@ public class Graphics3DObject
 
    /**
     * Scales the origin coordinate system by the specified scale factor. This will scale existing
-    * graphics and all graphics added after calling this function. The components of the vector indicate
-    * scale factors in each dimension.
+    * graphics and all graphics added after calling this function. The components of the vector
+    * indicate scale factors in each dimension.
     *
     * @param scaleFactors Vector3d describing the scaling factors in each dimension
     * @return
@@ -321,15 +314,14 @@ public class Graphics3DObject
    public void preScale(Vector3D scaleFactors)
    {
 
-
       ArrayList<Graphics3DPrimitiveInstruction> newInstructions = new ArrayList<>();
       newInstructions.add(new Graphics3DScaleInstruction(scaleFactors));
 
-      for(int i = 0; i < graphics3DInstructions.size(); i++)
+      for (int i = 0; i < graphics3DInstructions.size(); i++)
       {
          Graphics3DPrimitiveInstruction instruction = graphics3DInstructions.get(i);
          newInstructions.add(instruction);
-         if(instruction instanceof Graphics3DIdentityInstruction)
+         if (instruction instanceof Graphics3DIdentityInstruction)
          {
             newInstructions.add(new Graphics3DScaleInstruction(scaleFactors));
 
@@ -340,8 +332,8 @@ public class Graphics3DObject
    }
 
    /**
-    * Resets the coordinate system to the joint origin.  This clears all rotations, translations,
-    * and scale factors.
+    * Resets the coordinate system to the joint origin. This clears all rotations, translations, and
+    * scale factors.
     */
    public void identity()
    {
@@ -349,11 +341,10 @@ public class Graphics3DObject
    }
 
    /**
-    * Adds the specified 3DS Max file to the center of the current coordinate system
-    * with a default appearance.  3DS Max is a 3D modeling program that allows the creation
-    * of detailed models and animations.  This function
-    * only imports the model allowing the use
-    * of more complicated and detailed system representations in simulations.
+    * Adds the specified 3DS Max file to the center of the current coordinate system with a default
+    * appearance. 3DS Max is a 3D modeling program that allows the creation of detailed models and
+    * animations. This function only imports the model allowing the use of more complicated and
+    * detailed system representations in simulations.
     *
     * @param fileURL URL pointing to the desired 3ds file.
     */
@@ -363,12 +354,12 @@ public class Graphics3DObject
    }
 
    /**
-    * Adds the specified 3DS Max file to the center of the current coordinate system
-    * with the given appearance.  3DS Max is a 3D modeling program that allows the creation
-    * of detailed models and animations.  This function only imports the model allowing the use
-    * of more complicated and detailed system representations in simulations.
+    * Adds the specified 3DS Max file to the center of the current coordinate system with the given
+    * appearance. 3DS Max is a 3D modeling program that allows the creation of detailed models and
+    * animations. This function only imports the model allowing the use of more complicated and
+    * detailed system representations in simulations.
     *
-    * @param fileURL URL pointing to the desired 3ds file.
+    * @param fileURL                URL pointing to the desired 3ds file.
     * @param yoAppearanceDefinition Appearance to use with the 3ds model once imported.
     */
    public void addModelFile(URL fileURL, AppearanceDefinition yoAppearanceDefinition)
@@ -384,7 +375,7 @@ public class Graphics3DObject
 
       // System.out.println("File name: " + fileName + " " + fileName.length());
 
-      if ((fileName == null) || (fileName.equals("")))
+      if (fileName == null || fileName.equals(""))
       {
          System.out.println("Null File Name in add3DSFile");
 
@@ -395,10 +386,9 @@ public class Graphics3DObject
    }
 
    /**
-    * Adds the specified model file to the center of the current coordinate system
-    * with a default appearance.  Supported model files are .stl, .obj and .dae
-    *
-    * Appearances of model files can only be changed at runtime if an appearance is given while loading the model
+    * Adds the specified model file to the center of the current coordinate system with a default
+    * appearance. Supported model files are .stl, .obj and .dae Appearances of model files can only be
+    * changed at runtime if an appearance is given while loading the model
     *
     * @param fileName File path of the desired 3ds file.
     * @return void
@@ -409,13 +399,12 @@ public class Graphics3DObject
    }
 
    /**
-    * Adds the specified model file to the center of the current coordinate system
-    * with the given appearance.    Supported model files are .stl, .obj and .dae.
-    *
-    * Appearances of model files can only be changed at runtime if an appearance is given while loading the model
+    * Adds the specified model file to the center of the current coordinate system with the given
+    * appearance. Supported model files are .stl, .obj and .dae. Appearances of model files can only be
+    * changed at runtime if an appearance is given while loading the model
     *
     * @param fileName File path to the desired 3ds file.
-    * @param app Appearance to use with the model once imported.
+    * @param app      Appearance to use with the model once imported.
     */
 
    /**
@@ -462,15 +451,16 @@ public class Graphics3DObject
    }
 
    /**
-    * Creates a graphical representation of the x, y, and z axis of the current coordinate
-    * system centered at its origin.  In the image below red, white and blue represent the
-    * x, y and z axies respectively.<br /><br />
+    * Creates a graphical representation of the x, y, and z axis of the current coordinate system
+    * centered at its origin. In the image below red, white and blue represent the x, y and z axies
+    * respectively.<br />
+    * <br />
     * <img src="doc-files/LinkGraphics.addCoordinateSystem.jpg">
     *
     * @param length the length in meters of each axis arrow.
     */
    public void addCoordinateSystem(double length, AppearanceDefinition xAxisAppearance, AppearanceDefinition yAxisAppearance,
-         AppearanceDefinition zAxisAppearance, AppearanceDefinition arrowAppearance)
+                                   AppearanceDefinition zAxisAppearance, AppearanceDefinition arrowAppearance)
    {
       rotate(Math.PI / 2.0, Axis3D.Y);
       addArrow(length, YoAppearance.Red(), arrowAppearance);
@@ -521,18 +511,20 @@ public class Graphics3DObject
    }
 
    /**
-    * Adds a solid black cube with the specified dimensions centered around the origin of the
-    * current coordinate system.  All lengths are in meters.</ br></ br>
-    * The image below demonstrates a 0.25 x 0.25 x 0.25 cube generated by the following code:<br /><br />
+    * Adds a solid black cube with the specified dimensions centered around the origin of the current
+    * coordinate system. All lengths are in meters.</ br></ br> The image below demonstrates a 0.25 x
+    * 0.25 x 0.25 cube generated by the following code:<br />
+    * <br />
     * {@code linkGraphics.addCoordinateSystem(0.5);}<br />
-    * {@code linkGraphics.addCube(0.25, 0.25, 0.25);}<br /><br />
-    *
-    * As is show by the graphical representation the cube is centered on the coordinate system.
-    * Again, x, y and z are red, white and blue.
-    * <br /><br /><img src="doc-files/LinkGraphics.addCube1.jpg">
+    * {@code linkGraphics.addCube(0.25, 0.25, 0.25);}<br />
+    * <br />
+    * As is show by the graphical representation the cube is centered on the coordinate system. Again,
+    * x, y and z are red, white and blue. <br />
+    * <br />
+    * <img src="doc-files/LinkGraphics.addCube1.jpg">
     *
     * @param lengthX length of the cube in the x direction.
-    * @param widthY width of the cube in the y direction.
+    * @param widthY  width of the cube in the y direction.
     * @param heightZ height of the cube in the z direction.
     */
    public CubeGraphics3DInstruction addCube(double lengthX, double widthY, double heightZ)
@@ -541,22 +533,25 @@ public class Graphics3DObject
    }
 
    /**
-    * Adds a solid cube with the given dimensions and appearance centered on the origin of the
-    * current coordinate system.  All lengths are in meters.</ br></ br>
-    * The image below demonstrates a yellow 0.1 x 0.35 x 0.2 cube generated by the following code:<br /><br />
+    * Adds a solid cube with the given dimensions and appearance centered on the origin of the current
+    * coordinate system. All lengths are in meters.</ br></ br> The image below demonstrates a yellow
+    * 0.1 x 0.35 x 0.2 cube generated by the following code:<br />
+    * <br />
     * {@code linkGraphics.addCoordinateSystem(0.5);}<br />
-    * {@code linkGraphics.addCube(0.1, 0.35, 0.2, YoAppearance.Yellow());}<br /><br />
+    * {@code linkGraphics.addCube(0.1, 0.35, 0.2, YoAppearance.Yellow());}<br />
+    * <br />
+    * As is show by the graphical representation the cube is centered on the coordinate system. Again,
+    * x, y and z are red, white and blue. <br />
+    * <br />
+    * <img src="doc-files/LinkGraphics.addCube2.jpg">
     *
-    * As is show by the graphical representation the cube is centered on the coordinate system.
-    * Again, x, y and z are red, white and blue.
-    * <br /><br /><img src="doc-files/LinkGraphics.addCube2.jpg">
-    *
-    *
-    * @param lengthX length of the cube in the x direction.
-    * @param widthY width of the cube in the y direction.
-    * @param heightZ height of the cube in the z direction.
-    * @param cubeApp Appearance of the cube.  See {@link YoAppearance YoAppearance} for implementations.
-    * @param textureFace Whether or not to texture map each of the 6 faces. Only relevant if the AppearanceDefinition is a texture map.
+    * @param lengthX     length of the cube in the x direction.
+    * @param widthY      width of the cube in the y direction.
+    * @param heightZ     height of the cube in the z direction.
+    * @param cubeApp     Appearance of the cube. See {@link YoAppearance YoAppearance} for
+    *                    implementations.
+    * @param textureFace Whether or not to texture map each of the 6 faces. Only relevant if the
+    *                    AppearanceDefinition is a texture map.
     * @return
     */
    public CubeGraphics3DInstruction addCube(double lengthX, double widthY, double heightZ, AppearanceDefinition cubeApp, boolean[] textureFaces)
@@ -569,7 +564,8 @@ public class Graphics3DObject
       return addCube(lengthX, widthY, heightZ, false, cubeAppearance, null);
    }
 
-   public CubeGraphics3DInstruction addCube(double lengthX, double widthY, double heightZ, boolean centeredInTheCenter, AppearanceDefinition cubeApp, boolean[] textureFaces)
+   public CubeGraphics3DInstruction addCube(double lengthX, double widthY, double heightZ, boolean centeredInTheCenter, AppearanceDefinition cubeApp,
+                                            boolean[] textureFaces)
    {
       CubeGraphics3DInstruction cubeInstruction = new CubeGraphics3DInstruction(lengthX, widthY, heightZ, centeredInTheCenter);
       cubeInstruction.setTextureFaces(textureFaces);
@@ -584,19 +580,21 @@ public class Graphics3DObject
    }
 
    /**
-    * Adds a solid wedge with the given dimensions centered on the origin of the current
-    * coordinate system.  The peak of the wedge is directly above the far edge of the cube
-    * in the x direction.</ br></ br>
-    * The image below demonstrates a 0.25 x 0.25 x 0.25 wedge generated by the following code:<br /><br />
+    * Adds a solid wedge with the given dimensions centered on the origin of the current coordinate
+    * system. The peak of the wedge is directly above the far edge of the cube in the x direction.</
+    * br></ br> The image below demonstrates a 0.25 x 0.25 x 0.25 wedge generated by the following
+    * code:<br />
+    * <br />
     * {@code linkGraphics.addCoordinateSystem(0.5);}<br />
-    * {@code linkGraphics.addWedge(0.25, 0.25, 0.25);}<br /><br />
-    *
-    * As is show by the graphical representation the wedge is centered on the coordinate system.
-    * Again, x, y and z are red, white and blue.
-    * <br /><br /><img src="doc-files/LinkGraphics.addWedge1.jpg">
+    * {@code linkGraphics.addWedge(0.25, 0.25, 0.25);}<br />
+    * <br />
+    * As is show by the graphical representation the wedge is centered on the coordinate system. Again,
+    * x, y and z are red, white and blue. <br />
+    * <br />
+    * <img src="doc-files/LinkGraphics.addWedge1.jpg">
     *
     * @param lengthX length of the wedge in the x direction.
-    * @param widthY width of the wedge in the y direction.
+    * @param widthY  width of the wedge in the y direction.
     * @param heightZ height of the wedge in the z direction.
     */
    public WedgeGraphics3DInstruction addWedge(double lengthX, double widthY, double heightZ)
@@ -605,22 +603,24 @@ public class Graphics3DObject
    }
 
    /**
-    *
     * Adds a solid wedge with the given dimensions and appearance centered on the origin of the current
-    * coordinate system.  The peak of the wedge is directly above the far edge of the cube
-    * in the x direction.</ br></ br>
-    * The image below demonstrates a green 0.35 x 0.3 x 0.1 wedge generated by the following code:<br /><br />
+    * coordinate system. The peak of the wedge is directly above the far edge of the cube in the x
+    * direction.</ br></ br> The image below demonstrates a green 0.35 x 0.3 x 0.1 wedge generated by
+    * the following code:<br />
+    * <br />
     * {@code linkGraphics.addCoordinateSystem(0.5);}<br />
-    * {@code linkGraphics.addWedge(0.35, 0.3, 0.1, YoAppearance.GREEN());}<br /><br />
+    * {@code linkGraphics.addWedge(0.35, 0.3, 0.1, YoAppearance.GREEN());}<br />
+    * <br />
+    * As is show by the graphical representation the wedge is centered on the coordinate system. Again,
+    * x, y and z are red, white and blue. <br />
+    * <br />
+    * <img src="doc-files/LinkGraphics.addWedge2.jpg">
     *
-    * As is show by the graphical representation the wedge is centered on the coordinate system.
-    * Again, x, y and z are red, white and blue.
-    * <br /><br /><img src="doc-files/LinkGraphics.addWedge2.jpg">
-    *
-    * @param lengthX length of the wedge in the x direction.
-    * @param widthY width of the wedge in the y direction.
-    * @param heightZ height of the wedge in the z direction.
-    * @param wedgeAppearance Appearance of the wedge.  See {@link YoAppearance YoAppearance} for implementations.
+    * @param lengthX         length of the wedge in the x direction.
+    * @param widthY          width of the wedge in the y direction.
+    * @param heightZ         height of the wedge in the z direction.
+    * @param wedgeAppearance Appearance of the wedge. See {@link YoAppearance YoAppearance} for
+    *                        implementations.
     */
    public WedgeGraphics3DInstruction addWedge(double lengthX, double widthY, double heightZ, AppearanceDefinition wedgeAppearance)
    {
@@ -631,15 +631,17 @@ public class Graphics3DObject
    }
 
    /**
-    * Adds a solid sphere with the given radius centered on the origin of the current coordinate system.
-    * </ br></ br>
-    * The image below demonstrates a sphere with a 0.25 meter radius generated by the following code:<br /><br />
+    * Adds a solid sphere with the given radius centered on the origin of the current coordinate
+    * system. </ br></ br> The image below demonstrates a sphere with a 0.25 meter radius generated by
+    * the following code:<br />
+    * <br />
     * {@code linkGraphics.addCoordinateSystem(0.5);}<br />
-    * {@code linkGraphics.addSphere(0.25);}<br /><br />
-    *
+    * {@code linkGraphics.addSphere(0.25);}<br />
+    * <br />
     * As is show by the graphical representation the sphere is centered on the coordinate system.
-    * Again, x, y and z are red, white and blue.
-    * <br /><br /><img src="doc-files/LinkGraphics.addSphere1.jpg">
+    * Again, x, y and z are red, white and blue. <br />
+    * <br />
+    * <img src="doc-files/LinkGraphics.addSphere1.jpg">
     *
     * @param radius radius of the new sphere in meters.
     */
@@ -649,18 +651,21 @@ public class Graphics3DObject
    }
 
    /**
-    * Adds a solid sphere with the given radius and appearance centered on the origin of the current coordinate system.
-    * </ br></ br>
-    * The image below demonstrates a blue sphere with a 0.15 meter radius generated by the following code:<br /><br />
+    * Adds a solid sphere with the given radius and appearance centered on the origin of the current
+    * coordinate system. </ br></ br> The image below demonstrates a blue sphere with a 0.15 meter
+    * radius generated by the following code:<br />
+    * <br />
     * {@code linkGraphics.addCoordinateSystem(0.5);}<br />
-    * {@code linkGraphics.addSphere(0.15, YoAppearance.Blue());}<br /><br />
-    *
+    * {@code linkGraphics.addSphere(0.15, YoAppearance.Blue());}<br />
+    * <br />
     * As is show by the graphical representation the sphere is centered on the coordinate system.
-    * Again, x, y and z are red, white and blue.
-    * <br /><br /><img src="doc-files/LinkGraphics.addSphere2.jpg">
+    * Again, x, y and z are red, white and blue. <br />
+    * <br />
+    * <img src="doc-files/LinkGraphics.addSphere2.jpg">
     *
-    * @param radius radius of the new sphere in meters.
-    * @param sphereAppearance Appearance to be used with the new sphere.  See {@link YoAppearance YoAppearance} for implementations.
+    * @param radius           radius of the new sphere in meters.
+    * @param sphereAppearance Appearance to be used with the new sphere. See {@link YoAppearance
+    *                         YoAppearance} for implementations.
     */
    public SphereGraphics3DInstruction addSphere(double radius, AppearanceDefinition sphereAppearance)
    {
@@ -704,15 +709,17 @@ public class Graphics3DObject
    }
 
    /**
-    * Adds a solid ellipsoid with the given radii centered on the origin of the current coordinate system.
-    * </ br></ br>
-    * The image below demonstrates an ellipsoid with radii of 0.3, 0.2 and 0.1 in the x, y and z directions respectively:<br /><br />
+    * Adds a solid ellipsoid with the given radii centered on the origin of the current coordinate
+    * system. </ br></ br> The image below demonstrates an ellipsoid with radii of 0.3, 0.2 and 0.1 in
+    * the x, y and z directions respectively:<br />
+    * <br />
     * {@code linkGraphics.addCoordinateSystem(0.5);}<br />
-    * {@code linkGraphics.addEllipsoid(0.3, 0.2, 0.1);}<br /><br />
-    *
+    * {@code linkGraphics.addEllipsoid(0.3, 0.2, 0.1);}<br />
+    * <br />
     * As is show by the graphical representation the ellipsoid is centered on the coordinate system.
-    * Again, x, y and z are red, white and blue.
-    * <br /><br /><img src="doc-files/LinkGraphics.addEllipsoid1.jpg">
+    * Again, x, y and z are red, white and blue. <br />
+    * <br />
+    * <img src="doc-files/LinkGraphics.addEllipsoid1.jpg">
     *
     * @param xRadius x direction radius in meters
     * @param yRadius y direction radius in meters
@@ -724,20 +731,23 @@ public class Graphics3DObject
    }
 
    /**
-    * Adds a solid ellipsoid with the given radii and appearance centered on the origin of the current coordinate system.
-    * </ br></ br>
-    * The image below demonstrates a red ellipsoid with radii of 0.2, 0.2 and 0.1 in the x, y and z directions respectively:<br /><br />
+    * Adds a solid ellipsoid with the given radii and appearance centered on the origin of the current
+    * coordinate system. </ br></ br> The image below demonstrates a red ellipsoid with radii of 0.2,
+    * 0.2 and 0.1 in the x, y and z directions respectively:<br />
+    * <br />
     * {@code linkGraphics.addCoordinateSystem(0.5);}<br />
-    * {@code linkGraphics.addEllipsoid(0.2, 0.2, 0.1, YoAppearance.Red());}<br /><br />
-    *
+    * {@code linkGraphics.addEllipsoid(0.2, 0.2, 0.1, YoAppearance.Red());}<br />
+    * <br />
     * As is show by the graphical representation the ellipsoid is centered on the coordinate system.
-    * Again, x, y and z are red, white and blue.
-    * <br /><br /><img src="doc-files/LinkGraphics.addEllipsoid2.jpg">
+    * Again, x, y and z are red, white and blue. <br />
+    * <br />
+    * <img src="doc-files/LinkGraphics.addEllipsoid2.jpg">
     *
-    * @param xRadius x direction radius in meters
-    * @param yRadius y direction radius in meters
-    * @param zRadius z direction radius in meters
-    * @param ellipsoidAppearance Appearance to be used with the new ellipsoid.  See {@link YoAppearance YoAppearance} for implementations.
+    * @param xRadius             x direction radius in meters
+    * @param yRadius             y direction radius in meters
+    * @param zRadius             z direction radius in meters
+    * @param ellipsoidAppearance Appearance to be used with the new ellipsoid. See {@link YoAppearance
+    *                            YoAppearance} for implementations.
     */
    public EllipsoidGraphics3DInstruction addEllipsoid(double xRadius, double yRadius, double zRadius, AppearanceDefinition ellipsoidAppearance)
    {
@@ -748,15 +758,17 @@ public class Graphics3DObject
    }
 
    /**
-    * Adds a soild cylinder with the given radius and height centered on the origin of the current coordinate system.
-    * </ br></ br>
-    * The image below demonstrates a cylinder with radius of 0.2 and a height of 0.4 as described by the following code:<br /><br />
+    * Adds a soild cylinder with the given radius and height centered on the origin of the current
+    * coordinate system. </ br></ br> The image below demonstrates a cylinder with radius of 0.2 and a
+    * height of 0.4 as described by the following code:<br />
+    * <br />
     * {@code linkGraphics.addCoordinateSystem(0.5);}<br />
-    * {@code linkGraphics.addCylinder(0.4, 0.2);}<br /><br />
-    *
+    * {@code linkGraphics.addCylinder(0.4, 0.2);}<br />
+    * <br />
     * As is show by the graphical representation the cylinder is centered on the coordinate system.
-    * Again, x, y and z are red, white and blue.
-    * <br /><br /><img src="doc-files/LinkGraphics.addCylinder1.jpg">
+    * Again, x, y and z are red, white and blue. <br />
+    * <br />
+    * <img src="doc-files/LinkGraphics.addCylinder1.jpg">
     *
     * @param height cylinder height in meters.
     * @param radius cylinder radius in meters.
@@ -767,19 +779,22 @@ public class Graphics3DObject
    }
 
    /**
-    * Adds a soild cylinder with the given radius, height and appearance centered on the origin of the current coordinate system.
-    * </ br></ br>
-    * The image below demonstrates a maroon cylinder with radius of 0.3 and a height of 0.1 as described by the following code:<br /><br />
+    * Adds a soild cylinder with the given radius, height and appearance centered on the origin of the
+    * current coordinate system. </ br></ br> The image below demonstrates a maroon cylinder with
+    * radius of 0.3 and a height of 0.1 as described by the following code:<br />
+    * <br />
     * {@code linkGraphics.addCoordinateSystem(0.5);}<br />
-    * {@code linkGraphics.addCylinder(0.1, 0.3, YoAppearance.Maroon());}<br /><br />
-    *
+    * {@code linkGraphics.addCylinder(0.1, 0.3, YoAppearance.Maroon());}<br />
+    * <br />
     * As is show by the graphical representation the cylinder is centered on the coordinate system.
-    * Again, x, y and z are red, white and blue.
-    * <br /><br /><img src="doc-files/LinkGraphics.addCylinder2.jpg">
+    * Again, x, y and z are red, white and blue. <br />
+    * <br />
+    * <img src="doc-files/LinkGraphics.addCylinder2.jpg">
     *
     * @param height cylinder height in meters.
     * @param radius cylinder radius in meters.
-    * @param cylApp Appearance to be used with the new cylinder.  See {@link YoAppearance YoAppearance} for implementations.
+    * @param cylApp Appearance to be used with the new cylinder. See {@link YoAppearance YoAppearance}
+    *               for implementations.
     */
    public CylinderGraphics3DInstruction addCylinder(double height, double radius, AppearanceDefinition cylApp)
    {
@@ -790,15 +805,17 @@ public class Graphics3DObject
    }
 
    /**
-    * Adds a cone with the given height and radius centered on the origin of the current coordinate system.
-    * </ br></ br>
-    * The image below demonstrates a cone with radius of 0.15 and a height of 0.35 as described by the following code:<br /><br />
+    * Adds a cone with the given height and radius centered on the origin of the current coordinate
+    * system. </ br></ br> The image below demonstrates a cone with radius of 0.15 and a height of 0.35
+    * as described by the following code:<br />
+    * <br />
     * {@code linkGraphics.addCoordinateSystem(0.5);}<br />
-    * {@code linkGraphics.addCone(0.35, 0.15);}<br /><br />
-    *
-    * As is show by the graphical representation the cone is centered on the coordinate system.
-    * Again, x, y and z are red, white and blue.
-    * <br /><br /><img src="doc-files/LinkGraphics.addCone1.jpg">
+    * {@code linkGraphics.addCone(0.35, 0.15);}<br />
+    * <br />
+    * As is show by the graphical representation the cone is centered on the coordinate system. Again,
+    * x, y and z are red, white and blue. <br />
+    * <br />
+    * <img src="doc-files/LinkGraphics.addCone1.jpg">
     *
     * @param height cone height in meters.
     * @param radius cone radius in meters.
@@ -809,19 +826,22 @@ public class Graphics3DObject
    }
 
    /**
-    * Adds a cone with the given height, radius and appearance centered on the origin of the current coordinate system.
-    * </ br></ br>
-    * The image below demonstrates a dark green cone with radius of 0.4 and a height of 0.2 as described by the following code:<br /><br />
+    * Adds a cone with the given height, radius and appearance centered on the origin of the current
+    * coordinate system. </ br></ br> The image below demonstrates a dark green cone with radius of 0.4
+    * and a height of 0.2 as described by the following code:<br />
+    * <br />
     * {@code linkGraphics.addCoordinateSystem(0.5);}<br />
-    * {@code linkGraphics.addCone(0.2, 0.4, YoAppearance.DarkGreen());}<br /><br />
+    * {@code linkGraphics.addCone(0.2, 0.4, YoAppearance.DarkGreen());}<br />
+    * <br />
+    * As is show by the graphical representation the cone is centered on the coordinate system. Again,
+    * x, y and z are red, white and blue. <br />
+    * <br />
+    * <img src="doc-files/LinkGraphics.addCone2.jpg">
     *
-    * As is show by the graphical representation the cone is centered on the coordinate system.
-    * Again, x, y and z are red, white and blue.
-    * <br /><br /><img src="doc-files/LinkGraphics.addCone2.jpg">
-    *
-    * @param height cone height in meters.
-    * @param radius cone radius in meters.
-    * @param coneApp Appearance to be used with the new cone.  See {@link YoAppearance YoAppearance} for implementations.
+    * @param height  cone height in meters.
+    * @param radius  cone radius in meters.
+    * @param coneApp Appearance to be used with the new cone. See {@link YoAppearance YoAppearance} for
+    *                implementations.
     */
    public ConeGraphics3DInstruction addCone(double height, double radius, AppearanceDefinition coneApp)
    {
@@ -832,23 +852,24 @@ public class Graphics3DObject
    }
 
    /**
-    * Adds a truncated cone with the given height, base width x, base width y, top width x, and top width y centered
-    * on the origin of the current coordinate system.
-    * </ br></ br>
-    * The image below demonstrates a truncated cone with a height of 0.3, a x base width of 0.25, a y base width of 0.2,
-    * a x top width of 0.15, and a y top width of 0.1:<br /><br />
+    * Adds a truncated cone with the given height, base width x, base width y, top width x, and top
+    * width y centered on the origin of the current coordinate system. </ br></ br> The image below
+    * demonstrates a truncated cone with a height of 0.3, a x base width of 0.25, a y base width of
+    * 0.2, a x top width of 0.15, and a y top width of 0.1:<br />
+    * <br />
     * {@code linkGraphics.addCoordinateSystem(0.5);}<br />
-    * {@code linkGraphics.addGenTruncatedCone(0.3, 0.25, 0.2, 0.15, 0.1);}<br /><br />
-    *
-    * As is show by the graphical representation the truncated cone is centered on the coordinate system.
-    * Again, x, y and z are red, white and blue.
-    * <br /><br /><img src="doc-files/LinkGraphics.addGenTruncatedCone1.jpg">
+    * {@code linkGraphics.addGenTruncatedCone(0.3, 0.25, 0.2, 0.15, 0.1);}<br />
+    * <br />
+    * As is show by the graphical representation the truncated cone is centered on the coordinate
+    * system. Again, x, y and z are red, white and blue. <br />
+    * <br />
+    * <img src="doc-files/LinkGraphics.addGenTruncatedCone1.jpg">
     *
     * @param height in meters
-    * @param bx x direction width of the base in meters
-    * @param by y direction width of the base in meters
-    * @param tx x direction width of the top in meters
-    * @param ty y direction width of the top in meters
+    * @param bx     x direction width of the base in meters
+    * @param by     y direction width of the base in meters
+    * @param tx     x direction width of the top in meters
+    * @param ty     y direction width of the top in meters
     */
    public TruncatedConeGraphics3DInstruction addGenTruncatedCone(double height, double bx, double by, double tx, double ty)
    {
@@ -856,26 +877,26 @@ public class Graphics3DObject
    }
 
    /**
-    * Adds a truncated cone with the given height, base width x, base width y, top width x,
-    * top width y, and appearance centered on the origin of the current coordinate system.
-    * </ br></ br>
-    * The image below demonstrates a navy blue truncated cone with a height of 0.25, a x
-    * base width of 0.15, a y base width of 0.15, a x top width of 0.05, and a y top width
-    * of 0.1:<br /><br />
-    *
+    * Adds a truncated cone with the given height, base width x, base width y, top width x, top width
+    * y, and appearance centered on the origin of the current coordinate system. </ br></ br> The image
+    * below demonstrates a navy blue truncated cone with a height of 0.25, a x base width of 0.15, a y
+    * base width of 0.15, a x top width of 0.05, and a y top width of 0.1:<br />
+    * <br />
     * {@code linkGraphics.addCoordinateSystem(0.5);}<br />
-    * {@code linkGraphics.addGenTruncatedCone(0.25, 0.15, 0.15, 0.05, 0.1, YoAppearance.Navy());}<br /><br />
+    * {@code linkGraphics.addGenTruncatedCone(0.25, 0.15, 0.15, 0.05, 0.1, YoAppearance.Navy());}<br />
+    * <br />
+    * As is show by the graphical representation the truncated cone is centered on the coordinate
+    * system. Again, x, y and z are red, white and blue. <br />
+    * <br />
+    * <img src="doc-files/LinkGraphics.addGenTruncatedCone2.jpg">
     *
-    * As is show by the graphical representation the truncated cone is centered on the coordinate system.
-    * Again, x, y and z are red, white and blue.
-    * <br /><br /><img src="doc-files/LinkGraphics.addGenTruncatedCone2.jpg">
-    *
-    * @param height in meters
-    * @param bx x direction width of the base in meters
-    * @param by y direction width of the base in meters
-    * @param tx x direction width of the top in meters
-    * @param ty y direction width of the top in meters
-    * @param coneApp Appearance to be used with the new truncated cone.  See {@link YoAppearance YoAppearance} for implementations.
+    * @param height  in meters
+    * @param bx      x direction width of the base in meters
+    * @param by      y direction width of the base in meters
+    * @param tx      x direction width of the top in meters
+    * @param ty      y direction width of the top in meters
+    * @param coneApp Appearance to be used with the new truncated cone. See {@link YoAppearance
+    *                YoAppearance} for implementations.
     */
    public TruncatedConeGraphics3DInstruction addGenTruncatedCone(double height, double bx, double by, double tx, double ty, AppearanceDefinition coneApp)
    {
@@ -886,17 +907,18 @@ public class Graphics3DObject
    }
 
    /**
-    * Adds a hemi ellipsoid with the given x, y and z radii centered on the current coordinate system.  Hemi ellipsoids
-    * are essentially cut in half, in this case the missing half is below the xy plane.
-    * </ br></ br>
-    * The image below demonstrates a hemi ellipsoid with x, y and z radii of 0.25, 0.15 and 0.35 respectively:<br /><br />
-    *
+    * Adds a hemi ellipsoid with the given x, y and z radii centered on the current coordinate system.
+    * Hemi ellipsoids are essentially cut in half, in this case the missing half is below the xy plane.
+    * </ br></ br> The image below demonstrates a hemi ellipsoid with x, y and z radii of 0.25, 0.15
+    * and 0.35 respectively:<br />
+    * <br />
     * {@code linkGraphics.addCoordinateSystem(0.5);}<br />
-    * {@code linkGraphics.addHemiEllipsoid(0.25, 0.15, 0.35);}<br /><br />
-    *
-    * As is show by the graphical representation the hemi ellipsoid is centered on the coordinate system.
-    * Again, x, y and z are red, white and blue.
-    * <br /><br /><img src="doc-files/LinkGraphics.addHemiEllipsoid1.jpg">
+    * {@code linkGraphics.addHemiEllipsoid(0.25, 0.15, 0.35);}<br />
+    * <br />
+    * As is show by the graphical representation the hemi ellipsoid is centered on the coordinate
+    * system. Again, x, y and z are red, white and blue. <br />
+    * <br />
+    * <img src="doc-files/LinkGraphics.addHemiEllipsoid1.jpg">
     *
     * @param xRad radius of the ellipsoid in the x direction.
     * @param yRad radius of the ellipsoid in the y direction.
@@ -908,22 +930,24 @@ public class Graphics3DObject
    }
 
    /**
-    * Adds a hemi ellipsoid with the given appearance and x, y and z radii centered on the current coordinate system.  Hemi ellipsoids
-    * are essentially cut in half, in this case the missing half is below the xy plane.
-    * </ br></ br>
-    * The image below demonstrates a dark red hemi ellipsoid with x, y and z radii of 0.15, 0.2 and 0.4 respectively:<br /><br />
-    *
+    * Adds a hemi ellipsoid with the given appearance and x, y and z radii centered on the current
+    * coordinate system. Hemi ellipsoids are essentially cut in half, in this case the missing half is
+    * below the xy plane. </ br></ br> The image below demonstrates a dark red hemi ellipsoid with x, y
+    * and z radii of 0.15, 0.2 and 0.4 respectively:<br />
+    * <br />
     * {@code linkGraphics.addCoordinateSystem(0.5);}<br />
-    * {@code linkGraphics.addHemiEllipsoid(0.15, 0.2, 0.4, YoAppearance.DarkRed());}<br /><br />
+    * {@code linkGraphics.addHemiEllipsoid(0.15, 0.2, 0.4, YoAppearance.DarkRed());}<br />
+    * <br />
+    * As is show by the graphical representation the hemi ellipsoid is centered on the coordinate
+    * system. Again, x, y and z are red, white and blue. <br />
+    * <br />
+    * <img src="doc-files/LinkGraphics.addHemiEllipsoid2.jpg">
     *
-    * As is show by the graphical representation the hemi ellipsoid is centered on the coordinate system.
-    * Again, x, y and z are red, white and blue.
-    * <br /><br /><img src="doc-files/LinkGraphics.addHemiEllipsoid2.jpg">
-    *
-    * @param xRad radius of the ellipsoid in the x direction.
-    * @param yRad radius of the ellipsoid in the y direction.
-    * @param zRad radius of the ellipsoid in the z direction.
-    * @param hEApp Appearance to be used with the new hemi ellipsoid.  See {@link YoAppearance YoAppearance} for implementations.
+    * @param xRad  radius of the ellipsoid in the x direction.
+    * @param yRad  radius of the ellipsoid in the y direction.
+    * @param zRad  radius of the ellipsoid in the z direction.
+    * @param hEApp Appearance to be used with the new hemi ellipsoid. See {@link YoAppearance
+    *              YoAppearance} for implementations.
     */
    public HemiEllipsoidGraphics3DInstruction addHemiEllipsoid(double xRad, double yRad, double zRad, AppearanceDefinition hEApp)
    {
@@ -934,24 +958,24 @@ public class Graphics3DObject
    }
 
    /**
-    * Creates an ArcTorus centered on the current coordinate system.  An ArcTorus is a toroid shape beginning at the start
-    * angle and wrapping around to the end angle.  Ensure that the angles don't overlap as the shape will appear inverted; the
-    * start angle must be smaller than the end angle.  All angles are measured in radians.  The shape is also defined by its
-    * major and minor radii.
-    * </ br></ br>
-    * The image below demonstrates a arctorus beginning at 3/2 pi and ending at 5/2 pi with major and minor radii of
-    * 0.25 and 0.15 respectively:<br /><br />
-    *
+    * Creates an ArcTorus centered on the current coordinate system. An ArcTorus is a toroid shape
+    * beginning at the start angle and wrapping around to the end angle. Ensure that the angles don't
+    * overlap as the shape will appear inverted; the start angle must be smaller than the end angle.
+    * All angles are measured in radians. The shape is also defined by its major and minor radii. </
+    * br></ br> The image below demonstrates a arctorus beginning at 3/2 pi and ending at 5/2 pi with
+    * major and minor radii of 0.25 and 0.15 respectively:<br />
+    * <br />
     * {@code linkGraphics.addCoordinateSystem(0.5);}<br />
-    * {@code linkGraphics.addArcTorus(3*Math.PI/2, 5*Math.PI/2, 0.25, 0.15);}<br /><br />
+    * {@code linkGraphics.addArcTorus(3*Math.PI/2, 5*Math.PI/2, 0.25, 0.15);}<br />
+    * <br />
+    * As is show by the graphical representation the arctorus is centered on the coordinate system.
+    * Note that the ends of the torus have no texture or surface, they are transparent. Again, x, y and
+    * z are red, white and blue. <br />
+    * <br />
+    * <img src="doc-files/LinkGraphics.addArcTorus1.jpg">
     *
-    * As is show by the graphical representation the arctorus is centered on the coordinate system.  Note that the ends
-    * of the torus have no texture or surface, they are transparent.
-    * Again, x, y and z are red, white and blue.
-    * <br /><br /><img src="doc-files/LinkGraphics.addArcTorus1.jpg">
-    *
-    * @param startAngle Angle in radians at which the torus begins.
-    * @param endAngle Angle in radians at which the torus ends
+    * @param startAngle  Angle in radians at which the torus begins.
+    * @param endAngle    Angle in radians at which the torus ends
     * @param majorRadius Distance from the origin to the center of the torus
     * @param minorRadius Distance from the center of the torus to the walls on either side.
     */
@@ -961,31 +985,33 @@ public class Graphics3DObject
    }
 
    /**
-    * Creates an ArcTorus centered on the current coordinate system with the specified appearance.  An ArcTorus is a toroid
-    * shape beginning at the start angle and wrapping around to the end angle.  Ensure that the angles don't overlap as the
-    * shape will appear inverted; the start angle must be smaller than the end angle.  All angles are measured in radians.
-    * The shape is also defined by its major and minor radii.  The minor radius is from the origin to the inner wall of the
-    * torus while the major is from the origin to the outer wall.
-    * </ br></ br>
-    * The image below demonstrates an aqua arctorus beginning at 0 and ending at 3/2 pi with major and minor radii of
-    * 0.30 and 0.05 respectively:<br /><br />
-    *
+    * Creates an ArcTorus centered on the current coordinate system with the specified appearance. An
+    * ArcTorus is a toroid shape beginning at the start angle and wrapping around to the end angle.
+    * Ensure that the angles don't overlap as the shape will appear inverted; the start angle must be
+    * smaller than the end angle. All angles are measured in radians. The shape is also defined by its
+    * major and minor radii. The minor radius is from the origin to the inner wall of the torus while
+    * the major is from the origin to the outer wall. </ br></ br> The image below demonstrates an aqua
+    * arctorus beginning at 0 and ending at 3/2 pi with major and minor radii of 0.30 and 0.05
+    * respectively:<br />
+    * <br />
     * {@code linkGraphics.addCoordinateSystem(0.5);}<br />
-    * {@code linkGraphics.addArcTorus(0, 3*Math.PI/2, 0.30, 0.05);}<br /><br />
+    * {@code linkGraphics.addArcTorus(0, 3*Math.PI/2, 0.30, 0.05);}<br />
+    * <br />
+    * As is show by the graphical representation the arctorus is centered on the coordinate system.
+    * Note that the ends of the torus have no texture or surface, they are transparent. Again, x, y and
+    * z are red, white and blue. <br />
+    * <br />
+    * <img src="doc-files/LinkGraphics.addArcTorus2.jpg">
     *
-    * As is show by the graphical representation the arctorus is centered on the coordinate system.  Note that the ends
-    * of the torus have no texture or surface, they are transparent.
-    * Again, x, y and z are red, white and blue.
-    * <br /><br /><img src="doc-files/LinkGraphics.addArcTorus2.jpg">
-    *
-    * @param startAngle Angle in radians at which the torus begins.
-    * @param endAngle Angle in radians at which the torus ends.
+    * @param startAngle  Angle in radians at which the torus begins.
+    * @param endAngle    Angle in radians at which the torus ends.
     * @param majorRadius Distance from the origin to the center of the torus.
     * @param minorRadius Distance from the center of the torus to the walls on either side.
-    * @param arcTorusApp Appearance to be used with the new arctorus.  See {@link YoAppearance YoAppearance} for implementations.
+    * @param arcTorusApp Appearance to be used with the new arctorus. See {@link YoAppearance
+    *                    YoAppearance} for implementations.
     */
    public ArcTorusGraphics3DInstruction addArcTorus(double startAngle, double endAngle, double majorRadius, double minorRadius,
-         AppearanceDefinition arcTorusApp)
+                                                    AppearanceDefinition arcTorusApp)
    {
       ArcTorusGraphics3DInstruction arcTorusInstruction = new ArcTorusGraphics3DInstruction(startAngle, endAngle, majorRadius, minorRadius, RESOLUTION);
       arcTorusInstruction.setAppearance(arcTorusApp);
@@ -994,18 +1020,18 @@ public class Graphics3DObject
    }
 
    /**
-    * Creates a pyramid cube centered on the origin of the current coordinate system.  A pyramid cube is nothing more than
-    * a standard cube of the given length, width and height with a square base pyramid of the specified height on the top and
-    * bottom.
-    * </ br></ br>
-    * The image below demonstrates a pyramid cube beginning with dimensions of 0.2 by 0.2 by 0.2 and a pyramid height of 0.2:<br /><br />
-    *
+    * Creates a pyramid cube centered on the origin of the current coordinate system. A pyramid cube is
+    * nothing more than a standard cube of the given length, width and height with a square base
+    * pyramid of the specified height on the top and bottom. </ br></ br> The image below demonstrates
+    * a pyramid cube beginning with dimensions of 0.2 by 0.2 by 0.2 and a pyramid height of 0.2:<br />
+    * <br />
     * {@code linkGraphics.addCoordinateSystem(0.5);}<br />
-    * {@code linkGraphics.addPyramidCube(0.2, 0.2, 0.2, 0.2);}<br /><br />
-    *
+    * {@code linkGraphics.addPyramidCube(0.2, 0.2, 0.2, 0.2);}<br />
+    * <br />
     * As is show by the graphical representation the pyramid cube is centered on the coordinate system.
-    * Again, x, y and z are red, white and blue.
-    * <br /><br /><img src="doc-files/LinkGraphics.addPyramidCube1.jpg">
+    * Again, x, y and z are red, white and blue. <br />
+    * <br />
+    * <img src="doc-files/LinkGraphics.addPyramidCube1.jpg">
     *
     * @param lx Length in meters of the cube. (x direction)
     * @param ly Width in meters of the cube. (y direction)
@@ -1018,24 +1044,26 @@ public class Graphics3DObject
    }
 
    /**
-    * Creates a pyramid cube with the specified appearance centered on the origin of the current coordinate system.
-    * A pyramid cube is nothing more than a standard cube of the given length, width and height with a square base
-    * pyramid of the specified height on the top and bottom.
-    * </ br></ br>
-    * The image below demonstrates a alluminum pyramid cube beginning with dimensions of 0.4 by 0.2 by 0.1 and a pyramid height of 0.3:<br /><br />
-    *
+    * Creates a pyramid cube with the specified appearance centered on the origin of the current
+    * coordinate system. A pyramid cube is nothing more than a standard cube of the given length, width
+    * and height with a square base pyramid of the specified height on the top and bottom. </ br></ br>
+    * The image below demonstrates a alluminum pyramid cube beginning with dimensions of 0.4 by 0.2 by
+    * 0.1 and a pyramid height of 0.3:<br />
+    * <br />
     * {@code linkGraphics.addCoordinateSystem(0.5);}<br />
-    * {@code linkGraphics.addPyramidCube(0.2, 0.2, 0.2, 0.2);}<br /><br />
-    *
+    * {@code linkGraphics.addPyramidCube(0.2, 0.2, 0.2, 0.2);}<br />
+    * <br />
     * As is show by the graphical representation the pyramid cube is centered on the coordinate system.
-    * Again, x, y and z are red, white and blue.
-    * <br /><br /><img src="doc-files/LinkGraphics.addPyramidCube2.jpg">
+    * Again, x, y and z are red, white and blue. <br />
+    * <br />
+    * <img src="doc-files/LinkGraphics.addPyramidCube2.jpg">
     *
-    * @param lx Length in meters of the cube. (x direction)
-    * @param ly Width in meters of the cube. (y direction)O
-    * @param lz Height of the cube in meters. (z direction)
-    * @param lh Height of the pyramids in meters.
-    * @param cubeApp Appearance to be used with the new pyramid cube.  See {@link YoAppearance YoAppearance} for implementations.
+    * @param lx      Length in meters of the cube. (x direction)
+    * @param ly      Width in meters of the cube. (y direction)O
+    * @param lz      Height of the cube in meters. (z direction)
+    * @param lh      Height of the pyramids in meters.
+    * @param cubeApp Appearance to be used with the new pyramid cube. See {@link YoAppearance
+    *                YoAppearance} for implementations.
     */
    public PyramidCubeGraphics3DInstruction addPyramidCube(double lx, double ly, double lz, double lh, AppearanceDefinition cubeApp)
    {
@@ -1051,13 +1079,13 @@ public class Graphics3DObject
    }
 
    /**
-    * Creates a polygon centered at the current coordinate system with the given vertices.
-    * The points this shape is composed of must be coplanar and the order matters.  Randomly
-    * inserting points will produce unpredictable results, clockwise direction determines the
-    * side that is drawn.
+    * Creates a polygon centered at the current coordinate system with the given vertices. The points
+    * this shape is composed of must be coplanar and the order matters. Randomly inserting points will
+    * produce unpredictable results, clockwise direction determines the side that is drawn.
     *
     * @param polygonPoints ArrayList containing the points.
-    * @param yoAppearance Appearance to be used with the new polygon.  See {@link YoAppearance YoAppearance} for implementations.
+    * @param yoAppearance  Appearance to be used with the new polygon. See {@link YoAppearance
+    *                      YoAppearance} for implementations.
     */
    public PolygonGraphics3DInstruction addPolygon(ArrayList<Point3D> polygonPoints, AppearanceDefinition yoAppearance)
    {
@@ -1067,16 +1095,17 @@ public class Graphics3DObject
    }
 
    /**
-    * Creates a polygon centered at the current coordinate system with the given vertices.
-    * The points this shape is composed of must be coplanar and the order matters.  Randomly
-    * inserting points will produce unpredictable results, clockwise direction determines the
-    * side that is drawn.
+    * Creates a polygon centered at the current coordinate system with the given vertices. The points
+    * this shape is composed of must be coplanar and the order matters. Randomly inserting points will
+    * produce unpredictable results, clockwise direction determines the side that is drawn.
+    * 
     * @param convexPolygon2d ConvexPolygon2d containing the points.
-    * @param yoAppearance Appearance to be used with the new polygon.  See {@link YoAppearance YoAppearance} for implementations.
+    * @param yoAppearance    Appearance to be used with the new polygon. See {@link YoAppearance
+    *                        YoAppearance} for implementations.
     */
    public PolygonGraphics3DInstruction addPolygon(ConvexPolygon2D convexPolygon2d, AppearanceDefinition yoAppearance)
    {
-      ArrayList<Point3D> polygonPoints = new ArrayList<Point3D>();
+      ArrayList<Point3D> polygonPoints = new ArrayList<>();
       int numPoints = convexPolygon2d.getNumberOfVertices();
 
       for (int i = 0; i < numPoints; i++)
@@ -1115,10 +1144,9 @@ public class Graphics3DObject
    }
 
    /**
-    * Creates a polygon centered at the current coordinate system with the given vertices.
-    * The points this shape is composed of must be coplanar and in a logical order.  Randomly
-    * inserting points will produce unpredictable results, clockwise direction determines the
-    * side that is drawn.
+    * Creates a polygon centered at the current coordinate system with the given vertices. The points
+    * this shape is composed of must be coplanar and in a logical order. Randomly inserting points will
+    * produce unpredictable results, clockwise direction determines the side that is drawn.
     *
     * @param polygonPoint Array containing Point3D's to be used when generating the shape.
     */
@@ -1128,13 +1156,13 @@ public class Graphics3DObject
    }
 
    /**
-    * Creates a polygon centered at the current coordinate system with the given vertices.
-    * The points this shape is composed of must be coplanar and the order matters.  Randomly
-    * inserting points will produce unpredictable results, clockwise direction determines the
-    * side that is drawn.
+    * Creates a polygon centered at the current coordinate system with the given vertices. The points
+    * this shape is composed of must be coplanar and the order matters. Randomly inserting points will
+    * produce unpredictable results, clockwise direction determines the side that is drawn.
     *
     * @param polygonPoints Array containing the points
-    * @param yoAppearance Appearance to be used with the new polygon.  See {@link AppearanceDefinition} for implementations.
+    * @param yoAppearance  Appearance to be used with the new polygon. See {@link AppearanceDefinition}
+    *                      for implementations.
     */
    public Graphics3DAddMeshDataInstruction addPolygon(Point3DReadOnly[] polygonPoints, AppearanceDefinition yoAppearance)
    {
@@ -1181,12 +1209,12 @@ public class Graphics3DObject
    }
 
    /**
-    * Create an extrusion of a BufferedImage. Black pixels of the image are extruded.
-    * A pixel is considered black when (red+green+blue)/3 < 60
+    * Create an extrusion of a BufferedImage. Black pixels of the image are extruded. A pixel is
+    * considered black when (red+green+blue)/3 < 60
     *
-    * @param bufferedImageToExtrude    BufferedImage to extrude
-    * @param thickness Thinkness of extrusion
-    * @param appearance Appearance
+    * @param bufferedImageToExtrude BufferedImage to extrude
+    * @param thickness              Thinkness of extrusion
+    * @param appearance             Appearance
     */
    public Graphics3DAddExtrusionInstruction addExtrusion(BufferedImage bufferedImageToExtrude, double thickness, AppearanceDefinition appearance)
    {
@@ -1210,15 +1238,15 @@ public class Graphics3DObject
       double Iyy = momentOfInertia.getM11();
       double Izz = momentOfInertia.getM22();
 
-//    http://en.wikipedia.org/wiki/Ellipsoid#Mass_properties
+      //    http://en.wikipedia.org/wiki/Ellipsoid#Mass_properties
       Vector3D ellipsoidRadii = new Vector3D();
       ellipsoidRadii.setX(Math.sqrt(5.0 / 2.0 * (Iyy + Izz - Ixx) / mass));
       ellipsoidRadii.setY(Math.sqrt(5.0 / 2.0 * (Izz + Ixx - Iyy) / mass));
       ellipsoidRadii.setZ(Math.sqrt(5.0 / 2.0 * (Ixx + Iyy - Izz) / mass));
-   
+
       this.translate(comOffset);
       this.addEllipsoid(ellipsoidRadii.getX(), ellipsoidRadii.getY(), ellipsoidRadii.getZ(), appearance);
-      this.identity();
+      identity();
    }
 
    public Graphics3DInstruction addTeaPot(AppearanceDefinition appearance)
@@ -1234,8 +1262,8 @@ public class Graphics3DObject
       return instruction;
    }
 
-   public void notifySelectedListeners(Graphics3DNode graphics3dNode, ModifierKeyInterface modifierKeyHolder, Point3DReadOnly location, Point3DReadOnly cameraPosition,
-         QuaternionReadOnly cameraRotation)
+   public void notifySelectedListeners(Graphics3DNode graphics3dNode, ModifierKeyInterface modifierKeyHolder, Point3DReadOnly location,
+                                       Point3DReadOnly cameraPosition, QuaternionReadOnly cameraRotation)
    {
       if (selectedListeners != null)
       {
@@ -1250,7 +1278,7 @@ public class Graphics3DObject
    {
       if (selectedListeners == null)
       {
-         selectedListeners = new ArrayList<SelectedListener>();
+         selectedListeners = new ArrayList<>();
       }
 
       selectedListeners.add(selectedListener);

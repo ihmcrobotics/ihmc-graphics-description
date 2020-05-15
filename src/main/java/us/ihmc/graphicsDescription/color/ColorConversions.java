@@ -14,10 +14,12 @@ public class ColorConversions
 
    public static java.awt.Color hsvValueToAwt(HSVValue hsvValue)
    {
-      int rgb = java.awt.Color.HSBtoRGB((float) hsvValue.getHue() / 180.0f, (float) hsvValue.getSaturation() / 255.0f, (float) hsvValue.getBrightnessValue() / 255.0f);
-      int red = (rgb >> 16) & 0xFF;
-      int green = (rgb >> 8) & 0xFF;
-      int blue = (rgb) & 0xFF;
+      int rgb = java.awt.Color.HSBtoRGB((float) hsvValue.getHue() / 180.0f,
+                                        (float) hsvValue.getSaturation() / 255.0f,
+                                        (float) hsvValue.getBrightnessValue() / 255.0f);
+      int red = rgb >> 16 & 0xFF;
+      int green = rgb >> 8 & 0xFF;
+      int blue = rgb & 0xFF;
       return new java.awt.Color(red, green, blue);
    }
 }

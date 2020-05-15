@@ -15,7 +15,7 @@ public class TextArtifact extends Artifact
    private Font font = Font.getFont(Font.SANS_SERIF);
    private int xPixelOffset = 0;
    private int yPixelOffset = 0;
-   
+
    private final Point2D tempPoint = new Point2D();
 
    public TextArtifact(String id, String text, double x1, double y1)
@@ -35,8 +35,8 @@ public class TextArtifact extends Artifact
 
    public void setPixelOffset(int pixelOffset)
    {
-      this.xPixelOffset = pixelOffset;
-      this.yPixelOffset = pixelOffset;
+      xPixelOffset = pixelOffset;
+      yPixelOffset = pixelOffset;
    }
 
    public void setxPixelOffset(int xPixelOffset)
@@ -104,18 +104,18 @@ public class TextArtifact extends Artifact
 
    public TextArtifact getCopy()
    {
-      TextArtifact cirlceCopy = new TextArtifact(this.getID(), this.text, x1, y1);
-      cirlceCopy.setColor(this.getColor());
+      TextArtifact cirlceCopy = new TextArtifact(getID(), text, x1, y1);
+      cirlceCopy.setColor(getColor());
 
       return cirlceCopy;
    }
-   
+
    @Override
    public void drawHistory(Graphics2DAdapter graphics)
    {
       throw new RuntimeException("Not implemented!");
    }
-   
+
    @Override
    public void takeHistorySnapshot()
    {

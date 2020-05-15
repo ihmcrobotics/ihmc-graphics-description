@@ -16,45 +16,45 @@ public abstract class YoArtifact extends Artifact implements RemoteYoGraphic
    private final YoVariable<?>[] variableArray;
    private final double[] constants;
    private final AppearanceDefinition appearance;
-   
-   private final ArrayList<double[]> historicalData = new ArrayList<double[]>();
-   
+
+   private final ArrayList<double[]> historicalData = new ArrayList<>();
+
    public YoArtifact(String name, double[] constants, Color color, YoVariable<?>... variableArray)
    {
       super(name);
-      
+
       this.variableArray = variableArray;
       this.constants = constants;
-      this.appearance = new YoAppearanceRGBColor(color, 0.0);
+      appearance = new YoAppearanceRGBColor(color, 0.0);
       this.color = color;
    }
-   
+
    public abstract void drawHistoryEntry(Graphics2DAdapter graphics, double[] entry);
-   
+
    @Override
    public YoVariable<?>[] getVariables()
    {
       return variableArray;
    }
-   
+
    @Override
    public final double[] getConstants()
    {
       return constants;
    }
-   
+
    @Override
    public final AppearanceDefinition getAppearance()
    {
       return appearance;
    }
-   
+
    @Override
    public final String getName()
    {
       return getID();
    }
-   
+
    @Override
    public final void takeHistorySnapshot()
    {
@@ -71,7 +71,7 @@ public abstract class YoArtifact extends Artifact implements RemoteYoGraphic
          }
       }
    }
-   
+
    @Override
    public final void drawHistory(Graphics2DAdapter graphics)
    {

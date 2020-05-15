@@ -18,16 +18,16 @@ public class Graphics3DScaleInstruction implements Graphics3DPrimitiveInstructio
    {
       scaleFactor = scale;
    }
-   
+
    public void setScale(Vector3D scale)
    {
       scaleFactor = scale;
-      if(scaleChangedListener != null)
+      if (scaleChangedListener != null)
       {
          scaleChangedListener.setScale(scale);
       }
    }
-   
+
    public void setScale(double scale)
    {
       setScale(new Vector3D(scale, scale, scale));
@@ -42,7 +42,7 @@ public class Graphics3DScaleInstruction implements Graphics3DPrimitiveInstructio
    public String toString()
    {
 
-      return "\t\t\t<Scale>"+scaleFactor+"</Scale>\n";
+      return "\t\t\t<Scale>" + scaleFactor + "</Scale>\n";
    }
 
    public void addChangeScaleListener(ScaleChangedListener scaleChangedListener)

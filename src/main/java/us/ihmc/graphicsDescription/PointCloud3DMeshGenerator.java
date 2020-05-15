@@ -9,9 +9,8 @@ import us.ihmc.euclid.tuple3D.interfaces.Point3DReadOnly;
  * <p>
  * It works as the {@link SegmentedLine3DMeshDataGenerator}.
  * </p>
- * 
- * @author Sylvain Bertrand
  *
+ * @author Sylvain Bertrand
  */
 public class PointCloud3DMeshGenerator
 {
@@ -33,11 +32,12 @@ public class PointCloud3DMeshGenerator
     * The points radius is set to 1 meter but can be changed later via the method
     * {@link #setPointRadius(double)}.
     * </p>
-    * 
+    *
     * @param numberOfPoints number of spheres to be displayed. Necessary to evaluate the number of
-    *           meshes needed for this generator.
-    * @param resolution refers to the quality of the rendering for each sphere. A high value will
-    *           result in a smooth sphere, while a low value result in a polygonized sphere.
+    *                       meshes needed for this generator.
+    * @param resolution     refers to the quality of the rendering for each sphere. A high value will
+    *                       result in a smooth sphere, while a low value result in a polygonized
+    *                       sphere.
     */
    public PointCloud3DMeshGenerator(int numberOfPoints, int resolution)
    {
@@ -46,13 +46,13 @@ public class PointCloud3DMeshGenerator
 
    /**
     * Create a new mesh generator given the properties necessary to initialize the meshes.
-    * 
+    *
     * @param numberOfPoints number of spheres to be displayed. Necessary to evaluate the number of
-    *           meshes needed for this generator.
-    * @param resolution refers to the quality of the rendering for each sphere. A high value will
-    *           result in a smooth sphere, while a low value result in a polygonized sphere.
-    * @param pointRadius radius used to create all the spheres.
-    * 
+    *                       meshes needed for this generator.
+    * @param resolution     refers to the quality of the rendering for each sphere. A high value will
+    *                       result in a smooth sphere, while a low value result in a polygonized
+    *                       sphere.
+    * @param pointRadius    radius used to create all the spheres.
     */
    public PointCloud3DMeshGenerator(int numberOfPoints, int resolution, double pointRadius)
    {
@@ -69,7 +69,7 @@ public class PointCloud3DMeshGenerator
     * <p>
     * The resulting meshes can be obtained using {@link #getMeshDataHolders()}.
     * </p>
-    * 
+    *
     * @param pointLocations the positions for each sphere.
     * @throws RuntimeException if {@code pointLocations.length != this.getNumberOfPoints()}.
     */
@@ -94,10 +94,9 @@ public class PointCloud3DMeshGenerator
    /**
     * Changes the radius used for all the spheres.
     * <p>
-    * The compute method has to be called before the change is effective on the output
-    * meshes.
+    * The compute method has to be called before the change is effective on the output meshes.
     * </p>
-    * 
+    *
     * @param pointRadius the new radius to be used for the spheres.
     */
    public void setPointRadius(double pointRadius)
@@ -113,7 +112,7 @@ public class PointCloud3DMeshGenerator
 
    /**
     * Gets the number of spheres this generator is currently setup for.
-    * 
+    *
     * @return the number of points.
     */
    public int getNumberOfPoints()
@@ -127,7 +126,7 @@ public class PointCloud3DMeshGenerator
     * WARNING: the meshes are part of the internal memory of this generator and are updated when
     * calling the compute method.
     * </p>
-    * 
+    *
     * @return the reference to the output meshes of this generator.
     */
    public MeshDataHolder[] getMeshDataHolders()

@@ -9,8 +9,8 @@ public interface AppearanceDefinition
    public void setTransparency(double transparancy);
 
    public double getTransparency();
-   
+
    public MutableColor getColor();
-   
+
    public Color getAwtColor();
 }

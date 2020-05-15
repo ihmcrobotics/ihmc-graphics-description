@@ -9,7 +9,7 @@ import us.ihmc.graphicsDescription.plotting.Plotter2DAdapter;
 
 /**
  * To render pixel-radius lines that auto-scale with the GUI.
- * 
+ *
  * @author Duncan Calvert (dcalvert@ihmc.us)
  */
 public class PixelLineArtifact extends Artifact
@@ -17,16 +17,16 @@ public class PixelLineArtifact extends Artifact
    private Point2D pointOne;
    private Point2D pointTwo;
    private BasicStroke basicStroke;
-   
+
    public PixelLineArtifact(String id, Point2D pointOne, Point2D pointTwo)
    {
       this(id, pointOne, pointTwo, Color.BLACK, 1.0f);
    }
-   
+
    public PixelLineArtifact(String id, Point2D pointOne, Point2D pointTwo, Color color, float width)
    {
       super(id);
-      
+
       this.pointOne = pointOne;
       this.pointTwo = pointTwo;
       basicStroke = new BasicStroke(width);

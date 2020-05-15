@@ -6,7 +6,7 @@ import us.ihmc.tools.inputDevices.keyboard.Key;
 
 public class KeyListenerHolder
 {
-   private final ArrayList<KeyListener> keyListeners = new ArrayList<KeyListener>();
+   private final ArrayList<KeyListener> keyListeners = new ArrayList<>();
 
    public void addKeyListener(KeyListener listener)
    {
