@@ -20,7 +20,7 @@ public class Graphics3DAddExtrusionInstruction extends Graphics3DInstruction
 
    // Text3D stuff
    private final Font font = new Font("Lucida Sans", Font.PLAIN, 40);
-   
+
    private final FontRenderContext fontRenderContext;
 
    private Graphics3DAddExtrusionInstruction()
@@ -29,32 +29,32 @@ public class Graphics3DAddExtrusionInstruction extends Graphics3DInstruction
       BufferedImage measurementImage = new BufferedImage(1, 1, BufferedImage.TYPE_3BYTE_BGR);
       Graphics2D measurementGraphics = measurementImage.createGraphics();
       fontRenderContext = measurementGraphics.getFontRenderContext();
-      
+
    }
-   
+
    public Graphics3DAddExtrusionInstruction(String text, double thickness, AppearanceDefinition appearance)
    {
       this();
       this.thickness = thickness;
-      this.setText(text);
-      this.setAppearance(appearance);
-      
+      setText(text);
+      setAppearance(appearance);
+
    }
 
    /**
-    * Create an extrusion of a BufferedImage. Black pixels of the image are extruded. 
-    * A pixel is considered black when (red+green+blue)/3 < 60
-    * 
-    * @param bufferedImageToExtrude    BufferedImage to extrude
-    * @param thickness Thinkness of extrusion
-    * @param appearance Appearance
+    * Create an extrusion of a BufferedImage. Black pixels of the image are extruded. A pixel is
+    * considered black when (red+green+blue)/3 < 60
+    *
+    * @param bufferedImageToExtrude BufferedImage to extrude
+    * @param thickness              Thinkness of extrusion
+    * @param appearance             Appearance
     */
    public Graphics3DAddExtrusionInstruction(BufferedImage bufferedImageToExtrude, double thickness, AppearanceDefinition appearance)
    {
       this();
       this.thickness = thickness;
-      this.setBufferedImage(bufferedImageToExtrude);
-      this.setAppearance(appearance);
+      setBufferedImage(bufferedImageToExtrude);
+      setAppearance(appearance);
    }
 
    public BufferedImage getBufferedImage()
@@ -64,13 +64,13 @@ public class Graphics3DAddExtrusionInstruction extends Graphics3DInstruction
 
    public void setBufferedImage(BufferedImage newImage)
    {
-      this.bufferedImageToExtrude = newImage;
+      bufferedImageToExtrude = newImage;
       notifyChangedListener();
    }
 
    public void setHeight(double height)
    {
-      this.thickness = height;
+      thickness = height;
       notifyChangedListener();
    }
 
@@ -104,7 +104,7 @@ public class Graphics3DAddExtrusionInstruction extends Graphics3DInstruction
 
    public void setTextChangedListener(ExtrusionChangedListener textChangedListener)
    {
-      this.extrusionChangedListener = textChangedListener;
+      extrusionChangedListener = textChangedListener;
    }
 
    public double getHeight()

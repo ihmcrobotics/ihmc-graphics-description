@@ -7,14 +7,11 @@ import java.awt.image.WritableRaster;
 import us.ihmc.euclid.tuple3D.Point3D32;
 
 /**
- * Class to hold an image with depth data and all necessary transforms to convert to points
- * 
- * The (0,0) coordinate corresponds to the top left corner
- * 
- * The depths are stored as the distance from the camera in the z-axis. Note that this is not the distance between the camera and the point. 
- * 
- * @author Jesper Smith
+ * Class to hold an image with depth data and all necessary transforms to convert to points The
+ * (0,0) coordinate corresponds to the top left corner The depths are stored as the distance from
+ * the camera in the z-axis. Note that this is not the distance between the camera and the point.
  *
+ * @author Jesper Smith
  */
 public class DepthImage
 {
@@ -30,7 +27,7 @@ public class DepthImage
 
    /**
     * Allocate a new depth image with a given width and height
-    * 
+    *
     * @param width
     * @param height
     */
@@ -50,25 +47,21 @@ public class DepthImage
 
    /**
     * Convert from x,y originating top left to internal representation of BufferedImage
-    * 
+    *
     * @param x
     * @param y
     * @return index for internal data storage
     */
    private int getDataIndex(int x, int y)
    {
-      return ((height - y - 1) * width + x);
+      return (height - y - 1) * width + x;
    }
 
    /**
-    * Set the transform to calculate 3D coordinates from pixel coordinates.
-    * 
-    * The following formulates are used to calculate the X,Y,Z coordinates
-    * 
-    * x = (x'/width * 2 - 1) * m00 * depth
-    * y = (y'/height * 2 - 1) * m11 * depth
-    * z = depth
-    * 
+    * Set the transform to calculate 3D coordinates from pixel coordinates. The following formulates
+    * are used to calculate the X,Y,Z coordinates x = (x'/width * 2 - 1) * m00 * depth y = (y'/height *
+    * 2 - 1) * m11 * depth z = depth
+    *
     * @param m00
     * @param m11
     */
@@ -80,7 +73,7 @@ public class DepthImage
 
    /**
     * Set the color and depth of the point at pixel coordinates x, y
-    * 
+    *
     * @param x
     * @param y
     * @param red
@@ -101,15 +94,12 @@ public class DepthImage
    }
 
    /**
-    * Get the depth of the point at pixel coordinates x,y
-    * 
-    * The depth measurement is -inf if an object was closer to the camera than the minimum distance
-    * The depth measurement is +inf if and object was farther away from the camera than the maximum distance
-    * 
-    * 
+    * Get the depth of the point at pixel coordinates x,y The depth measurement is -inf if an object
+    * was closer to the camera than the minimum distance The depth measurement is +inf if and object
+    * was farther away from the camera than the maximum distance
+    *
     * @param x pixel coordinate
     * @param y pixel coordinate
-    * 
     * @return Depth measurement
     */
    public float getDepth(int x, int y)
@@ -118,13 +108,12 @@ public class DepthImage
    }
 
    /**
-    * 
-    * Get the point at pixel coordinates x,y and return the color
-    * 
-    * If there is no valid depth measurement at the this point (depth is -inf, +inf or NaN) then result is set to NaN for x,y and z.
-    * 
-    * @param x pixel coordinate
-    * @param y pixel coordinate
+    * Get the point at pixel coordinates x,y and return the color If there is no valid depth
+    * measurement at the this point (depth is -inf, +inf or NaN) then result is set to NaN for x,y and
+    * z.
+    *
+    * @param x      pixel coordinate
+    * @param y      pixel coordinate
     * @param result point to pack
     * @return Color packed in int as A-RGB, one byte per channel
     */
@@ -142,10 +131,10 @@ public class DepthImage
          }
          else
          {
-            result.setY(-1 * (((float) x / (float) width) * 2f - 1f) * m00);
-            result.setZ((((float) y / (float) height) * 2f - 1f) * m11);
+            result.setY(-1 * ((float) x / (float) width * 2f - 1f) * m00);
+            result.setZ(((float) y / (float) height * 2f - 1f) * m11);
             result.setX(1);
-            
+
             result.scale(depth);
 
          }
@@ -161,20 +150,19 @@ public class DepthImage
 
    /**
     * Get the color at pixel coordinates x,y
-    * 
+    *
     * @param x pixel coordinate
     * @param y pixel coordinate
-    *
     * @return Color packed in int as A-RGB, one byte per channel
     */
    public int getColor(int x, int y)
    {
       return getPoint(x, y, null);
    }
-   
+
    /**
     * Get the buffered image for this depth image
-    * 
+    *
     * @return Buffered image
     */
    public BufferedImage getBufferedImage()

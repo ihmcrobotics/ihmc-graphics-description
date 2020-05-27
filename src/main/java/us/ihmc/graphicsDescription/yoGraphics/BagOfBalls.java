@@ -18,7 +18,6 @@ import us.ihmc.yoVariables.variable.YoFramePoint3D;
  * <p>
  * Title: BagOfBalls
  * </p>
- *
  * <p>
  * Description: Class for displaying multiple points in the SCS GUI.
  * </p>
@@ -71,16 +70,14 @@ public class BagOfBalls
    }
 
    /**
-    * Creates a BagOfBalls with the given number of balls, and all the balls with the given
-    * Appearance.
+    * Creates a BagOfBalls with the given number of balls, and all the balls with the given Appearance.
     *
-    * @param numberOfBalls int Number of balls to create.
-    * @param sizeInMeters double Size of each ball in meters.
-    * @param name String Name of the BagOfBalls
-    * @param appearance Appearance for each of the balls.
-    * @param parentRegistry YoVariableRegistry to register the BagOfBalls with.
-    * @param yoGraphicsListRegistry YoGraphicsListRegistry to register the BagOfBalls
-    *           with.
+    * @param numberOfBalls          int Number of balls to create.
+    * @param sizeInMeters           double Size of each ball in meters.
+    * @param name                   String Name of the BagOfBalls
+    * @param appearance             Appearance for each of the balls.
+    * @param parentRegistry         YoVariableRegistry to register the BagOfBalls with.
+    * @param yoGraphicsListRegistry YoGraphicsListRegistry to register the BagOfBalls with.
     */
    public BagOfBalls(int numberOfBalls, double sizeInMeters, String name, AppearanceDefinition appearance, YoVariableRegistry parentRegistry,
                      YoGraphicsListRegistry yoGraphicsListRegistry)
@@ -89,16 +86,14 @@ public class BagOfBalls
    }
 
    /**
-    * Creates a BagOfBalls with the given number of balls, and all the balls with the given
-    * Appearance.
+    * Creates a BagOfBalls with the given number of balls, and all the balls with the given Appearance.
     *
-    * @param numberOfBalls int Number of balls to create.
-    * @param sizeInMeters double Size of each ball in meters.
-    * @param name String Name of the BagOfBalls
-    * @param appearance Appearance for each of the balls.
-    * @param parentRegistry YoVariableRegistry to register the BagOfBalls with.
-    * @param yoGraphicsListRegistry YoGraphicsListRegistry to register the BagOfBalls
-    *           with.
+    * @param numberOfBalls          int Number of balls to create.
+    * @param sizeInMeters           double Size of each ball in meters.
+    * @param name                   String Name of the BagOfBalls
+    * @param appearance             Appearance for each of the balls.
+    * @param parentRegistry         YoVariableRegistry to register the BagOfBalls with.
+    * @param yoGraphicsListRegistry YoGraphicsListRegistry to register the BagOfBalls with.
     */
    public BagOfBalls(int numberOfBalls, double sizeInMeters, String name, AppearanceDefinition appearance, GraphicType graphicType,
                      YoVariableRegistry parentRegistry, YoGraphicsListRegistry yoGraphicsListRegistry)
@@ -109,12 +104,11 @@ public class BagOfBalls
    /**
     * Creates a BagOfBalls with the size being the same as the number of Appearances given.
     *
-    * @param sizeInMeters double Size of each ball in meters.
-    * @param name String Name of the BagOfBalls
-    * @param appearances ArrayList of the Appearance for each of the balls.
-    * @param parentRegistry YoVariableRegistry to register the BagOfBalls with.
-    * @param yoGraphicsListRegistry YoGraphicsListRegistry to register the BagOfBalls
-    *           with.
+    * @param sizeInMeters           double Size of each ball in meters.
+    * @param name                   String Name of the BagOfBalls
+    * @param appearances            ArrayList of the Appearance for each of the balls.
+    * @param parentRegistry         YoVariableRegistry to register the BagOfBalls with.
+    * @param yoGraphicsListRegistry YoGraphicsListRegistry to register the BagOfBalls with.
     */
    public BagOfBalls(double sizeInMeters, String name, List<AppearanceDefinition> appearances, YoVariableRegistry parentRegistry,
                      YoGraphicsListRegistry yoGraphicsListRegistry)
@@ -159,12 +153,11 @@ public class BagOfBalls
    /**
     * Create a Bag of Balls with alternating ball color going through Red, White, and Blue.
     *
-    * @param numberOfBalls int Number of balls to create.
-    * @param sizeInMeters double Size of each ball in meters.
-    * @param name String Name of the BagOfBalls to create.
+    * @param numberOfBalls            int Number of balls to create.
+    * @param sizeInMeters             double Size of each ball in meters.
+    * @param name                     String Name of the BagOfBalls to create.
     * @param parentYoVariableRegistry YoVariableRegistry to register the BagOfBalls with.
-    * @param yoGraphicsListRegistry YoGraphicsListRegistry to register the BagOfBalls
-    *           with.
+    * @param yoGraphicsListRegistry   YoGraphicsListRegistry to register the BagOfBalls with.
     * @return BagOfBalls
     */
    public static BagOfBalls createPatrioticBag(int numberOfBalls, double sizeInMeters, String name, YoVariableRegistry parentYoVariableRegistry,
@@ -186,12 +179,11 @@ public class BagOfBalls
     * Create a Bag of Balls with alternating ball color going through the cycle of the colors of the
     * rainbow.
     *
-    * @param numberOfBalls int Number of balls to create.
-    * @param sizeInMeters double Size of each ball in meters.
-    * @param name String Name of the BagOfBalls to create.
+    * @param numberOfBalls            int Number of balls to create.
+    * @param sizeInMeters             double Size of each ball in meters.
+    * @param name                     String Name of the BagOfBalls to create.
     * @param parentYoVariableRegistry YoVariableRegistry to register the BagOfBalls with.
-    * @param yoGraphicsListRegistry YoGraphicsListRegistry to register the BagOfBalls
-    *           with.
+    * @param yoGraphicsListRegistry   YoGraphicsListRegistry to register the BagOfBalls with.
     * @return BagOfBalls
     */
    public static BagOfBalls createRainbowBag(int numberOfBalls, double sizeInMeters, String name, YoVariableRegistry parentYoVariableRegistry,
@@ -285,7 +277,7 @@ public class BagOfBalls
     * Sets the next ball to the given location, and gives it the given appearance. If all the balls
     * have been set, then does nothing.
     *
-    * @param location FramePoint to set the next ball to.
+    * @param location   FramePoint to set the next ball to.
     * @param appearance Appearance to give the next ball.
     */
    public void setBall(FramePoint3DReadOnly location, AppearanceDefinition appearance, int ballIndex)
@@ -328,8 +320,8 @@ public class BagOfBalls
    }
 
    /**
-    * Sets the next ball to the given location. If all the balls have been set, then loops to the
-    * first ball.
+    * Sets the next ball to the given location. If all the balls have been set, then loops to the first
+    * ball.
     *
     * @param location FramePoint to set the next ball to.
     */
@@ -342,7 +334,7 @@ public class BagOfBalls
     * Sets the next ball to the given location with the given Appearance. If all the balls have been
     * set, then loops to the first ball.
     *
-    * @param location FramePoint to set the next ball to.
+    * @param location   FramePoint to set the next ball to.
     * @param appearance Appearance to give the next ball.
     */
    public void setBallLoop(FramePoint3DReadOnly location, AppearanceDefinition appearance)
@@ -363,8 +355,7 @@ public class BagOfBalls
    }
 
    /**
-    * Resets by placing all the balls at (0, 0, 0) and making the first ball be the next ball to
-    * place.
+    * Resets by placing all the balls at (0, 0, 0) and making the first ball be the next ball to place.
     */
    public void reset()
    {

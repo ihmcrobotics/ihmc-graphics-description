@@ -27,7 +27,7 @@ public class YoGraphicPosition extends YoGraphic implements RemoteYoGraphic
    public enum GraphicType
    {
       BALL, SOLID_BALL, CROSS, BALL_WITH_CROSS, ROTATED_CROSS, BALL_WITH_ROTATED_CROSS, DIAMOND, DIAMOND_WITH_CROSS, SQUARE, SQUARE_WITH_CROSS, ELLIPSOID
-   };
+   }
 
    protected final YoDouble x, y, z;
    private final double scale;
@@ -206,58 +206,58 @@ public class YoGraphicPosition extends YoGraphic implements RemoteYoGraphic
       linkGraphics.setChangeable(true);
       switch (type)
       {
-      case BALL:
-      case SOLID_BALL:
-      case BALL_WITH_CROSS:
-      case BALL_WITH_ROTATED_CROSS:
-      {
-         double radius = 1.0;
-         linkGraphicInstructions.add(linkGraphics.addSphere(radius, appearance));
-         break;
-      }
-      case ELLIPSOID:
-      {
-         linkGraphicInstructions.add(linkGraphics.addEllipsoid(0.50, 1.0, 0.20, appearance));
-         break;
-      }
-      case CROSS:
-      {
-         double R = 1.0, r = 0.16;
+         case BALL:
+         case SOLID_BALL:
+         case BALL_WITH_CROSS:
+         case BALL_WITH_ROTATED_CROSS:
+         {
+            double radius = 1.0;
+            linkGraphicInstructions.add(linkGraphics.addSphere(radius, appearance));
+            break;
+         }
+         case ELLIPSOID:
+         {
+            linkGraphicInstructions.add(linkGraphics.addEllipsoid(0.50, 1.0, 0.20, appearance));
+            break;
+         }
+         case CROSS:
+         {
+            double R = 1.0, r = 0.16;
 
-         linkGraphicInstructions.add(linkGraphics.addArcTorus(0.0, 2.0 * Math.PI, R, r, appearance));
+            linkGraphicInstructions.add(linkGraphics.addArcTorus(0.0, 2.0 * Math.PI, R, r, appearance));
 
-         linkGraphics.rotate(Math.PI / 2.0, Axis3D.X);
-         linkGraphics.translate(0.0, 0.0, -R);
-         linkGraphicInstructions.add(linkGraphics.addCylinder(2.0 * R, r, appearance));
+            linkGraphics.rotate(Math.PI / 2.0, Axis3D.X);
+            linkGraphics.translate(0.0, 0.0, -R);
+            linkGraphicInstructions.add(linkGraphics.addCylinder(2.0 * R, r, appearance));
 
-         linkGraphics.identity();
-         linkGraphics.rotate(Math.PI / 2.0, Axis3D.Y);
-         linkGraphics.translate(0.0, 0.0, -R);
-         linkGraphicInstructions.add(linkGraphics.addCylinder(2.0 * R, r, appearance));
-         break;
-      }
+            linkGraphics.identity();
+            linkGraphics.rotate(Math.PI / 2.0, Axis3D.Y);
+            linkGraphics.translate(0.0, 0.0, -R);
+            linkGraphicInstructions.add(linkGraphics.addCylinder(2.0 * R, r, appearance));
+            break;
+         }
 
-      case ROTATED_CROSS:
-      {
+         case ROTATED_CROSS:
+         {
 
-         double R = 1.0, r = 0.16;
+            double R = 1.0, r = 0.16;
 
-         linkGraphicInstructions.add(linkGraphics.addArcTorus(0.0, 2.0 * Math.PI, R, r, appearance));
+            linkGraphicInstructions.add(linkGraphics.addArcTorus(0.0, 2.0 * Math.PI, R, r, appearance));
 
-         linkGraphics.rotate(Math.PI / 4.0, Axis3D.Z);
-         linkGraphics.rotate(Math.PI / 2.0, Axis3D.X);
-         linkGraphics.translate(0.0, 0.0, -R);
-         linkGraphicInstructions.add(linkGraphics.addCylinder(2.0 * R, r, appearance));
+            linkGraphics.rotate(Math.PI / 4.0, Axis3D.Z);
+            linkGraphics.rotate(Math.PI / 2.0, Axis3D.X);
+            linkGraphics.translate(0.0, 0.0, -R);
+            linkGraphicInstructions.add(linkGraphics.addCylinder(2.0 * R, r, appearance));
 
-         linkGraphics.identity();
-         linkGraphics.rotate(Math.PI / 4.0, Axis3D.Z);
-         linkGraphics.rotate(Math.PI / 2.0, Axis3D.Y);
-         linkGraphics.translate(0.0, 0.0, -R);
-         linkGraphicInstructions.add(linkGraphics.addCylinder(2.0 * R, r, appearance));
-         break;
-      }
-      default:
-         throw new RuntimeException("Shouldn't get here. Seems you set an invalid YoGraphicPosition type! type = " + type);
+            linkGraphics.identity();
+            linkGraphics.rotate(Math.PI / 4.0, Axis3D.Z);
+            linkGraphics.rotate(Math.PI / 2.0, Axis3D.Y);
+            linkGraphics.translate(0.0, 0.0, -R);
+            linkGraphicInstructions.add(linkGraphics.addCylinder(2.0 * R, r, appearance));
+            break;
+         }
+         default:
+            throw new RuntimeException("Shouldn't get here. Seems you set an invalid YoGraphicPosition type! type = " + type);
       }
 
       return linkGraphics;

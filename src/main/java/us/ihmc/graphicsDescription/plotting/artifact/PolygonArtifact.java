@@ -15,9 +15,9 @@ import us.ihmc.graphicsDescription.plotting.Plotter2DAdapter;
 
 public class PolygonArtifact extends Artifact
 {
-   private ArrayList<Point2DReadOnly> points = new ArrayList<>();
+   private List<Point2DReadOnly> points = new ArrayList<>();
    private boolean FILL_POLYGON = false;
-   
+
    private final ConvexPolygon2D tempPolygon = new ConvexPolygon2D();
    private final Point2D tempPoint = new Point2D();
    private final Vector2D tempRadii = new Vector2D();
@@ -43,7 +43,7 @@ public class PolygonArtifact extends Artifact
       this.color = color;
    }
 
-   public PolygonArtifact(String id, boolean fill, Color color, List<Point2D> points)
+   public PolygonArtifact(String id, boolean fill, Color color, List<? extends Point2DReadOnly> points)
    {
       super(id);
       setLevel(2);
@@ -82,7 +82,7 @@ public class PolygonArtifact extends Artifact
       Point2D maxPoint = boundingBox2d.getMaxPoint();
       Point2D leftUpper = new Point2D(minPoint.getX(), maxPoint.getY());
       Point2D rightLower = new Point2D(maxPoint.getX(), minPoint.getY());
-      ArrayList<Point2D> points = new ArrayList<Point2D>();
+      ArrayList<Point2D> points = new ArrayList<>();
       points.add(minPoint);
       points.add(leftUpper);
       points.add(maxPoint);
@@ -90,7 +90,7 @@ public class PolygonArtifact extends Artifact
       setPoints(points);
    }
 
-   public void setPoints(List<Point2D> points)
+   public void setPoints(List<? extends Point2DReadOnly> points)
    {
       this.points.clear();
       this.points.addAll(points);
@@ -98,24 +98,24 @@ public class PolygonArtifact extends Artifact
 
    public void setPoints(ConvexPolygon2D polygon)
    {
-      this.points.clear();
+      points.clear();
       for (int i = 0; i < polygon.getNumberOfVertices(); i++)
-         this.points.add(polygon.getVertex(i));
+         points.add(polygon.getVertex(i));
    }
 
-   public void addPoint(Point2D point)
+   public void addPoint(Point2DReadOnly point)
    {
-      this.points.add(point);
+      points.add(point);
    }
 
    public void clearAllPoints()
    {
-      this.points.clear();
+      points.clear();
    }
 
-   public ArrayList<Point2DReadOnly> getPoints()
+   public List<Point2DReadOnly> getPoints()
    {
-      return this.points;
+      return points;
    }
 
    public int getSize()
@@ -137,9 +137,9 @@ public class PolygonArtifact extends Artifact
    {
       if (points.isEmpty())
          return;
-      
+
       ArrayList<Point2DReadOnly> pointsCopy = new ArrayList<>(points);
-      
+
       if (pointsCopy.size() == 1)
       {
          tempPoint.set(pointsCopy.get(0).getX(), pointsCopy.get(0).getY());

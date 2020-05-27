@@ -56,40 +56,40 @@ public class YoArtifactPosition extends YoArtifact
 
       switch (graphicType)
       {
-      case BALL:
-         graphics.drawOval(graphics.getScreenFrame(), origin, legendRadii);
-         break;
-      case SOLID_BALL:
-         graphics.drawOvalFilled(graphics.getScreenFrame(), origin, legendRadii);
-         break;
-      case CROSS:
-         graphics.drawCross(graphics.getScreenFrame(), origin, legendRadii);
-         break;
-      case BALL_WITH_CROSS:
-         graphics.drawCircleWithCross(graphics.getScreenFrame(), origin, legendRadii);
-         break;
-      case ROTATED_CROSS:
-         graphics.drawRotatedCross(graphics.getScreenFrame(), origin, legendRadii);
-         break;
-      case BALL_WITH_ROTATED_CROSS:
-         graphics.drawCircleWithRotatedCross(graphics.getScreenFrame(), origin, legendRadii);
-         break;
-      case DIAMOND:
-         graphics.drawDiamond(graphics.getScreenFrame(), origin, legendRadii);
-         break;
-      case DIAMOND_WITH_CROSS:
-         graphics.drawDiamondWithCross(graphics.getScreenFrame(), origin, legendRadii);
-         break;
-      case SQUARE:
-         graphics.drawRectangle(graphics.getScreenFrame(), origin, legendRadii);
-         break;
-      case SQUARE_WITH_CROSS:
-         graphics.drawSquareWithCross(graphics.getScreenFrame(), origin, legendRadii);
-         break;
-      case ELLIPSOID:
-         legendRadii.set(LEGEND_RADIUS * 1.2, LEGEND_RADIUS * 0.8);
-         graphics.drawOval(graphics.getScreenFrame(), origin, legendRadii);
-         break;
+         case BALL:
+            graphics.drawOval(graphics.getScreenFrame(), origin, legendRadii);
+            break;
+         case SOLID_BALL:
+            graphics.drawOvalFilled(graphics.getScreenFrame(), origin, legendRadii);
+            break;
+         case CROSS:
+            graphics.drawCross(graphics.getScreenFrame(), origin, legendRadii);
+            break;
+         case BALL_WITH_CROSS:
+            graphics.drawCircleWithCross(graphics.getScreenFrame(), origin, legendRadii);
+            break;
+         case ROTATED_CROSS:
+            graphics.drawRotatedCross(graphics.getScreenFrame(), origin, legendRadii);
+            break;
+         case BALL_WITH_ROTATED_CROSS:
+            graphics.drawCircleWithRotatedCross(graphics.getScreenFrame(), origin, legendRadii);
+            break;
+         case DIAMOND:
+            graphics.drawDiamond(graphics.getScreenFrame(), origin, legendRadii);
+            break;
+         case DIAMOND_WITH_CROSS:
+            graphics.drawDiamondWithCross(graphics.getScreenFrame(), origin, legendRadii);
+            break;
+         case SQUARE:
+            graphics.drawRectangle(graphics.getScreenFrame(), origin, legendRadii);
+            break;
+         case SQUARE_WITH_CROSS:
+            graphics.drawSquareWithCross(graphics.getScreenFrame(), origin, legendRadii);
+            break;
+         case ELLIPSOID:
+            legendRadii.set(LEGEND_RADIUS * 1.2, LEGEND_RADIUS * 0.8);
+            graphics.drawOval(graphics.getScreenFrame(), origin, legendRadii);
+            break;
       }
    }
 
@@ -119,46 +119,46 @@ public class YoArtifactPosition extends YoArtifact
 
       switch (graphicType)
       {
-      case BALL:
-         graphics.drawOval(tempPoint, radii);
-         break;
-      case SOLID_BALL:
-         graphics.drawOvalFilled(tempPoint, radii);
-         break;
-      case CROSS:
-         graphics.drawCross(tempPoint, radii);
-         break;
-      case BALL_WITH_CROSS:
-         graphics.drawCircleWithCross(tempPoint, radii);
-         break;
-      case ROTATED_CROSS:
-         graphics.drawRotatedCross(tempPoint, radii);
-         break;
-      case BALL_WITH_ROTATED_CROSS:
-         graphics.drawCircleWithRotatedCross(tempPoint, radii);
-         break;
-      case DIAMOND:
-         graphics.drawDiamond(tempPoint, radii);
-         break;
-      case DIAMOND_WITH_CROSS:
-         graphics.drawDiamondWithCross(tempPoint, radii);
-         break;
-      case SQUARE:
-         graphics.drawSquare(tempPoint, radii);
-         break;
-      case SQUARE_WITH_CROSS:
-         graphics.drawSquareWithCross(tempPoint, radii);
-         break;
-      case ELLIPSOID:
-         double radius = radii.getX();
-         radii.setX(radii.getX() * 1.2);
-         radii.setY(radii.getY() * 0.8);
-         graphics.drawOval(tempPoint, radii);
-         radii.set(radius, radius);
-         break;
+         case BALL:
+            graphics.drawOval(tempPoint, radii);
+            break;
+         case SOLID_BALL:
+            graphics.drawOvalFilled(tempPoint, radii);
+            break;
+         case CROSS:
+            graphics.drawCross(tempPoint, radii);
+            break;
+         case BALL_WITH_CROSS:
+            graphics.drawCircleWithCross(tempPoint, radii);
+            break;
+         case ROTATED_CROSS:
+            graphics.drawRotatedCross(tempPoint, radii);
+            break;
+         case BALL_WITH_ROTATED_CROSS:
+            graphics.drawCircleWithRotatedCross(tempPoint, radii);
+            break;
+         case DIAMOND:
+            graphics.drawDiamond(tempPoint, radii);
+            break;
+         case DIAMOND_WITH_CROSS:
+            graphics.drawDiamondWithCross(tempPoint, radii);
+            break;
+         case SQUARE:
+            graphics.drawSquare(tempPoint, radii);
+            break;
+         case SQUARE_WITH_CROSS:
+            graphics.drawSquareWithCross(tempPoint, radii);
+            break;
+         case ELLIPSOID:
+            double radius = radii.getX();
+            radii.setX(radii.getX() * 1.2);
+            radii.setY(radii.getY() * 0.8);
+            graphics.drawOval(tempPoint, radii);
+            radii.set(radius, radius);
+            break;
       }
    }
-   
+
    public YoDouble getYoX()
    {
       return point.getYoX();

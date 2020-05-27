@@ -1,8 +1,8 @@
 package us.ihmc.graphicsDescription.plotting.artifact;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface ArtifactsChangedListener
 {
-   public void artifactsChanged(ArrayList<Artifact> newArtifacts);
+   public void artifactsChanged(List<Artifact> newArtifacts);
 }

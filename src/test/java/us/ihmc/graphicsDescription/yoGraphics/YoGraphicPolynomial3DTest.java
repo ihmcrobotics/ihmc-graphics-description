@@ -46,8 +46,14 @@ public class YoGraphicPolynomial3DTest
          double radius = random.nextDouble();
          int resolution = random.nextInt(50);
          int radialResolution = random.nextInt(50);
-         YoGraphicPolynomial3D yoGraphicWriter = new YoGraphicPolynomial3D(name, poseToPolynomialFrame, yoPolynomial3Ds, waypointTimes, radius, resolution,
-                                                                           radialResolution, registry);
+         YoGraphicPolynomial3D yoGraphicWriter = new YoGraphicPolynomial3D(name,
+                                                                           poseToPolynomialFrame,
+                                                                           yoPolynomial3Ds,
+                                                                           waypointTimes,
+                                                                           radius,
+                                                                           resolution,
+                                                                           radialResolution,
+                                                                           registry);
 
          YoVariable<?>[] allWriterYoVariables = yoGraphicWriter.getVariables();
          double[] allWriterConstants = new double[yoGraphicWriter.getConstants().length];

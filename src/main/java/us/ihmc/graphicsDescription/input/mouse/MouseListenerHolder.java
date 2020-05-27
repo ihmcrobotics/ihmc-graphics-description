@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class MouseListenerHolder
 {
-   private final ArrayList<MouseListener> mouseListeners = new ArrayList<MouseListener>();
+   private final ArrayList<MouseListener> mouseListeners = new ArrayList<>();
 
    public void addMouseListener(MouseListener mouseListener)
    {

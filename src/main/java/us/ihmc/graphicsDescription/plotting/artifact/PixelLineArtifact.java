@@ -4,31 +4,32 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 
 import us.ihmc.euclid.tuple2D.Point2D;
+import us.ihmc.euclid.tuple2D.interfaces.Point2DReadOnly;
 import us.ihmc.graphicsDescription.plotting.Graphics2DAdapter;
 import us.ihmc.graphicsDescription.plotting.Plotter2DAdapter;
 
 /**
  * To render pixel-radius lines that auto-scale with the GUI.
- * 
+ *
  * @author Duncan Calvert (dcalvert@ihmc.us)
  */
 public class PixelLineArtifact extends Artifact
 {
-   private Point2D pointOne;
-   private Point2D pointTwo;
+   private final Point2D pointOne = new Point2D();
+   private final Point2D pointTwo = new Point2D();
    private BasicStroke basicStroke;
-   
-   public PixelLineArtifact(String id, Point2D pointOne, Point2D pointTwo)
+
+   public PixelLineArtifact(String id, Point2DReadOnly pointOne, Point2DReadOnly pointTwo)
    {
       this(id, pointOne, pointTwo, Color.BLACK, 1.0f);
    }
-   
-   public PixelLineArtifact(String id, Point2D pointOne, Point2D pointTwo, Color color, float width)
+
+   public PixelLineArtifact(String id, Point2DReadOnly pointOne, Point2DReadOnly pointTwo, Color color, float width)
    {
       super(id);
-      
-      this.pointOne = pointOne;
-      this.pointTwo = pointTwo;
+
+      this.pointOne.set(pointOne);
+      this.pointTwo.set(pointTwo);
       basicStroke = new BasicStroke(width);
       setColor(color);
    }
@@ -56,13 +57,13 @@ public class PixelLineArtifact extends Artifact
    {
    }
 
-   public void setPointOne(Point2D pointOne)
+   public void setPointOne(Point2DReadOnly pointOne)
    {
-      this.pointOne = pointOne;
+      this.pointOne.set(pointOne);
    }
 
-   public void setPointTwo(Point2D pointTwo)
+   public void setPointTwo(Point2DReadOnly pointTwo)
    {
-      this.pointTwo = pointTwo;
+      this.pointTwo.set(pointTwo);
    }
 }

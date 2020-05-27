@@ -8,7 +8,7 @@ public class Mouse3DPollData
    private double drx;
    private double dry;
    private double drz;
-   
+
    public Mouse3DPollData(double dx, double dy, double dz, double drx, double dry, double drz)
    {
       this.dx = dx;

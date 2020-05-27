@@ -5,13 +5,10 @@ import us.ihmc.yoVariables.registry.YoVariableRegistry;
 import us.ihmc.yoVariables.variable.YoVariable;
 
 /**
- * This interface is applied to YoGraphics and Artifacts which support
- * being packed into YoVariables and sent from simulation to viewer.
- *
- * See YoGraphicFactory and YoVariableHandshakeServer
+ * This interface is applied to YoGraphics and Artifacts which support being packed into YoVariables
+ * and sent from simulation to viewer. See YoGraphicFactory and YoVariableHandshakeServer
  *
  * @author Alex Lesman
- *
  */
 public interface RemoteYoGraphic
 {

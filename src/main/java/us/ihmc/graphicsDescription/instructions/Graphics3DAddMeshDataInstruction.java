@@ -20,12 +20,11 @@ public class Graphics3DAddMeshDataInstruction extends Graphics3DInstruction
       return meshData;
    }
 
-
+   @Override
    public String toString()
    {
-      return "\t\t\t<MeshDataInstruction@"+hashCode()+">\n";
+      return "\t\t\t<MeshDataInstruction@" + hashCode() + ">\n";
    }
-
 
    public void setMeshChangedListener(MeshChangedListener meshChangedListener)
    {
@@ -34,11 +33,10 @@ public class Graphics3DAddMeshDataInstruction extends Graphics3DInstruction
 
    public void setMesh(MeshDataHolder newMesh)
    {
-      this.meshData = newMesh;
-      if(meshChangedListener != null)
+      meshData = newMesh;
+      if (meshChangedListener != null)
       {
          meshChangedListener.meshChanged(newMesh);
       }
    }
 }
-

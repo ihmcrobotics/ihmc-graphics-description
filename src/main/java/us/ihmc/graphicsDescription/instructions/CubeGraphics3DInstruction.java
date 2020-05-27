@@ -11,7 +11,7 @@ public class CubeGraphics3DInstruction extends PrimitiveGraphics3DInstruction
    public CubeGraphics3DInstruction(double length, double width, double height, boolean centeredInTheCenter)
    {
       super();
-      
+
       this.length = length;
       this.width = width;
       this.height = height;

@@ -9,12 +9,11 @@ import java.util.Map;
 import java.util.Set;
 
 import us.ihmc.commons.MathTools;
-import us.ihmc.euclid.geometry.LineSegment3D;
 import us.ihmc.euclid.geometry.interfaces.ConvexPolygon2DReadOnly;
-import us.ihmc.euclid.transform.RigidBodyTransform;
+import us.ihmc.euclid.geometry.interfaces.LineSegment3DReadOnly;
+import us.ihmc.euclid.transform.interfaces.RigidBodyTransformReadOnly;
 import us.ihmc.euclid.tuple2D.Point2D;
 import us.ihmc.euclid.tuple2D.interfaces.Point2DReadOnly;
-import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Point3D32;
 import us.ihmc.euclid.tuple3D.Vector3D32;
 import us.ihmc.euclid.tuple3D.interfaces.Point3DReadOnly;
@@ -65,7 +64,7 @@ public class MeshDataGenerator
 
       for (int longitudeIndex = 0; longitudeIndex < longitudeN; longitudeIndex++)
       {
-         float longitudeAngle = (float) (TwoPi * ((float) longitudeIndex / (float) longitudeN));
+         float longitudeAngle = TwoPi * ((float) longitudeIndex / (float) longitudeN);
          float cosLongitude = (float) Math.cos(longitudeAngle);
          float sinLongitude = (float) Math.sin(longitudeAngle);
 
@@ -86,7 +85,7 @@ public class MeshDataGenerator
 
             normals[currentIndex] = new Vector3D32(normalX, normalY, normalZ);
 
-            float textureX = (float) (longitudeAngle / TwoPi);
+            float textureX = longitudeAngle / TwoPi;
             float textureY = (float) (0.5 * sinLatitude + 0.5);
             textPoints[currentIndex] = new TexCoord2f(textureX, textureY);
          }
@@ -115,7 +114,7 @@ public class MeshDataGenerator
          for (int longitudeIndex = 0; longitudeIndex < longitudeN; longitudeIndex++)
          {
             int nextLongitudeIndex = (longitudeIndex + 1) % longitudeN;
-            int nextLatitudeIndex = (latitudeIndex + 1);
+            int nextLatitudeIndex = latitudeIndex + 1;
 
             // Lower triangles
             triangleIndices[index++] = latitudeIndex * longitudeN + longitudeIndex;
@@ -154,7 +153,7 @@ public class MeshDataGenerator
     * <p>
     * <b> It is assumed that the polygon is convex and counter-clockwise ordered. </b>
     * </p>
-    * 
+    *
     * @param ccwOrderedConvexPolygonPoints the counter-clockwise-ordered vertices of the polygon.
     * @return the created triangle mesh.
     */
@@ -168,9 +167,9 @@ public class MeshDataGenerator
     * <p>
     * <b> It is assumed that the polygon is convex and counter-clockwise ordered. </b>
     * </p>
-    * 
+    *
     * @param ccwOrderedConvexPolygonPoints the counter-clockwise-ordered vertices of the polygon.
-    * @param numberOfVertices will read only the vertices from 0 to numberOfVertices - 1.
+    * @param numberOfVertices              will read only the vertices from 0 to numberOfVertices - 1.
     * @return the created triangle mesh.
     */
    public static MeshDataHolder Polygon(List<? extends Point3DReadOnly> ccwOrderedConvexPolygonPoints, int numberOfVertices)
@@ -189,7 +188,7 @@ public class MeshDataGenerator
     * <p>
     * <b> It is assumed that the polygon is convex and counter-clockwise ordered. </b>
     * </p>
-    * 
+    *
     * @param ccwOrderedConvexPolygonPoints the counter-clockwise-ordered vertices of the polygon.
     * @return the created triangle mesh.
     */
@@ -209,12 +208,12 @@ public class MeshDataGenerator
     * <p>
     * <b> It is assumed that the polygon is convex and counter-clockwise ordered. </b>
     * </p>
-    * 
-    * @param polygonTransformToWorld transform to use to obtain polygon 3D coordinates in world.
+    *
+    * @param polygonTransformToWorld       transform to use to obtain polygon 3D coordinates in world.
     * @param ccwOrderedConvexPolygonPoints the counter-clockwise-ordered vertices of the polygon.
     * @return the created triangle mesh.
     */
-   public static MeshDataHolder Polygon(RigidBodyTransform polygonTransformToWorld, List<? extends Point2DReadOnly> ccwOrderedConvexPolygonPoints)
+   public static MeshDataHolder Polygon(RigidBodyTransformReadOnly polygonTransformToWorld, List<? extends Point2DReadOnly> ccwOrderedConvexPolygonPoints)
    {
       Point3D32[] points = new Point3D32[ccwOrderedConvexPolygonPoints.size()];
       int reverseIndex = ccwOrderedConvexPolygonPoints.size();
@@ -230,7 +229,7 @@ public class MeshDataGenerator
 
    /**
     * Create a triangle mesh for the given polygon.
-    * 
+    *
     * @param convexPolygon the polygon to create a mesh from.
     * @return the created triangle mesh.
     */
@@ -249,12 +248,12 @@ public class MeshDataGenerator
 
    /**
     * Create a triangle mesh for the given polygon.
-    * 
+    *
     * @param polygonTransformToWorld transform to use to obtain polygon 3D coordinates in world.
-    * @param convexPolygon the polygon to create a mesh from.
+    * @param convexPolygon           the polygon to create a mesh from.
     * @return the created triangle mesh.
     */
-   public static MeshDataHolder Polygon(RigidBodyTransform polygonTransformToWorld, ConvexPolygon2DReadOnly convexPolygon)
+   public static MeshDataHolder Polygon(RigidBodyTransformReadOnly polygonTransformToWorld, ConvexPolygon2DReadOnly convexPolygon)
    {
       Point3D32[] points = new Point3D32[convexPolygon.getNumberOfVertices()];
       int reverseIndex = convexPolygon.getNumberOfVertices();
@@ -273,7 +272,7 @@ public class MeshDataGenerator
     * <p>
     * <b> It is assumed that the polygon is convex and counter-clockwise ordered. </b>
     * </p>
-    * 
+    *
     * @param ccwOrderedConvexPolygonPoints the counter-clockwise-ordered vertices of the polygon.
     * @return the created triangle mesh.
     */
@@ -308,9 +307,10 @@ public class MeshDataGenerator
     * <p>
     * TODO: Figure out how to texture an extruded polygon!
     * </p>
-    * 
+    *
     * @param convexPolygon2d the polygon to create a mesh from.
-    * @param extrusionHeight thickness of the extrusion. If {@code extrusionHeight < 0}, the polygon is extruded toward z negative.
+    * @param extrusionHeight thickness of the extrusion. If {@code extrusionHeight < 0}, the polygon is
+    *                        extruded toward z negative.
     * @return the created triangle mesh.
     */
    public static MeshDataHolder ExtrudedPolygon(ConvexPolygon2DReadOnly convexPolygon2d, double extrusionHeight)
@@ -333,9 +333,10 @@ public class MeshDataGenerator
     * <p>
     * TODO: Figure out how to texture an extruded polygon!
     * </p>
-    * 
+    *
     * @param ccwOrderedConvexPolygonPoints the counter-clockwise-ordered vertices of the polygon.
-    * @param extrusionHeight thickness of the extrusion. If {@code extrusionHeight < 0}, the polygon is extruded toward z negative.
+    * @param extrusionHeight               thickness of the extrusion. If {@code extrusionHeight < 0},
+    *                                      the polygon is extruded toward z negative.
     * @return the created triangle mesh.
     */
    public static MeshDataHolder ExtrudedPolygon(List<? extends Point2DReadOnly> ccwOrderedConvexPolygonPoints, double extrusionHeight)
@@ -358,9 +359,10 @@ public class MeshDataGenerator
     * <p>
     * TODO: Figure out how to texture an extruded polygon!
     * </p>
-    * 
+    *
     * @param ccwOrderedConvexPolygonPoints the counter-clockwise-ordered vertices of the polygon.
-    * @param extrusionHeight thickness of the extrusion. If {@code extrusionHeight < 0}, the polygon is extruded toward z negative.
+    * @param extrusionHeight               thickness of the extrusion. If {@code extrusionHeight < 0},
+    *                                      the polygon is extruded toward z negative.
     * @return the created triangle mesh.
     */
    public static MeshDataHolder ExtrudedPolygon(Point2DReadOnly[] ccwOrderedConvexPolygonPoints, double extrusionHeight)
@@ -376,10 +378,12 @@ public class MeshDataGenerator
     * <p>
     * TODO: Figure out how to texture an extruded polygon!
     * </p>
-    * 
+    *
     * @param ccwOrderedConvexPolygonPoints the counter-clockwise-ordered vertices of the polygon.
-    * @param extrusionHeight thickness of the extrusion. If {@code extrusionHeight < 0}, the polygon is extruded toward z negative.
-    * @param heightOffset offset along the z-axis that is applied on all the vertices of the resulting mesh.
+    * @param extrusionHeight               thickness of the extrusion. If {@code extrusionHeight < 0},
+    *                                      the polygon is extruded toward z negative.
+    * @param heightOffset                  offset along the z-axis that is applied on all the vertices
+    *                                      of the resulting mesh.
     * @return the created triangle mesh.
     */
    public static MeshDataHolder ExtrudedPolygon(Point2DReadOnly[] ccwOrderedConvexPolygonPoints, double extrusionHeight, double heightOffset)
@@ -406,8 +410,8 @@ public class MeshDataGenerator
 
       for (int i = 0; i < N; i++)
       {
-         float vertexX = (float) (ccwOrderedConvexPolygonPoints[i].getX());
-         float vertexY = (float) (ccwOrderedConvexPolygonPoints[i].getY());
+         float vertexX = (float) ccwOrderedConvexPolygonPoints[i].getX();
+         float vertexY = (float) ccwOrderedConvexPolygonPoints[i].getY();
          float normalX = vertexX - (float) average.getX();
          float normalY = vertexY - (float) average.getY();
          float normalLength = (float) Math.sqrt(normalX * normalX + normalY * normalY);
@@ -484,11 +488,11 @@ public class MeshDataGenerator
 
       for (int longitudeIndex = 0; longitudeIndex < longitudeN; longitudeIndex++)
       {
-         float longitudeAngle = (float) (TwoPi * ((float) longitudeIndex / (float) longitudeN));
+         float longitudeAngle = TwoPi * ((float) longitudeIndex / (float) longitudeN);
 
          for (int latitudeIndex = 0; latitudeIndex < latitudeN; latitudeIndex++)
          {
-            float latitudeAngle = (float) (HalfPi * ((float) latitudeIndex / (float) latitudeN));
+            float latitudeAngle = HalfPi * ((float) latitudeIndex / (float) latitudeN);
 
             float cosLongitude = (float) Math.cos(longitudeAngle);
             float sinLongitude = (float) Math.sin(longitudeAngle);
@@ -506,7 +510,7 @@ public class MeshDataGenerator
 
             normals[currentIndex] = new Vector3D32(normalX, normalY, normalZ);
 
-            float textureX = (float) (longitudeAngle / TwoPi);
+            float textureX = longitudeAngle / TwoPi;
             float textureY = (float) (0.5 * sinLatitude + 0.5);
             textPoints[currentIndex] = new TexCoord2f(textureX, textureY);
          }
@@ -515,7 +519,7 @@ public class MeshDataGenerator
       // Bottom side
       for (int longitudeIndex = 0; longitudeIndex < longitudeN; longitudeIndex++)
       {
-         float longitudeAngle = (float) (TwoPi * ((float) longitudeIndex / (float) longitudeN));
+         float longitudeAngle = TwoPi * ((float) longitudeIndex / (float) longitudeN);
 
          int currentIndex = latitudeN * longitudeN + longitudeIndex;
          float vertexX = (float) (xRadius * Math.cos(longitudeAngle));
@@ -525,7 +529,7 @@ public class MeshDataGenerator
 
          normals[currentIndex] = new Vector3D32(0.0f, 0.0f, -1.0f);
 
-         float textureX = (float) (longitudeAngle / TwoPi);
+         float textureX = longitudeAngle / TwoPi;
          textPoints[currentIndex] = new TexCoord2f(textureX, 0.5f);
       }
 
@@ -552,7 +556,7 @@ public class MeshDataGenerator
          for (int longitudeIndex = 0; longitudeIndex < longitudeN; longitudeIndex++)
          {
             int nextLongitudeIndex = (longitudeIndex + 1) % longitudeN;
-            int nextLatitudeIndex = (latitudeIndex + 1);
+            int nextLatitudeIndex = latitudeIndex + 1;
 
             // Lower triangles
             triangleIndices[index++] = latitudeIndex * longitudeN + longitudeIndex;
@@ -606,8 +610,8 @@ public class MeshDataGenerator
          float cosAngle = (float) Math.cos(angle);
          float sinAngle = (float) Math.sin(angle);
 
-         float vertexX = (radius * cosAngle);
-         float vertexY = (radius * sinAngle);
+         float vertexX = radius * cosAngle;
+         float vertexY = radius * sinAngle;
 
          // Bottom vertices
          points[i] = new Point3D32(vertexX, vertexY, 0.0f);
@@ -661,7 +665,7 @@ public class MeshDataGenerator
 
       for (int i = 0; i < N; i++)
       { // The cylinder part
-           // Lower triangle
+        // Lower triangle
          triangleIndices[index++] = i + 2 * N;
          triangleIndices[index++] = (i + 1) % N + 2 * N;
          triangleIndices[index++] = i + 3 * N;
@@ -778,11 +782,13 @@ public class MeshDataGenerator
          float baseAngle = (float) Math.atan2(baseY, baseX);
          float topAngle = (float) Math.atan2(topY, topX);
          points[i + 2 * N] = new Point3D32(baseX, baseY, 0.0f);
-         normals[i + 2 * N] = new Vector3D32((float) (Math.cos(baseAngle) * Math.cos(openingAngle)), (float) (Math.sin(baseAngle) * Math.cos(openingAngle)),
+         normals[i + 2 * N] = new Vector3D32((float) (Math.cos(baseAngle) * Math.cos(openingAngle)),
+                                             (float) (Math.sin(baseAngle) * Math.cos(openingAngle)),
                                              (float) Math.sin(openingAngle));
          textPoints[i + 2 * N] = new TexCoord2f(0.5f * cosAngle + 0.5f, 0.5f * sinAngle + 0.5f);
          points[i + 3 * N] = new Point3D32(topX, topY, height);
-         normals[i + 3 * N] = new Vector3D32((float) (Math.cos(topAngle) * Math.cos(openingAngle)), (float) (Math.sin(topAngle) * Math.cos(openingAngle)),
+         normals[i + 3 * N] = new Vector3D32((float) (Math.cos(topAngle) * Math.cos(openingAngle)),
+                                             (float) (Math.sin(topAngle) * Math.cos(openingAngle)),
                                              (float) Math.sin(openingAngle));
          textPoints[i + 3 * N] = new TexCoord2f(0.5f * cosAngle + 0.5f, 0.5f * sinAngle + 0.5f);
       }
@@ -979,10 +985,10 @@ public class MeshDataGenerator
 
    /**
     * Generate a {@link MeshDataHolder} for a cube of size (lx, ly, lz).
-    * 
-    * @param lx cube size along the x-axis.
-    * @param ly cube size along the y-axis.
-    * @param lz cube size along the z-axis.
+    *
+    * @param lx       cube size along the x-axis.
+    * @param ly       cube size along the y-axis.
+    * @param lz       cube size along the z-axis.
     * @param centered whether the generated cube is centered at 0 along the z-axis only.
     * @return the cube mesh in a {@link MeshDataHolder}.
     */
@@ -993,13 +999,13 @@ public class MeshDataGenerator
 
    /**
     * Generate a {@link MeshDataHolder} for a cube of size (lx, ly, lz).
-    * 
-    * @param lx cube size along the x-axis.
-    * @param ly cube size along the y-axis.
-    * @param lz cube size along the z-axis.
-    * @param centered whether the generated cube is centered at 0 along the z-axis only.
-    * @param textureFaces specifies for each face whether the texture coordinates should be computed
-    *           or not. When null, the texture coordinates for all the faces are computed.
+    *
+    * @param lx           cube size along the x-axis.
+    * @param ly           cube size along the y-axis.
+    * @param lz           cube size along the z-axis.
+    * @param centered     whether the generated cube is centered at 0 along the z-axis only.
+    * @param textureFaces specifies for each face whether the texture coordinates should be computed or
+    *                     not. When null, the texture coordinates for all the faces are computed.
     * @return the cube mesh in a {@link MeshDataHolder}.
     */
    public static MeshDataHolder Cube(double lx, double ly, double lz, boolean centered, boolean[] textureFaces)
@@ -1009,13 +1015,13 @@ public class MeshDataGenerator
 
    /**
     * Generate a {@link MeshDataHolder} for a cube of size (lx, ly, lz).
-    * 
-    * @param lx cube size along the x-axis.
-    * @param ly cube size along the y-axis.
-    * @param lz cube size along the z-axis.
-    * @param centered whether the generated cube is centered at 0 along the z-axis only.
-    * @param textureFaces specifies for each face whether the texture coordinates should be computed
-    *           or not. When null, the texture coordinates for all the faces are computed.
+    *
+    * @param lx           cube size along the x-axis.
+    * @param ly           cube size along the y-axis.
+    * @param lz           cube size along the z-axis.
+    * @param centered     whether the generated cube is centered at 0 along the z-axis only.
+    * @param textureFaces specifies for each face whether the texture coordinates should be computed or
+    *                     not. When null, the texture coordinates for all the faces are computed.
     * @return the cube mesh in a {@link MeshDataHolder}.
     */
    public static MeshDataHolder Cube(float lx, float ly, float lz, boolean centered, boolean[] textureFaces)
@@ -1281,7 +1287,7 @@ public class MeshDataGenerator
 
    public static MeshDataHolder Wedge(double lx, double ly, double lz)
    {
-      return (Wedge((float) lx, (float) ly, (float) lz));
+      return Wedge((float) lx, (float) ly, (float) lz);
    }
 
    public static MeshDataHolder Wedge(float lx, float ly, float lz)
@@ -1402,7 +1408,7 @@ public class MeshDataGenerator
 
    public static MeshDataHolder PyramidCube(double lx, double ly, double lz, double lh)
    {
-      return (PyramidCube((float) lx, (float) ly, (float) lz, (float) lh));
+      return PyramidCube((float) lx, (float) ly, (float) lz, (float) lh);
    }
 
    public static MeshDataHolder PyramidCube(float lx, float ly, float lz, float lh)
@@ -1643,7 +1649,7 @@ public class MeshDataGenerator
       return new MeshDataHolder(points, textPoints, polygonIndices, normals);
    }
 
-   public static MeshDataHolder Line(LineSegment3D lineSegment3d, double width)
+   public static MeshDataHolder Line(LineSegment3DReadOnly lineSegment3d, double width)
    {
       return Line(lineSegment3d.getFirstEndpoint(), lineSegment3d.getSecondEndpoint(), width);
    }
@@ -1732,7 +1738,7 @@ public class MeshDataGenerator
       if (longitudeN % 2 != 0)
          throw new RuntimeException("Sorry but latitudeN must be even for now in MeshDataGenerator.Capsule(). Please change or fix Capsule");
       // Reminder of longitude and latitude: http://www.geographyalltheway.com/ks3_geography/maps_atlases/longitude_latitude.htm
-      int numberOfVertices = (latitudeN) * longitudeN + 2;
+      int numberOfVertices = latitudeN * longitudeN + 2;
       Point3D32 points[] = new Point3D32[numberOfVertices];
       Vector3D32[] normals = new Vector3D32[numberOfVertices];
       TexCoord2f textPoints[] = new TexCoord2f[numberOfVertices];
@@ -1742,11 +1748,11 @@ public class MeshDataGenerator
       for (int longitudeIndex = 0; longitudeIndex < longitudeN; longitudeIndex++)
       {
          // Top hemi-ellipsoid
-         float longitudeAngle = (float) (TwoPi * ((float) longitudeIndex / (float) longitudeN));
+         float longitudeAngle = TwoPi * ((float) longitudeIndex / (float) longitudeN);
 
          for (int latitudeIndex = 0; latitudeIndex < latitudeN / 2; latitudeIndex++)
          {
-            float latitudeAngle = (float) (HalfPi * ((float) 2 * latitudeIndex / (float) latitudeN));
+            float latitudeAngle = HalfPi * ((float) 2 * latitudeIndex / latitudeN);
 
             float cosLongitude = (float) Math.cos(longitudeAngle);
             float sinLongitude = (float) Math.sin(longitudeAngle);
@@ -1764,17 +1770,17 @@ public class MeshDataGenerator
 
             normals[currentIndex] = new Vector3D32(normalX, normalY, normalZ);
 
-            float textureX = (float) (longitudeAngle / TwoPi);
+            float textureX = longitudeAngle / TwoPi;
             float textureY = (float) (0.5 * sinLatitude + 0.5);
             textPoints[currentIndex] = new TexCoord2f(textureX, textureY);
          }
 
          // Bottom hemi-ellipsoid
-         longitudeAngle = (float) (TwoPi * ((float) longitudeIndex / (float) longitudeN));
+         longitudeAngle = TwoPi * ((float) longitudeIndex / (float) longitudeN);
 
          for (int latitudeIndex = 0; latitudeIndex < latitudeN / 2; latitudeIndex++)
          {
-            float latitudeAngle = -(float) (HalfPi * ((float) 2 * latitudeIndex / (float) latitudeN));
+            float latitudeAngle = -(HalfPi * ((float) 2 * latitudeIndex / latitudeN));
 
             float cosLongitude = (float) Math.cos(longitudeAngle);
             float sinLongitude = (float) Math.sin(longitudeAngle);
@@ -1792,20 +1798,20 @@ public class MeshDataGenerator
 
             normals[currentIndex] = new Vector3D32(normalX, normalY, normalZ);
 
-            float textureX = (float) (longitudeAngle / TwoPi);
+            float textureX = longitudeAngle / TwoPi;
             float textureY = (float) (0.5 * sinLatitude + 0.5);
             textPoints[currentIndex] = new TexCoord2f(textureX, textureY);
          }
       }
 
       // North pole
-      int northPoleIndex = (latitudeN) * longitudeN;
+      int northPoleIndex = latitudeN * longitudeN;
       points[northPoleIndex] = new Point3D32(0.0f, 0.0f, zRadius + halfHeight);
       normals[northPoleIndex] = new Vector3D32(0.0f, 0.0f, 1.0f);
       textPoints[northPoleIndex] = new TexCoord2f(1.0f, 1.0f);
 
       // South pole
-      int southPoleIndex = (latitudeN) * longitudeN + 1;
+      int southPoleIndex = latitudeN * longitudeN + 1;
       points[southPoleIndex] = new Point3D32(0.0f, 0.0f, -zRadius - halfHeight);
       normals[southPoleIndex] = new Vector3D32(0.0f, 0.0f, -1.0f);
       textPoints[southPoleIndex] = new TexCoord2f(0.5f, 1.0f);
@@ -1821,7 +1827,7 @@ public class MeshDataGenerator
          for (int longitudeIndex = 0; longitudeIndex < longitudeN; longitudeIndex++)
          {
             int nextLongitudeIndex = (longitudeIndex + 1) % longitudeN;
-            int nextLatitudeIndex = (latitudeIndex + 1);
+            int nextLatitudeIndex = latitudeIndex + 1;
 
             // Lower triangles
             triangleIndices[index++] = latitudeIndex * longitudeN + longitudeIndex;
@@ -1849,7 +1855,7 @@ public class MeshDataGenerator
          for (int longitudeIndex = 0; longitudeIndex < longitudeN; longitudeIndex++)
          {
             int nextLongitudeIndex = (longitudeIndex + 1) % longitudeN;
-            int nextLatitudeIndex = (latitudeIndex + 1);
+            int nextLatitudeIndex = latitudeIndex + 1;
 
             // Lower triangles
             triangleIndices[index++] = latitudeIndex * longitudeN + longitudeIndex;
@@ -2018,7 +2024,7 @@ public class MeshDataGenerator
    {
       TexCoord2f[] textPoints = new TexCoord2f[numPoints];
 
-      double distanceBetweenPoints = 4.0 / (numPoints);
+      double distanceBetweenPoints = 4.0 / numPoints;
       float[] xSides = {0.0f, 0.0f, 1.0f, 1.0f};
       float[] ySides = {0.0f, 1.0f, 1.0f, 0.0f};
       float positionAlongPerimeter;
@@ -2030,7 +2036,7 @@ public class MeshDataGenerator
       {
          positionAlongPerimeter = (float) distanceBetweenPoints * i;
          positionAlongSide = (float) (positionAlongPerimeter - Math.floor(positionAlongPerimeter));
-         side = ((int) Math.floor(positionAlongPerimeter)) % 4;
+         side = (int) Math.floor(positionAlongPerimeter) % 4;
          secondPoint = (side + 1) % 4;
 
          texCoordX = positionAlongSide * xSides[secondPoint] + (1.0f - positionAlongSide) * xSides[side];
@@ -2052,9 +2058,9 @@ public class MeshDataGenerator
       return points3f;
    }
 
-   public static Vector3D32[] findNormalsPerVertex(int[] indices, Point3D32[] vertices)
+   public static Vector3D32[] findNormalsPerVertex(int[] indices, Point3DReadOnly[] vertices)
    {
-      Map<Integer, Set<Integer>> participatingFacesPerVertex = new LinkedHashMap<Integer, Set<Integer>>();
+      Map<Integer, Set<Integer>> participatingFacesPerVertex = new LinkedHashMap<>();
 
       for (int i = 0; i < indices.length; i++)
       {
@@ -2062,7 +2068,7 @@ public class MeshDataGenerator
 
          if (vertexFacesSet == null)
          {
-            vertexFacesSet = new LinkedHashSet<Integer>();
+            vertexFacesSet = new LinkedHashSet<>();
             participatingFacesPerVertex.put(indices[i], vertexFacesSet);
          }
 
@@ -2086,7 +2092,7 @@ public class MeshDataGenerator
          for (int face : participatingFaceIndices)
             vertexNormal.add(normalsPerFace[face]);
 
-         float faces = (float) participatingFaceIndices.size();
+         float faces = participatingFaceIndices.size();
          vertexNormal.scale(1.0f / faces);
          normalsPerVertex[pos++] = vertexNormal;
       }
@@ -2094,13 +2100,13 @@ public class MeshDataGenerator
       return normalsPerVertex;
    }
 
-   private static Vector3D32[] findNormalsPerFace(int[] indices, Point3D32[] vertices)
+   private static Vector3D32[] findNormalsPerFace(int[] indices, Point3DReadOnly[] vertices)
    {
       Vector3D32[] normalsPerFace = new Vector3D32[indices.length / 3]; // Abuse integer division.
 
       Vector3D32 firstVector = new Vector3D32();
       Vector3D32 secondVector = new Vector3D32();
-      Point3D32[] faceVertices = new Point3D32[3];
+      Point3DReadOnly[] faceVertices = new Point3DReadOnly[3];
 
       for (int face = 0; face < normalsPerFace.length; face++)
       {
@@ -2124,7 +2130,7 @@ public class MeshDataGenerator
       return normalsPerFace;
    }
 
-   public static MeshDataHolder createFromVerticesAndStripCounts(Point3D[] vertices, int[] polygonStripCounts)
+   public static MeshDataHolder createFromVerticesAndStripCounts(Point3DReadOnly[] vertices, int[] polygonStripCounts)
    {
       Point3D32[] verticesWithFloats = new Point3D32[vertices.length];
 
@@ -2151,7 +2157,7 @@ public class MeshDataGenerator
          textPoints[i] = new TexCoord2f();
       }
 
-      List<Integer> triangleIndices = new ArrayList<Integer>();
+      List<Integer> triangleIndices = new ArrayList<>();
 
       int polygonIndicesStart = 0;
       for (int pointsForThisPolygon : polygonStripCounts)

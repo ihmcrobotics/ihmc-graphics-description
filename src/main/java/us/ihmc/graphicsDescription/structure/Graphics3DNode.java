@@ -6,9 +6,10 @@ import java.util.List;
 
 import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.transform.AffineTransform;
-import us.ihmc.euclid.transform.RigidBodyTransform;
+import us.ihmc.euclid.transform.interfaces.RigidBodyTransformReadOnly;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.interfaces.Point3DReadOnly;
+import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 import us.ihmc.euclid.tuple4D.interfaces.QuaternionReadOnly;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.input.SelectedListener;
@@ -24,8 +25,8 @@ public class Graphics3DNode
    private Graphics3DObject graphicsObject;
    private boolean hasGraphicsObjectChanged = false;
 
-   private final ArrayList<Graphics3DNode> childeren = new ArrayList<Graphics3DNode>();
-   private final ArrayList<SelectedListener> selectedListeners = new ArrayList<SelectedListener>();
+   private final ArrayList<Graphics3DNode> childeren = new ArrayList<>();
+   private final ArrayList<SelectedListener> selectedListeners = new ArrayList<>();
 
    public Graphics3DNode(String name, Graphics3DNodeType nodeType, Graphics3DObject graphicsObject)
    {
@@ -58,7 +59,7 @@ public class Graphics3DNode
       return transform;
    }
 
-   public synchronized void setTransform(RigidBodyTransform transform)
+   public synchronized void setTransform(RigidBodyTransformReadOnly transform)
    {
       this.transform.set(transform);
    }
@@ -95,8 +96,8 @@ public class Graphics3DNode
    {
       translateTo(new Vector3D(x, y, z));
    }
-   
-   public void translateTo(Vector3D translation)
+
+   public void translateTo(Tuple3DReadOnly translation)
    {
       transform.setIdentity();
       transform.setTranslation(translation);
@@ -106,26 +107,23 @@ public class Graphics3DNode
    {
       switch (axis)
       {
-      case X:
-         transform.appendRollRotation(angle);
-         break;
-      case Y:
-         transform.appendPitchRotation(angle);
-         break;
-      case Z:
-         transform.appendYawRotation(angle);
-         break;
-      default:
-         throw new RuntimeException("Unhandled value of Axis: " + axis);
+         case X:
+            transform.appendRollRotation(angle);
+            break;
+         case Y:
+            transform.appendPitchRotation(angle);
+            break;
+         case Z:
+            transform.appendYawRotation(angle);
+            break;
+         default:
+            throw new RuntimeException("Unhandled value of Axis: " + axis);
       }
    }
 
    public Vector3D getTranslation()
    {
-      Vector3D translation = new Vector3D();
-      getTransform().getTranslation(translation);
-
-      return translation;
+      return new Vector3D(getTransform().getTranslationVector());
    }
 
    public void addChild(Graphics3DNode child)
@@ -183,7 +181,8 @@ public class Graphics3DNode
       return nodeType;
    }
 
-   public void notifySelectedListeners(ModifierKeyInterface modifierKeys, Point3DReadOnly location, Point3DReadOnly cameraPosition, QuaternionReadOnly cameraRotation)
+   public void notifySelectedListeners(ModifierKeyInterface modifierKeys, Point3DReadOnly location, Point3DReadOnly cameraPosition,
+                                       QuaternionReadOnly cameraRotation)
    {
       for (SelectedListener selectedListener : selectedListeners)
       {

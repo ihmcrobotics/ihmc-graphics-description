@@ -11,7 +11,7 @@ public class Graphics3DAddModelFileInstruction extends Graphics3DInstruction
    private final String fileName;
    private final String submesh;
    private final boolean centerSubmesh;
-   private final ArrayList<String> resourceDirectories = new ArrayList<String>();
+   private final ArrayList<String> resourceDirectories = new ArrayList<>();
    private final ClassLoader resourceClassLoader;
 
    public Graphics3DAddModelFileInstruction(String fileName)
@@ -24,7 +24,8 @@ public class Graphics3DAddModelFileInstruction extends Graphics3DInstruction
       this(fileName, null, false, appearance, resourceDirectories, resourceClassLoader);
    }
 
-   public Graphics3DAddModelFileInstruction(String fileName, String submesh, boolean centerSubmesh, AppearanceDefinition appearance, List<String> resourceDirectories, ClassLoader resourceClassLoader)
+   public Graphics3DAddModelFileInstruction(String fileName, String submesh, boolean centerSubmesh, AppearanceDefinition appearance,
+                                            List<String> resourceDirectories, ClassLoader resourceClassLoader)
    {
       this.fileName = fileName;
       this.submesh = submesh;
@@ -58,12 +59,13 @@ public class Graphics3DAddModelFileInstruction extends Graphics3DInstruction
    {
       return submesh;
    }
-   
+
    public boolean centerSubmesh()
    {
       return centerSubmesh;
    }
-   
+
+   @Override
    public String toString()
    {
       String ret = "\t\t\t<Add3DSFile>\n\t\t\t\t<Name>" + fileName + "</Name>\n";

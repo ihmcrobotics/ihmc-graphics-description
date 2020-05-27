@@ -2,10 +2,9 @@ package us.ihmc.graphicsDescription.yoGraphics;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import us.ihmc.euclid.referenceFrame.FramePoint3D;
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
+import us.ihmc.euclid.referenceFrame.interfaces.FramePoint3DReadOnly;
 import us.ihmc.euclid.transform.AffineTransform;
-import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.interfaces.Point3DReadOnly;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.GraphicsUpdatable;
@@ -34,8 +33,9 @@ public class YoGraphicTriangle extends YoGraphic implements RemoteYoGraphic, Gra
 
    public YoGraphicTriangle(String name, AppearanceDefinition appearance, YoVariableRegistry registry)
    {
-      this(name, new YoFramePoint3D(name + "0", ReferenceFrame.getWorldFrame(), registry), new YoFramePoint3D(name + "1", ReferenceFrame.getWorldFrame(), registry),
-            new YoFramePoint3D(name + "2", ReferenceFrame.getWorldFrame(), registry), appearance);
+      this(name, new YoFramePoint3D(name + "0", ReferenceFrame.getWorldFrame(), registry),
+           new YoFramePoint3D(name + "1", ReferenceFrame.getWorldFrame(), registry), new YoFramePoint3D(name + "2", ReferenceFrame.getWorldFrame(), registry),
+           appearance);
    }
 
    public YoGraphicTriangle(String name, YoFramePoint3D pointOne, YoFramePoint3D pointTwo, YoFramePoint3D pointThree, AppearanceDefinition appearance)
@@ -68,12 +68,14 @@ public class YoGraphicTriangle extends YoGraphic implements RemoteYoGraphic, Gra
    }
 
    public YoGraphicTriangle(String name, YoDouble pointOneX, YoDouble pointOneY, YoDouble pointOneZ, YoDouble pointTwoX, YoDouble pointTwoY, YoDouble pointTwoZ,
-         YoDouble pointThreeX, YoDouble pointThreeY, YoDouble pointThreeZ, AppearanceDefinition appearance)
+                            YoDouble pointThreeX, YoDouble pointThreeY, YoDouble pointThreeZ, AppearanceDefinition appearance)
    {
-      this(name, new YoFramePoint3D(pointOneX, pointOneY, pointOneZ, ReferenceFrame.getWorldFrame()), new YoFramePoint3D(pointTwoX, pointTwoY, pointTwoZ, ReferenceFrame.getWorldFrame()),
-            new YoFramePoint3D(pointThreeX, pointThreeY, pointThreeZ, ReferenceFrame.getWorldFrame()), appearance);
+      this(name, new YoFramePoint3D(pointOneX, pointOneY, pointOneZ, ReferenceFrame.getWorldFrame()),
+           new YoFramePoint3D(pointTwoX, pointTwoY, pointTwoZ, ReferenceFrame.getWorldFrame()),
+           new YoFramePoint3D(pointThreeX, pointThreeY, pointThreeZ, ReferenceFrame.getWorldFrame()), appearance);
    }
 
+   @Override
    public Artifact createArtifact()
    {
       throw new RuntimeException("Implement Me!");
@@ -84,9 +86,9 @@ public class YoGraphicTriangle extends YoGraphic implements RemoteYoGraphic, Gra
    {
       if (hasChanged.getAndSet(false))
       {
-         if ((!pointOne.containsNaN()) && (!pointTwo.containsNaN()) && (!pointThree.containsNaN()))
+         if (!pointOne.containsNaN() && !pointTwo.containsNaN() && !pointThree.containsNaN())
          {
-            instruction.setMesh(MeshDataGenerator.Polygon(new Point3DReadOnly[] { pointOne, pointTwo, pointThree }));
+            instruction.setMesh(MeshDataGenerator.Polygon(pointOne, pointTwo, pointThree));
          }
          else
          {
@@ -95,25 +97,25 @@ public class YoGraphicTriangle extends YoGraphic implements RemoteYoGraphic, Gra
       }
    }
 
-   public void updatePointOne(FramePoint3D framePointOne)
+   public void updatePointOne(FramePoint3DReadOnly framePointOne)
    {
       pointOne.set(framePointOne);
       update();
    }
 
-   public void updatePointTwo(FramePoint3D framePointTwo)
+   public void updatePointTwo(FramePoint3DReadOnly framePointTwo)
    {
       pointTwo.set(framePointTwo);
       update();
    }
 
-   public void updatePointThree(FramePoint3D framePointThree)
+   public void updatePointThree(FramePoint3DReadOnly framePointThree)
    {
       pointThree.set(framePointThree);
       update();
    }
 
-   public void updatePoints(Point3D pointOne, Point3D pointTwo, Point3D pointThree)
+   public void updatePoints(Point3DReadOnly pointOne, Point3DReadOnly pointTwo, Point3DReadOnly pointThree)
    {
       this.pointOne.set(pointOne);
       this.pointTwo.set(pointTwo);
@@ -122,11 +124,13 @@ public class YoGraphicTriangle extends YoGraphic implements RemoteYoGraphic, Gra
       update();
    }
 
+   @Override
    public Graphics3DObject getLinkGraphics()
    {
       return graphics3dObject;
    }
 
+   @Override
    public YoVariable<?>[] getVariables()
    {
       YoVariable<?>[] vars = new YoVariable[9];
@@ -146,12 +150,14 @@ public class YoGraphicTriangle extends YoGraphic implements RemoteYoGraphic, Gra
       return vars;
    }
 
+   @Override
    public double[] getConstants()
    {
       // No constants...
       return new double[] {};
    }
 
+   @Override
    public AppearanceDefinition getAppearance()
    {
       return appearance;
@@ -182,7 +188,7 @@ public class YoGraphicTriangle extends YoGraphic implements RemoteYoGraphic, Gra
       pointTwo.setToNaN();
       pointThree.setToNaN();
 
-      this.update();
+      update();
    }
 
    @Override

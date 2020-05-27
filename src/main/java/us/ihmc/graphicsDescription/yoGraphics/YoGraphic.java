@@ -2,6 +2,7 @@ package us.ihmc.graphicsDescription.yoGraphics;
 
 import us.ihmc.euclid.transform.AffineTransform;
 import us.ihmc.euclid.transform.RigidBodyTransform;
+import us.ihmc.euclid.transform.interfaces.RigidBodyTransformReadOnly;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.plotting.artifact.Artifact;
 import us.ihmc.yoVariables.providers.DoubleProvider;
@@ -63,8 +64,8 @@ public abstract class YoGraphic
    {
       return name;
    }
-   
-   public void setRootTransform(RigidBodyTransform transform)
+
+   public void setRootTransform(RigidBodyTransformReadOnly transform)
    {
       rootTransform.set(transform);
    }
@@ -97,11 +98,10 @@ public abstract class YoGraphic
    }
 
    /**
-    * Overwrite the update method if an object needs special updating. But it is up to each user to update their objects. 
-    * The internals only update the position and orientation transform...
-    * 
-    * This is generally use to update YoGraphics based on non-yovariablized data (referenceframes etc). Not doing this
-    * will break rewind-playback.
+    * Overwrite the update method if an object needs special updating. But it is up to each user to
+    * update their objects. The internals only update the position and orientation transform... This is
+    * generally use to update YoGraphics based on non-yovariablized data (referenceframes etc). Not
+    * doing this will break rewind-playback.
     */
    public void update()
    {

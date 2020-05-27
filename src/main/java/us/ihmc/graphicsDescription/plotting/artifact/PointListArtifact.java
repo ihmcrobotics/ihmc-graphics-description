@@ -14,13 +14,13 @@ import us.ihmc.graphicsDescription.plotting.Plotter2DAdapter;
 
 public class PointListArtifact extends Artifact
 {
-   private final List<Point2D> points = new ArrayList<Point2D>();
+   private final List<Point2D> points = new ArrayList<>();
    private int historyLength = 1;
    private Color historyColor = Color.BLUE;
    int medianFilterSize = 20;
    int meanFilterSize = 999;
    private double size = 10;
-   
+
    private final Point2D tempPoint = new Point2D();
    private final Vector2D tempRadii = new Vector2D();
 
@@ -121,7 +121,7 @@ public class PointListArtifact extends Artifact
 
       for (int i = 0; i < n; i++)
       {
-         sd += Math.pow((((Double) buffer.elementAt(i)).doubleValue() - mean), 2);
+         sd += Math.pow(((Double) buffer.elementAt(i)).doubleValue() - mean, 2);
       }
 
       sd = Math.sqrt(sd);
@@ -135,10 +135,10 @@ public class PointListArtifact extends Artifact
    @Override
    public void draw(Graphics2DAdapter graphics)
    {
-      Vector<Double> xMedianFliter = new Vector<Double>();
-      Vector<Double> yMedianFliter = new Vector<Double>();
-      Vector<Double> xMeanFilter = new Vector<Double>();
-      Vector<Double> yMeanFilter = new Vector<Double>();
+      Vector<Double> xMedianFliter = new Vector<>();
+      Vector<Double> yMedianFliter = new Vector<>();
+      Vector<Double> xMeanFilter = new Vector<>();
+      Vector<Double> yMeanFilter = new Vector<>();
 
       Point2D coordinate = null;
       synchronized (points)
@@ -150,7 +150,7 @@ public class PointListArtifact extends Artifact
 
             if (coordinate != null)
             {
-               if (i == (points.size() - 1))
+               if (i == points.size() - 1)
                {
                   graphics.setColor(color);
                   tempPoint.set(coordinate.getX(), coordinate.getY());
@@ -166,13 +166,13 @@ public class PointListArtifact extends Artifact
                }
 
                // save for median and mean
-               if (i >= (points.size() - medianFilterSize))
+               if (i >= points.size() - medianFilterSize)
                {
                   xMedianFliter.addElement(new Double(coordinate.getX()));
                   yMedianFliter.addElement(new Double(coordinate.getY()));
                }
 
-               if (i >= (points.size() - meanFilterSize))
+               if (i >= points.size() - meanFilterSize)
                {
                   xMeanFilter.addElement(new Double(coordinate.getX()));
                   yMeanFilter.addElement(new Double(coordinate.getY()));

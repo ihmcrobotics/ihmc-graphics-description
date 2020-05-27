@@ -10,14 +10,14 @@ public class HeightBasedTerrainBlend extends YoAppearanceTransparent
 {
 
    private final HeightMap heightMap;
-   private final ArrayList<TextureDefinition> textures = new ArrayList<TextureDefinition>();
-   private final ArrayList<ImmutablePair<Double, Double>> blends = new ArrayList<ImmutablePair<Double, Double>>();
-   
+   private final ArrayList<TextureDefinition> textures = new ArrayList<>();
+   private final ArrayList<ImmutablePair<Double, Double>> blends = new ArrayList<>();
+
    public HeightBasedTerrainBlend(HeightMap heightMap)
    {
       this.heightMap = heightMap;
    }
-   
+
    public HeightMap getHeightMap()
    {
       return heightMap;
@@ -27,18 +27,17 @@ public class HeightBasedTerrainBlend extends YoAppearanceTransparent
    {
       textures.add(new TextureDefinition(scale, diffuse, normal));
    }
-   
+
    public void addBlend(double min_height, double fade_dist)
    {
-      blends.add(new ImmutablePair<Double, Double>(min_height, fade_dist));
+      blends.add(new ImmutablePair<>(min_height, fade_dist));
    }
-
 
    public ArrayList<ImmutablePair<Double, Double>> getBlends()
    {
       return blends;
    }
-   
+
    public class TextureDefinition
    {
       private final double scale;
@@ -74,6 +73,5 @@ public class HeightBasedTerrainBlend extends YoAppearanceTransparent
    {
       return textures;
    }
-
 
 }

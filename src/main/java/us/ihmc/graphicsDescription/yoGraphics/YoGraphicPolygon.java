@@ -139,16 +139,15 @@ public class YoGraphicPolygon extends YoGraphicAbstractShape implements RemoteYo
    private YoGraphicPolygon(String name, YoVariable<?>[] yoVariables, double[] constants, AppearanceDefinition appearance)
    {
       /*
-       * 2 * (int) constants[1] + 1 => constants[1] is the size of the 2D vertex
-       * buffer so we have 2 * YoVariables, the "+ 1" is for the YoInteger that
-       * keeps track of the actual polygon size.
+       * 2 * (int) constants[1] + 1 => constants[1] is the size of the 2D vertex buffer so we have 2 *
+       * YoVariables, the "+ 1" is for the YoInteger that keeps track of the actual polygon size.
        */
       super(name, Arrays.copyOfRange(yoVariables, 2 * (int) constants[1] + 1, yoVariables.length), constants[0]);
 
       int constantIndex = 1; // 0 corresponds to the scale factor
       int vertexBufferSize = (int) constants[constantIndex++];
       // Ensuring backward compatibility
-      this.height = constants.length == 3 ? constants[constantIndex++] : DEFAULT_HEIGHT;
+      height = constants.length == 3 ? constants[constantIndex++] : DEFAULT_HEIGHT;
 
       int yoIndex = 0;
       YoInteger numberOfVertices = (YoInteger) yoVariables[yoIndex++];
@@ -189,11 +188,9 @@ public class YoGraphicPolygon extends YoGraphicAbstractShape implements RemoteYo
       for (int i = yoFrameConvexPolygon2d.getNumberOfVertices() - 1; i >= 0; i--)
       {
          /*
-          * Using the unsafe getter as this instance of the polygon might not be
-          * recognized as up-to-date. This can occur when displaying a remote
-          * YoGraphic. In such scenario, the coordinates of the vertices are
-          * updated under the hood and this polygon only serves as a data
-          * holder.
+          * Using the unsafe getter as this instance of the polygon might not be recognized as up-to-date.
+          * This can occur when displaying a remote YoGraphic. In such scenario, the coordinates of the
+          * vertices are updated under the hood and this polygon only serves as a data holder.
           */
          verticesToDisplay.add(yoFrameConvexPolygon2d.getVertexUnsafe(i));
       }
@@ -258,11 +255,21 @@ public class YoGraphicPolygon extends YoGraphicAbstractShape implements RemoteYo
    public YoGraphicPolygon duplicate(YoVariableRegistry newRegistry)
    {
       if (isUsingYawPitchRoll())
-         return new YoGraphicPolygon(getName(), yoFrameConvexPolygon2d.duplicate(newRegistry), yoFramePoint.duplicate(newRegistry),
-                                     yoFrameYawPitchRoll.duplicate(newRegistry), scale, height, appearance);
+         return new YoGraphicPolygon(getName(),
+                                     yoFrameConvexPolygon2d.duplicate(newRegistry),
+                                     yoFramePoint.duplicate(newRegistry),
+                                     yoFrameYawPitchRoll.duplicate(newRegistry),
+                                     scale,
+                                     height,
+                                     appearance);
       else
-         return new YoGraphicPolygon(getName(), yoFrameConvexPolygon2d.duplicate(newRegistry), yoFramePoint.duplicate(newRegistry),
-                                     yoFrameQuaternion.duplicate(newRegistry), scale, height, appearance);
+         return new YoGraphicPolygon(getName(),
+                                     yoFrameConvexPolygon2d.duplicate(newRegistry),
+                                     yoFramePoint.duplicate(newRegistry),
+                                     yoFrameQuaternion.duplicate(newRegistry),
+                                     scale,
+                                     height,
+                                     appearance);
    }
 
    @Override

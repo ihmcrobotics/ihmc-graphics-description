@@ -16,8 +16,8 @@ public abstract class PixelsReferenceFrame extends PlotterReferenceFrame
       super(frameName, parentFrame, isWorldFrame, isZupFrame, PlotterFrameSpace.PIXELS, spaceConverter);
    }
 
-   public PixelsReferenceFrame(String frameName, ReferenceFrame parentFrame, RigidBodyTransform transformToParent, boolean isWorldFrame,
-                               boolean isZupFrame, PlotterSpaceConverter spaceConverter)
+   public PixelsReferenceFrame(String frameName, ReferenceFrame parentFrame, RigidBodyTransform transformToParent, boolean isWorldFrame, boolean isZupFrame,
+                               PlotterSpaceConverter spaceConverter)
    {
       super(frameName, parentFrame, transformToParent, isWorldFrame, isZupFrame, PlotterFrameSpace.PIXELS, spaceConverter);
    }

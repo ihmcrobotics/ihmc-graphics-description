@@ -16,13 +16,13 @@ public class YoAppearanceTexture extends YoAppearanceTransparency
    {
       super();
       this.path = path;
-      this.bufferedImage = null;
+      bufferedImage = null;
    }
 
    public YoAppearanceTexture(BufferedImage bufferedImage)
    {
       super();
-      this.path = null;
+      path = null;
       this.bufferedImage = bufferedImage;
    }
 
@@ -30,7 +30,7 @@ public class YoAppearanceTexture extends YoAppearanceTransparency
    {
       return path;
    }
-   
+
    public BufferedImage getBufferedImage()
    {
       return bufferedImage;

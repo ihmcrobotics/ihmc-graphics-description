@@ -60,7 +60,7 @@ public class HSVValue
 
       return Arrays.equals(values, hsvValue.values);
    }
-   
+
    @Override
    public String toString()
    {

@@ -1,6 +1,6 @@
 package us.ihmc.graphicsDescription.graphInterfaces;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface GraphIndicesHolder
 {
@@ -24,7 +24,7 @@ public interface GraphIndicesHolder
 
    public abstract int getMaxIndex();
 
-   public abstract ArrayList<Integer> getKeyPoints();
+   public abstract List<Integer> getKeyPoints();
 
    public abstract boolean isIndexAtOutPoint();
 }

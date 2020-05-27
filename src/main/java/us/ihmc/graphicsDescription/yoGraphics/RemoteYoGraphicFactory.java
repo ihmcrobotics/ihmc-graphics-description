@@ -104,7 +104,7 @@ public class RemoteYoGraphicFactory
       ReferenceFrame referenceFrame = ReferenceFrame.getWorldFrame();
       int i = 0;
       YoInteger yoNumVertices = (YoInteger) vars[i++];
-      ArrayList<YoFramePoint2D> yoFramePoints = new ArrayList<YoFramePoint2D>();
+      ArrayList<YoFramePoint2D> yoFramePoints = new ArrayList<>();
       while (i < vars.length)
       {
          yoFramePoints.add(new YoFramePoint2D((YoDouble) vars[i++], (YoDouble) vars[i++], referenceFrame));
@@ -137,7 +137,7 @@ public class RemoteYoGraphicFactory
       return new YoArtifactPosition(name,
                                     (YoDouble) vars[0],
                                     (YoDouble) vars[1],
-                                    YoGraphicPosition.GraphicType.values()[(int) (double) consts[1]],
+                                    YoGraphicPosition.GraphicType.values()[(int) consts[1]],
                                     appearance.getColor().get(),
                                     consts[0]);
    }
@@ -180,7 +180,7 @@ public class RemoteYoGraphicFactory
                                    (YoDouble) getVariableOrNull(vars, 2),
                                    consts[0],
                                    appearance,
-                                   YoGraphicPosition.GraphicType.values()[(int) (double) consts[1]]);
+                                   YoGraphicPosition.GraphicType.values()[(int) consts[1]]);
    }
 
    private static YoGraphicVector yoGraphicVectorFromMessage(String name, YoVariable<?>[] vars, double[] consts, AppearanceDefinition appearance)

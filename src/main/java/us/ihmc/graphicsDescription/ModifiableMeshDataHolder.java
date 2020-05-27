@@ -6,9 +6,10 @@ import us.ihmc.euclid.tuple3D.Point3D32;
 import us.ihmc.euclid.tuple3D.Vector3D32;
 
 /**
- * This class provides an mutable data structure for 3D graphic mesh that is independent from the graphics engine to be used.
- * It contains all the data necessary to create a mesh.
- * Using the corresponding mesh data interpreter, a {@link ModifiableMeshDataHolder} can be translated into a specific mesh data type usable by a specific graphics engine such as JME or JavaFX.
+ * This class provides an mutable data structure for 3D graphic mesh that is independent from the
+ * graphics engine to be used. It contains all the data necessary to create a mesh. Using the
+ * corresponding mesh data interpreter, a {@link ModifiableMeshDataHolder} can be translated into a
+ * specific mesh data type usable by a specific graphics engine such as JME or JavaFX.
  */
 public class ModifiableMeshDataHolder
 {
@@ -36,23 +37,27 @@ public class ModifiableMeshDataHolder
    }
 
    /**
-    * Creates an immutable mesh data holder that can be used by a mesh data interpreter.
-    * The data contained in this is copied in the immutable mesh data holder.
+    * Creates an immutable mesh data holder that can be used by a mesh data interpreter. The data
+    * contained in this is copied in the immutable mesh data holder.
+    * 
     * @return the immutable mesh data holder.
     */
    public MeshDataHolder createMeshDataHolder()
    {
-      Point3D32[] vertexArray = (Point3D32[]) vertices.toArray(new Point3D32[0]);
-      TexCoord2f[] texturePointArray = (TexCoord2f[]) texturePoints.toArray(new TexCoord2f[0]);
+      Point3D32[] vertexArray = vertices.toArray(new Point3D32[0]);
+      TexCoord2f[] texturePointArray = texturePoints.toArray(new TexCoord2f[0]);
       int[] triangleIndexArray = triangleIndices.toArray();
-      Vector3D32[] vertexNormalArray = (Vector3D32[]) vertexNormals.toArray(new Vector3D32[0]);
+      Vector3D32[] vertexNormalArray = vertexNormals.toArray(new Vector3D32[0]);
       return new MeshDataHolder(vertexArray, texturePointArray, triangleIndexArray, vertexNormalArray);
    }
 
    /**
     * Append a mesh to this.
-    * @param meshDataHolder the mesh to append. Not modified.
-    * @param updateTriangleIndices whether the indices of the given mesh should be updated when appended. Highly recommended, set it to false only if you what you are doing.
+    * 
+    * @param meshDataHolder        the mesh to append. Not modified.
+    * @param updateTriangleIndices whether the indices of the given mesh should be updated when
+    *                              appended. Highly recommended, set it to false only if you what you
+    *                              are doing.
     */
    public void add(MeshDataHolder meshDataHolder, boolean updateTriangleIndices)
    {
@@ -85,8 +90,11 @@ public class ModifiableMeshDataHolder
 
    /**
     * Append a mesh to this.
-    * @param other the mesh to append. Not modified.
-    * @param updateTriangleIndices whether the indices of the given mesh should be updated when appended. Highly recommended, set it to false only if you what you are doing.
+    * 
+    * @param other                 the mesh to append. Not modified.
+    * @param updateTriangleIndices whether the indices of the given mesh should be updated when
+    *                              appended. Highly recommended, set it to false only if you what you
+    *                              are doing.
     */
    public void add(ModifiableMeshDataHolder other, boolean updateTriangleIndices)
    {

@@ -23,8 +23,8 @@ public abstract class PlotterReferenceFrame extends ReferenceFrame
       this.spaceConverter = spaceConverter;
    }
 
-   public PlotterReferenceFrame(String frameName, ReferenceFrame parentFrame, RigidBodyTransform transformToParent, boolean isWorldFrame,
-                                boolean isZupFrame, PlotterFrameSpace frameSpace, PlotterSpaceConverter spaceConverter)
+   public PlotterReferenceFrame(String frameName, ReferenceFrame parentFrame, RigidBodyTransform transformToParent, boolean isWorldFrame, boolean isZupFrame,
+                                PlotterFrameSpace frameSpace, PlotterSpaceConverter spaceConverter)
    {
       super(frameName, parentFrame, transformToParent, isWorldFrame, isZupFrame);
       this.frameSpace = frameSpace;

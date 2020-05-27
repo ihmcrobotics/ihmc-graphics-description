@@ -112,7 +112,7 @@ public class YoGraphicPolygon3D extends YoGraphic implements RemoteYoGraphic, Gr
 
    public void set(Point3DReadOnly[] points)
    {
-      if (points.length > this.ccwOrderedYoFramePoints.length)
+      if (points.length > ccwOrderedYoFramePoints.length)
          throw new RuntimeException("Cannot plot more vertices than the maximum number");
 
       numberOfPoints.set(points.length);
@@ -126,7 +126,7 @@ public class YoGraphicPolygon3D extends YoGraphic implements RemoteYoGraphic, Gr
 
    public void set(List<? extends Point3DReadOnly> points)
    {
-      if (points.size() > this.ccwOrderedYoFramePoints.length)
+      if (points.size() > ccwOrderedYoFramePoints.length)
          throw new RuntimeException("Cannot plot more vertices than the maximum number");
 
       numberOfPoints.set(points.size());

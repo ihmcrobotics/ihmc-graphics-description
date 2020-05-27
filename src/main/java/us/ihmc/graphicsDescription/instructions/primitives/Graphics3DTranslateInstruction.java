@@ -23,6 +23,7 @@ public class Graphics3DTranslateInstruction implements Graphics3DPrimitiveInstru
       return translation;
    }
 
+   @Override
    public String toString()
    {
       return "\t\t\t<Translate>" + translation + "</Translate>\n";

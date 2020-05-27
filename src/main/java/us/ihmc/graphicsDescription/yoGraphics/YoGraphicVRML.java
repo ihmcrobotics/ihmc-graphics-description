@@ -90,7 +90,15 @@ public class YoGraphicVRML extends YoGraphicCoordinateSystem
    @Override
    public YoGraphicVRML duplicate(YoVariableRegistry newRegistry)
    {
-      return new YoGraphicVRML(getName(), referenceFrame, position.duplicate(newRegistry), yawPitchRoll.duplicate(newRegistry), modelFilePath, graphicOffset,
-                               graphicRotation, appearance, showCoordinateSystem, scale);
+      return new YoGraphicVRML(getName(),
+                               referenceFrame,
+                               position.duplicate(newRegistry),
+                               yawPitchRoll.duplicate(newRegistry),
+                               modelFilePath,
+                               graphicOffset,
+                               graphicRotation,
+                               appearance,
+                               showCoordinateSystem,
+                               scale);
    }
 }

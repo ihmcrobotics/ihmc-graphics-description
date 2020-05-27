@@ -24,11 +24,11 @@ public abstract class Artifact
    }
 
    public abstract void draw(Graphics2DAdapter graphics);
-   
+
    public abstract void drawHistory(Graphics2DAdapter graphics);
-   
+
    public abstract void drawLegend(Plotter2DAdapter graphics, Point2D origin);
-   
+
    public abstract void takeHistorySnapshot();
 
    public void setType(String type)
@@ -105,7 +105,7 @@ public abstract class Artifact
    {
       this.isVisible = isVisible;
    }
-   
+
    @Override
    public String toString()
    {

@@ -11,13 +11,13 @@ import us.ihmc.graphicsDescription.plotting.Plotter2DAdapter;
 public class ArcArtifact extends Artifact
 {
    private static final BasicStroke STROKE = new BasicStroke(1.0f);
-   
+
    private double x;
    private double y;
    private double diameter;
    private double startAngle;
    private double arcAngle;
-   
+
    private final Point2D tempPoint = new Point2D();
    private final Vector2D tempRadii = new Vector2D();
 
@@ -35,7 +35,7 @@ public class ArcArtifact extends Artifact
    public ArcArtifact(String string, double x2, double y2, double diameter, double startAngle, double arcAngle, Color color)
    {
       this(string, x2, y2, diameter, startAngle, arcAngle);
-      this.setColor(color);
+      setColor(color);
    }
 
    public void setPosition(double x, double y)
@@ -64,7 +64,7 @@ public class ArcArtifact extends Artifact
    {
       graphics.setColor(color);
       graphics.setStroke(STROKE);
-      
+
       tempPoint.set(x, y);
       tempRadii.set(diameter / 2.0, diameter / 2.0);
       graphics.drawArc(tempPoint, tempRadii, startAngle, arcAngle);

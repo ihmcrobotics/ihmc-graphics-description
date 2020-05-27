@@ -7,11 +7,10 @@ import javax.swing.event.ChangeListener;
 
 import us.ihmc.yoVariables.variable.YoVariable;
 
-
 public class SelectedVariableHolder
 {
    private YoVariable<?> var;
-   private final ArrayList<ChangeListener> listeners = new ArrayList<ChangeListener>();
+   private final ArrayList<ChangeListener> listeners = new ArrayList<>();
 
    public SelectedVariableHolder()
    {
@@ -30,7 +29,7 @@ public class SelectedVariableHolder
 
    public YoVariable<?> getSelectedVariable()
    {
-      return this.var;
+      return var;
    }
 
    public void addChangeListener(ChangeListener listener)

@@ -58,7 +58,7 @@ public class YoAppearanceMaterial extends YoAppearanceTransparency
    {
       return ambientColor;
    }
-   
+
    public void setAmbientColor(MutableColor color3f)
    {
       ambientColor.set(color3f);
