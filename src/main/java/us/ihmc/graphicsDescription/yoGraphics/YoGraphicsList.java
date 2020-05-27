@@ -1,15 +1,16 @@
 package us.ihmc.graphicsDescription.yoGraphics;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import us.ihmc.euclid.transform.RigidBodyTransform;
 
 public class YoGraphicsList
 {
    private String label;
-   private ArrayList<YoGraphic> yoGraphics;
+   private List<YoGraphic> yoGraphics;
 
-   public YoGraphicsList(String label, ArrayList<? extends YoGraphic> yoGraphics)
+   public YoGraphicsList(String label, List<? extends YoGraphic> yoGraphics)
    {
       checkLabelNonEmpty(label);
       this.label = label;
@@ -21,7 +22,7 @@ public class YoGraphicsList
       checkLabelNonEmpty(label);
       this.label = label;
 
-      ArrayList<YoGraphic> yoGraphics = new ArrayList<>(yoGraphicsArray.length);
+      List<YoGraphic> yoGraphics = new ArrayList<>(yoGraphicsArray.length);
 
       for (YoGraphic yoGraphic : yoGraphicsArray)
       {
@@ -63,7 +64,7 @@ public class YoGraphicsList
       return label;
    }
 
-   public ArrayList<YoGraphic> getYoGraphics()
+   public List<YoGraphic> getYoGraphics()
    {
       return yoGraphics;
    }
@@ -73,7 +74,7 @@ public class YoGraphicsList
       yoGraphics.add(yoGraphic);
    }
 
-   public void addAll(ArrayList<YoGraphic> yoGraphics)
+   public void addAll(List<YoGraphic> yoGraphics)
    {
       this.yoGraphics.addAll(yoGraphics);
    }

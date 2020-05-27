@@ -13,8 +13,6 @@ public class TextArtifact extends Artifact
    private double y1;
    private String text;
    private Font font = Font.getFont(Font.SANS_SERIF);
-   private int xPixelOffset = 0;
-   private int yPixelOffset = 0;
 
    private final Point2D tempPoint = new Point2D();
 
@@ -31,22 +29,6 @@ public class TextArtifact extends Artifact
    {
       this.x1 = x1;
       this.y1 = y1;
-   }
-
-   public void setPixelOffset(int pixelOffset)
-   {
-      xPixelOffset = pixelOffset;
-      yPixelOffset = pixelOffset;
-   }
-
-   public void setxPixelOffset(int xPixelOffset)
-   {
-      this.xPixelOffset = xPixelOffset;
-   }
-
-   public void setyPixelOffset(int yPixelOffset)
-   {
-      this.yPixelOffset = yPixelOffset;
    }
 
    public String getText()

@@ -15,7 +15,7 @@ import us.ihmc.graphicsDescription.plotting.Plotter2DAdapter;
 
 public class PolygonArtifact extends Artifact
 {
-   private ArrayList<Point2DReadOnly> points = new ArrayList<>();
+   private List<Point2DReadOnly> points = new ArrayList<>();
    private boolean FILL_POLYGON = false;
 
    private final ConvexPolygon2D tempPolygon = new ConvexPolygon2D();
@@ -43,7 +43,7 @@ public class PolygonArtifact extends Artifact
       this.color = color;
    }
 
-   public PolygonArtifact(String id, boolean fill, Color color, List<Point2D> points)
+   public PolygonArtifact(String id, boolean fill, Color color, List<? extends Point2DReadOnly> points)
    {
       super(id);
       setLevel(2);
@@ -90,7 +90,7 @@ public class PolygonArtifact extends Artifact
       setPoints(points);
    }
 
-   public void setPoints(List<Point2D> points)
+   public void setPoints(List<? extends Point2DReadOnly> points)
    {
       this.points.clear();
       this.points.addAll(points);
@@ -103,7 +103,7 @@ public class PolygonArtifact extends Artifact
          points.add(polygon.getVertex(i));
    }
 
-   public void addPoint(Point2D point)
+   public void addPoint(Point2DReadOnly point)
    {
       points.add(point);
    }
@@ -113,7 +113,7 @@ public class PolygonArtifact extends Artifact
       points.clear();
    }
 
-   public ArrayList<Point2DReadOnly> getPoints()
+   public List<Point2DReadOnly> getPoints()
    {
       return points;
    }

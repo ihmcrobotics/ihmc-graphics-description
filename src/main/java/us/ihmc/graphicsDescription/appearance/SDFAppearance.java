@@ -10,11 +10,11 @@ import us.ihmc.graphicsDescription.color.MutableColor;
 
 public class SDFAppearance extends YoAppearanceTransparency
 {
-   private final ArrayList<String> urls;
+   private final List<String> urls;
    private final String name;
-   private final ArrayList<String> resourceDirectories = new ArrayList<>();
+   private final List<String> resourceDirectories = new ArrayList<>();
 
-   public SDFAppearance(ArrayList<String> urls, String name, List<String> resourceDirectories)
+   public SDFAppearance(List<String> urls, String name, List<String> resourceDirectories)
    {
       super();
       this.urls = urls;
@@ -22,7 +22,7 @@ public class SDFAppearance extends YoAppearanceTransparency
       this.resourceDirectories.addAll(resourceDirectories);
    }
 
-   public ArrayList<String> getUrls()
+   public List<String> getUrls()
    {
       return urls;
    }
@@ -32,7 +32,7 @@ public class SDFAppearance extends YoAppearanceTransparency
       return name;
    }
 
-   public ArrayList<String> getResourceDirectories()
+   public List<String> getResourceDirectories()
    {
       return resourceDirectories;
    }

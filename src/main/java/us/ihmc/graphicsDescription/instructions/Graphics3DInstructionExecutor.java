@@ -1,6 +1,6 @@
 package us.ihmc.graphicsDescription.instructions;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import us.ihmc.graphicsDescription.instructions.primitives.Graphics3DIdentityInstruction;
 import us.ihmc.graphicsDescription.instructions.primitives.Graphics3DRotateInstruction;
@@ -14,7 +14,7 @@ public abstract class Graphics3DInstructionExecutor
       super();
    }
 
-   protected void setUpGraphicsFromDefinition(ArrayList<Graphics3DPrimitiveInstruction> instructions)
+   protected void setUpGraphicsFromDefinition(List<Graphics3DPrimitiveInstruction> instructions)
    {
       for (Graphics3DPrimitiveInstruction instruction : instructions)
       {

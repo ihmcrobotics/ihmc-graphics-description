@@ -6,6 +6,7 @@ import java.util.StringTokenizer;
 
 import us.ihmc.euclid.tuple2D.Point2D;
 import us.ihmc.euclid.tuple2D.Vector2D;
+import us.ihmc.euclid.tuple2D.interfaces.Point2DReadOnly;
 import us.ihmc.graphicsDescription.plotting.Graphics2DAdapter;
 import us.ihmc.graphicsDescription.plotting.Plotter2DAdapter;
 
@@ -13,26 +14,26 @@ public class ShapeArtifact extends Artifact
 {
    private static final double LEGEND_RADIUS = 20.0;
 
-   private Point2D pose;
+   private final Point2D pose = new Point2D();
    private double height;
    private double width;
 
    private final Point2D tempCenter = new Point2D();
    private final Vector2D tempRadii = new Vector2D();
 
-   public ShapeArtifact(String id, String type, double height, double width, Point2D pose)
+   public ShapeArtifact(String id, String type, double height, double width, Point2DReadOnly pose)
    {
       super(id);
       setType(type);
       setLevel(1);
-      this.pose = pose;
+      this.pose.set(pose);
       this.height = height;
       this.width = width;
    }
 
-   public void setPose(Point2D pose)
+   public void setPose(Point2DReadOnly pose)
    {
-      this.pose = pose;
+      this.pose.set(pose);
    }
 
    public Point2D getPose()

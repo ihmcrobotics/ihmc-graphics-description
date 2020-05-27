@@ -1,12 +1,14 @@
 package us.ihmc.graphicsDescription.yoGraphics;
 
-import us.ihmc.euclid.referenceFrame.FramePoint3D;
 import us.ihmc.euclid.referenceFrame.FramePose3D;
-import us.ihmc.euclid.referenceFrame.FrameQuaternion;
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
+import us.ihmc.euclid.referenceFrame.interfaces.FramePoint3DBasics;
+import us.ihmc.euclid.referenceFrame.interfaces.FramePoint3DReadOnly;
+import us.ihmc.euclid.referenceFrame.interfaces.FrameQuaternionBasics;
 import us.ihmc.euclid.referenceFrame.interfaces.FrameQuaternionReadOnly;
 import us.ihmc.euclid.transform.AffineTransform;
 import us.ihmc.euclid.transform.RigidBodyTransform;
+import us.ihmc.euclid.transform.interfaces.RigidBodyTransformReadOnly;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.graphicsDescription.plotting.artifact.Artifact;
 import us.ihmc.yoVariables.variable.YoDouble;
@@ -114,17 +116,17 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
       yoFramePoint.set(x, y, z);
    }
 
-   public void getPosition(FramePoint3D framePointToPack)
+   public void getPosition(FramePoint3DBasics framePointToPack)
    {
-      framePointToPack.set(yoFramePoint);
+      framePointToPack.setIncludingFrame(yoFramePoint);
    }
 
-   public void setPosition(FramePoint3D position)
+   public void setPosition(FramePoint3DReadOnly position)
    {
       yoFramePoint.set(position);
    }
 
-   public void getOrientation(FrameQuaternion orientationToPack)
+   public void getOrientation(FrameQuaternionBasics orientationToPack)
    {
       if (isUsingYawPitchRoll())
          orientationToPack.setIncludingFrame(yoFrameYawPitchRoll);
@@ -148,7 +150,7 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
          yoFrameQuaternion.setYawPitchRoll(yaw, pitch, roll);
    }
 
-   public void setTransformToWorld(RigidBodyTransform transformToWorld)
+   public void setTransformToWorld(RigidBodyTransformReadOnly transformToWorld)
    {
       yoFramePoint.set(transformToWorld.getTranslation());
       yoFrameYawPitchRoll.set(transformToWorld.getRotation());

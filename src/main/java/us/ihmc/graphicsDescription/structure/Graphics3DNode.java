@@ -6,9 +6,10 @@ import java.util.List;
 
 import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.transform.AffineTransform;
-import us.ihmc.euclid.transform.RigidBodyTransform;
+import us.ihmc.euclid.transform.interfaces.RigidBodyTransformReadOnly;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.interfaces.Point3DReadOnly;
+import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 import us.ihmc.euclid.tuple4D.interfaces.QuaternionReadOnly;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.input.SelectedListener;
@@ -58,7 +59,7 @@ public class Graphics3DNode
       return transform;
    }
 
-   public synchronized void setTransform(RigidBodyTransform transform)
+   public synchronized void setTransform(RigidBodyTransformReadOnly transform)
    {
       this.transform.set(transform);
    }
@@ -96,7 +97,7 @@ public class Graphics3DNode
       translateTo(new Vector3D(x, y, z));
    }
 
-   public void translateTo(Vector3D translation)
+   public void translateTo(Tuple3DReadOnly translation)
    {
       transform.setIdentity();
       transform.setTranslation(translation);
@@ -122,10 +123,7 @@ public class Graphics3DNode
 
    public Vector3D getTranslation()
    {
-      Vector3D translation = new Vector3D();
-      getTransform().getTranslation(translation);
-
-      return translation;
+      return new Vector3D(getTransform().getTranslationVector());
    }
 
    public void addChild(Graphics3DNode child)

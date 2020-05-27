@@ -2,14 +2,12 @@ package us.ihmc.graphicsDescription;
 
 import java.lang.reflect.Array;
 
-import us.ihmc.euclid.axisAngle.interfaces.AxisAngleReadOnly;
 import us.ihmc.euclid.interfaces.Transformable;
-import us.ihmc.euclid.matrix.RotationMatrix;
+import us.ihmc.euclid.orientation.interfaces.Orientation3DReadOnly;
 import us.ihmc.euclid.transform.interfaces.Transform;
 import us.ihmc.euclid.tuple3D.Point3D32;
 import us.ihmc.euclid.tuple3D.Vector3D32;
 import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
-import us.ihmc.euclid.tuple4D.interfaces.QuaternionReadOnly;
 
 /**
  * This class provides an immutable data structure for 3D graphic mesh that is independent from the
@@ -130,11 +128,11 @@ public class MeshDataHolder implements Transformable
    /**
     * Utility method to rotate a given mesh using a given rotation matrix.
     * 
-    * @param input  the mesh to rotate. Not modified.
-    * @param matrix the rotation to apply to the mesh. Not Modified.
+    * @param input    the mesh to rotate. Not modified.
+    * @param rotation the rotation to apply to the mesh. Not Modified.
     * @return the rotated mesh.
     */
-   public static MeshDataHolder rotate(MeshDataHolder input, RotationMatrix matrix)
+   public static MeshDataHolder rotate(MeshDataHolder input, Orientation3DReadOnly rotation)
    {
       TexCoord2f[] texturePoints = input.getTexturePoints();
       int[] triangleIndices = input.getTriangleIndices();
@@ -148,34 +146,10 @@ public class MeshDataHolder implements Transformable
       {
          outputVertices[i] = new Point3D32();
          outputNormals[i] = new Vector3D32();
-         matrix.transform(inputVertices[i], outputVertices[i]);
-         matrix.transform(inputNormals[i], outputNormals[i]);
+         rotation.transform(inputVertices[i], outputVertices[i]);
+         rotation.transform(inputNormals[i], outputNormals[i]);
       }
       return new MeshDataHolder(outputVertices, texturePoints, triangleIndices, outputNormals);
-   }
-
-   /**
-    * Utility method to rotate a given mesh using a given rotation matrix.
-    * 
-    * @param input     the mesh to rotate. Not modified.
-    * @param axisAngle the axis-angle describing the rotation to apply to the mesh. Not Modified.
-    * @return the rotated mesh.
-    */
-   public static MeshDataHolder rotate(MeshDataHolder input, AxisAngleReadOnly axisAngle)
-   {
-      return rotate(input, new RotationMatrix(axisAngle));
-   }
-
-   /**
-    * Utility method to rotate a given mesh using a given rotation matrix.
-    * 
-    * @param input      the mesh to rotate. Not modified.
-    * @param quaternion the quaternion describing the rotation to apply to the mesh. Not Modified.
-    * @return the rotated mesh.
-    */
-   public static MeshDataHolder rotate(MeshDataHolder input, QuaternionReadOnly quaternion)
-   {
-      return rotate(input, new RotationMatrix(quaternion));
    }
 
    /**
