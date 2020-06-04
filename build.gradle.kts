@@ -19,10 +19,10 @@ mainDependencies {
    api("net.sf.trove4j:trove4j:3.0.3")
    api("org.apache.commons:commons-lang3:3.9")
 
-   api("us.ihmc:euclid-frame:0.14.2")
-   api("us.ihmc:euclid-shape:0.14.2")
+   api("us.ihmc:euclid-frame:0.14.2-ejml-0.39-beta-1")
+   api("us.ihmc:euclid-shape:0.14.2-ejml-0.39-beta-1")
    api("us.ihmc:ihmc-commons:0.29.0")
-   api("us.ihmc:ihmc-yovariables:0.7.0")
+   api("us.ihmc:ihmc-yovariables:0.7.0-ejml-0.39-beta-1")
 }
 
 testDependencies {
