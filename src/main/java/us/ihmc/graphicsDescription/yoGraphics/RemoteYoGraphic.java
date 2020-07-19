@@ -1,7 +1,7 @@
 package us.ihmc.graphicsDescription.yoGraphics;
 
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoVariable;
 
 /**
@@ -14,11 +14,11 @@ public interface RemoteYoGraphic
 {
    public String getName();
 
-   public YoVariable<?>[] getVariables();
+   public YoVariable[] getVariables();
 
    public double[] getConstants();
 
    public AppearanceDefinition getAppearance();
 
-   public RemoteYoGraphic duplicate(YoVariableRegistry newRegistry);
+   public RemoteYoGraphic duplicate(YoRegistry newRegistry);
 }

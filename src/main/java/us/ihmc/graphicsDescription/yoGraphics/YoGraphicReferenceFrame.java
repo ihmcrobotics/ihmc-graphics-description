@@ -2,19 +2,19 @@ package us.ihmc.graphicsDescription.yoGraphics;
 
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoVariable;
 
 public class YoGraphicReferenceFrame extends YoGraphicCoordinateSystem
 {
    private final ReferenceFrame referenceFrame;
 
-   public YoGraphicReferenceFrame(ReferenceFrame referenceFrame, YoVariableRegistry registry, boolean useYawPitchRoll, double scale)
+   public YoGraphicReferenceFrame(ReferenceFrame referenceFrame, YoRegistry registry, boolean useYawPitchRoll, double scale)
    {
       this(referenceFrame, registry, useYawPitchRoll, scale, YoGraphicCoordinateSystem.DEFAULT_APPEARANCE);
    }
 
-   public YoGraphicReferenceFrame(ReferenceFrame referenceFrame, YoVariableRegistry registry, boolean useYawPitchRoll, double scale,
+   public YoGraphicReferenceFrame(ReferenceFrame referenceFrame, YoRegistry registry, boolean useYawPitchRoll, double scale,
                                   AppearanceDefinition arrowColor)
    {
       super(referenceFrame.getName(), "", registry, useYawPitchRoll, scale, arrowColor);
@@ -22,7 +22,7 @@ public class YoGraphicReferenceFrame extends YoGraphicCoordinateSystem
       this.referenceFrame = referenceFrame;
    }
 
-   public YoGraphicReferenceFrame(String prefix, ReferenceFrame referenceFrame, YoVariableRegistry registry, boolean useYawPitchRoll, double scale,
+   public YoGraphicReferenceFrame(String prefix, ReferenceFrame referenceFrame, YoRegistry registry, boolean useYawPitchRoll, double scale,
                                   AppearanceDefinition arrowColor)
    {
       super(prefix + referenceFrame.getName(), "", registry, useYawPitchRoll, scale, arrowColor);
@@ -30,12 +30,12 @@ public class YoGraphicReferenceFrame extends YoGraphicCoordinateSystem
       this.referenceFrame = referenceFrame;
    }
 
-   static YoGraphicReferenceFrame createAsRemoteYoGraphic(String name, YoVariable<?>[] yoVariables, double[] constants)
+   static YoGraphicReferenceFrame createAsRemoteYoGraphic(String name, YoVariable[] yoVariables, double[] constants)
    {
       return new YoGraphicReferenceFrame(name, yoVariables, constants);
    }
 
-   private YoGraphicReferenceFrame(String name, YoVariable<?>[] yoVariables, double[] constants)
+   private YoGraphicReferenceFrame(String name, YoVariable[] yoVariables, double[] constants)
    {
       super(name, yoVariables, constants);
       referenceFrame = null;

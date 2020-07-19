@@ -5,10 +5,10 @@ import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoFramePoint3D;
-import us.ihmc.yoVariables.variable.YoFramePoseUsingYawPitchRoll;
-import us.ihmc.yoVariables.variable.YoFrameYawPitchRoll;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoseUsingYawPitchRoll;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameYawPitchRoll;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public class YoGraphicEllipsoid extends YoGraphicCoordinateSystem
 {
@@ -29,7 +29,7 @@ public class YoGraphicEllipsoid extends YoGraphicCoordinateSystem
       this.radii.set(radii);
    }
 
-   public YoGraphicEllipsoid(String namePrefix, String nameSuffix, YoVariableRegistry registry, AppearanceDefinition appearance, Vector3DReadOnly radii)
+   public YoGraphicEllipsoid(String namePrefix, String nameSuffix, YoRegistry registry, AppearanceDefinition appearance, Vector3DReadOnly radii)
    {
       super(namePrefix, nameSuffix, registry, true, 1.0, appearance);
       this.appearance = appearance;
@@ -59,7 +59,7 @@ public class YoGraphicEllipsoid extends YoGraphicCoordinateSystem
    }
 
    @Override
-   public YoGraphicEllipsoid duplicate(YoVariableRegistry newRegistry)
+   public YoGraphicEllipsoid duplicate(YoRegistry newRegistry)
    {
       return new YoGraphicEllipsoid(getName(), position.duplicate(newRegistry), yawPitchRoll.duplicate(newRegistry), appearance, radii);
    }

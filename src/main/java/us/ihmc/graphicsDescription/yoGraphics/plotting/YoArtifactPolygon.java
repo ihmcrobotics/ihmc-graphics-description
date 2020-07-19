@@ -8,9 +8,9 @@ import us.ihmc.euclid.geometry.ConvexPolygon2D;
 import us.ihmc.euclid.tuple2D.Point2D;
 import us.ihmc.graphicsDescription.plotting.Graphics2DAdapter;
 import us.ihmc.graphicsDescription.plotting.Plotter2DAdapter;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoFrameConvexPolygon2D;
-import us.ihmc.yoVariables.variable.YoFramePoint2D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameConvexPolygon2D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint2D;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoVariable;
 
 public class YoArtifactPolygon extends YoArtifact
@@ -98,9 +98,9 @@ public class YoArtifactPolygon extends YoArtifact
    }
 
    @Override
-   public YoVariable<?>[] getVariables()
+   public YoVariable[] getVariables()
    {
-      YoVariable<?>[] vars = new YoVariable[1 + 2 * convexPolygon.getMaxNumberOfVertices()];
+      YoVariable[] vars = new YoVariable[1 + 2 * convexPolygon.getMaxNumberOfVertices()];
       int i = 0;
       vars[i++] = convexPolygon.getYoNumberOfVertices();
 
@@ -114,7 +114,7 @@ public class YoArtifactPolygon extends YoArtifact
    }
 
    @Override
-   public YoArtifact duplicate(YoVariableRegistry newRegistry)
+   public YoArtifact duplicate(YoRegistry newRegistry)
    {
       return new YoArtifactPolygon(getName(), convexPolygon.duplicate(newRegistry), color, fill, lineWidth, dashedLine);
    }

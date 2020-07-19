@@ -7,8 +7,8 @@ import us.ihmc.euclid.geometry.Line2D;
 import us.ihmc.euclid.tuple2D.Point2D;
 import us.ihmc.graphicsDescription.plotting.Graphics2DAdapter;
 import us.ihmc.graphicsDescription.plotting.Plotter2DAdapter;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoFrameLine2D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameLine2D;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public class YoArtifactLine2d extends YoArtifact
 {
@@ -55,7 +55,7 @@ public class YoArtifactLine2d extends YoArtifact
    }
 
    @Override
-   public YoArtifactLine2d duplicate(YoVariableRegistry newRegistry)
+   public YoArtifactLine2d duplicate(YoRegistry newRegistry)
    {
       return new YoArtifactLine2d(getName(), yoFrameLine2d.duplicate(newRegistry), color);
    }

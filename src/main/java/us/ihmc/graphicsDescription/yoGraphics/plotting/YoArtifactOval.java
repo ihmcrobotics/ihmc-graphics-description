@@ -7,11 +7,11 @@ import us.ihmc.euclid.tuple2D.Point2D;
 import us.ihmc.euclid.tuple2D.Vector2D;
 import us.ihmc.graphicsDescription.plotting.Graphics2DAdapter;
 import us.ihmc.graphicsDescription.plotting.Plotter2DAdapter;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint2D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameVector2D;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
-import us.ihmc.yoVariables.variable.YoFramePoint2D;
-import us.ihmc.yoVariables.variable.YoFramePoint3D;
-import us.ihmc.yoVariables.variable.YoFrameVector2D;
 
 public class YoArtifactOval extends YoArtifact
 {
@@ -75,7 +75,7 @@ public class YoArtifactOval extends YoArtifact
    }
 
    @Override
-   public YoArtifact duplicate(YoVariableRegistry newRegistry)
+   public YoArtifact duplicate(YoRegistry newRegistry)
    {
       return new YoArtifactOval(getName(), center.duplicate(newRegistry), radii.duplicate(newRegistry), color);
    }

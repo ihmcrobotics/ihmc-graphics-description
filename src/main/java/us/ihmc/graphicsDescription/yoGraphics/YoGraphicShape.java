@@ -3,10 +3,10 @@ package us.ihmc.graphicsDescription.yoGraphics;
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoFramePoint3D;
-import us.ihmc.yoVariables.variable.YoFramePoseUsingYawPitchRoll;
-import us.ihmc.yoVariables.variable.YoFrameYawPitchRoll;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoseUsingYawPitchRoll;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameYawPitchRoll;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public class YoGraphicShape extends YoGraphicAbstractShape
 {
@@ -24,7 +24,7 @@ public class YoGraphicShape extends YoGraphicAbstractShape
       this.linkGraphics = linkGraphics;
    }
 
-   public YoGraphicShape(String name, Graphics3DObject linkGraphics, String namePrefix, String nameSuffix, YoVariableRegistry registry, double scale,
+   public YoGraphicShape(String name, Graphics3DObject linkGraphics, String namePrefix, String nameSuffix, YoRegistry registry, double scale,
                          AppearanceDefinition appearance)
    {
       this(name, linkGraphics, new YoFramePoint3D(namePrefix, nameSuffix, ReferenceFrame.getWorldFrame(), registry),
@@ -38,7 +38,7 @@ public class YoGraphicShape extends YoGraphicAbstractShape
    }
 
    @Override
-   public YoGraphic duplicate(YoVariableRegistry newRegistry)
+   public YoGraphic duplicate(YoRegistry newRegistry)
    {
       return new YoGraphicShape(getName(), getLinkGraphics(), yoFramePoint.duplicate(newRegistry), yoFrameYawPitchRoll.duplicate(newRegistry), scale);
    }

@@ -12,10 +12,10 @@ import us.ihmc.euclid.tuple2D.Vector2D;
 import us.ihmc.euclid.tuple2D.interfaces.Tuple2DBasics;
 import us.ihmc.graphicsDescription.plotting.Graphics2DAdapter;
 import us.ihmc.graphicsDescription.plotting.Plotter2DAdapter;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameLineSegment2D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint2D;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
-import us.ihmc.yoVariables.variable.YoFrameLineSegment2D;
-import us.ihmc.yoVariables.variable.YoFramePoint2D;
 
 public class YoArtifactLineSegment2d extends YoArtifact
 {
@@ -134,7 +134,7 @@ public class YoArtifactLineSegment2d extends YoArtifact
    }
 
    @Override
-   public YoArtifact duplicate(YoVariableRegistry newRegistry)
+   public YoArtifact duplicate(YoRegistry newRegistry)
    {
       return new YoArtifactLineSegment2d(getName(), lineSegment.duplicate(newRegistry), color, arrowHeadWidth, arrowHeadHeight);
    }
