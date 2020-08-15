@@ -25,15 +25,11 @@ import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.graphicsDescription.appearance.YoAppearance;
 import us.ihmc.graphicsDescription.instructions.Graphics3DAddMeshDataInstruction;
 import us.ihmc.graphicsDescription.plotting.artifact.Artifact;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoBoolean;
-import us.ihmc.yoVariables.variable.YoDouble;
-import us.ihmc.yoVariables.variable.YoEnum;
-import us.ihmc.yoVariables.variable.YoFramePoint3D;
-import us.ihmc.yoVariables.variable.YoFramePose3D;
-import us.ihmc.yoVariables.variable.YoFrameQuaternion;
-import us.ihmc.yoVariables.variable.YoInteger;
-import us.ihmc.yoVariables.variable.YoVariable;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePose3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameQuaternion;
+import us.ihmc.yoVariables.registry.YoRegistry;
+import us.ihmc.yoVariables.variable.*;
 
 /**
  * {@link YoGraphic} that can display 3D trajectories using {@link PolynomialVariables}s or
@@ -188,13 +184,13 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
     * @param radius           either the radius of the segmented line of the points.
     * @param resolution       defines the number of trajectory samples to use.
     * @param radialResolution used to define the mesh resolution.
-    * @param registry         the {@link YoVariableRegistry} to which internal {@link YoVariable}s will
+    * @param registry         the {@link YoRegistry} to which internal {@link YoVariable}s will
     *                         be registered to. Modified.
     * @throws RuntimeException if the number of {@link Polynomial3DVariableHolder}s differs from the
     *                          number of waypoint times.
     */
    public YoGraphicPolynomial3D(String name, Polynomial3DVariableHolder yoPolynomial3D, YoDouble trajectoryTime, double radius, int resolution,
-                                int radialResolution, YoVariableRegistry registry)
+                                int radialResolution, YoRegistry registry)
    {
       this(name, null, yoPolynomial3D, trajectoryTime, radius, resolution, radialResolution, registry);
    }
@@ -218,13 +214,13 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
     * @param radius                              either the radius of the segmented line of the points.
     * @param resolution                          defines the number of trajectory samples to use.
     * @param radialResolution                    used to define the mesh resolution.
-    * @param registry                            the {@link YoVariableRegistry} to which internal
+    * @param registry                            the {@link YoRegistry} to which internal
     *                                            {@link YoVariable}s will be registered to. Modified.
     * @throws RuntimeException if the number of {@link Polynomial3DVariableHolder}s differs from the
     *                          number of waypoint times.
     */
    public YoGraphicPolynomial3D(String name, YoFramePose3D poseFromTrajectoryFrameToWorldFrame, Polynomial3DVariableHolder yoPolynomial3D,
-                                YoDouble trajectoryTime, double radius, int resolution, int radialResolution, YoVariableRegistry registry)
+                                YoDouble trajectoryTime, double radius, int resolution, int radialResolution, YoRegistry registry)
    {
       this(name, poseFromTrajectoryFrameToWorldFrame, singletonList(yoPolynomial3D), singletonList(trajectoryTime), radius, resolution, radialResolution,
            registry);
@@ -254,13 +250,13 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
     * @param radius           either the radius of the segmented line of the points.
     * @param resolution       defines the number of trajectory samples to use.
     * @param radialResolution used to define the mesh resolution.
-    * @param registry         the {@link YoVariableRegistry} to which internal {@link YoVariable}s will
+    * @param registry         the {@link YoRegistry} to which internal {@link YoVariable}s will
     *                         be registered to. Modified.
     * @throws RuntimeException if the number of {@link Polynomial3DVariableHolder}s differs from the
     *                          number of waypoint times.
     */
    public YoGraphicPolynomial3D(String name, List<? extends Polynomial3DVariableHolder> yoPolynomial3Ds, List<YoDouble> waypointTimes, double radius,
-                                int resolution, int radialResolution, YoVariableRegistry registry)
+                                int resolution, int radialResolution, YoRegistry registry)
    {
       this(name, null, yoPolynomial3Ds, waypointTimes, radius, resolution, radialResolution, registry);
    }
@@ -290,13 +286,13 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
     * @param radius           either the radius of the segmented line of the points.
     * @param resolution       defines the number of trajectory samples to use.
     * @param radialResolution used to define the mesh resolution.
-    * @param registry         the {@link YoVariableRegistry} to which internal {@link YoVariable}s will
+    * @param registry         the {@link YoRegistry} to which internal {@link YoVariable}s will
     *                         be registered to. Modified.
     * @throws RuntimeException if the number of {@link Polynomial3DVariableHolder}s differs from the
     *                          number of waypoint times.
     */
    public YoGraphicPolynomial3D(String name, Polynomial3DVariableHolder[] yoPolynomial3Ds, YoDouble[] waypointTimes, double radius, int resolution,
-                                int radialResolution, YoVariableRegistry registry)
+                                int radialResolution, YoRegistry registry)
    {
       this(name, null, yoPolynomial3Ds, waypointTimes, radius, resolution, radialResolution, registry);
    }
@@ -326,13 +322,13 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
     * @param radius                              either the radius of the segmented line of the points.
     * @param resolution                          defines the number of trajectory samples to use.
     * @param radialResolution                    used to define the mesh resolution.
-    * @param registry                            the {@link YoVariableRegistry} to which internal
+    * @param registry                            the {@link YoRegistry} to which internal
     *                                            {@link YoVariable}s will be registered to. Modified.
     * @throws RuntimeException if the number of {@link Polynomial3DVariableHolder}s differs from the
     *                          number of waypoint times.
     */
    public YoGraphicPolynomial3D(String name, YoFramePose3D poseFromTrajectoryFrameToWorldFrame, List<? extends Polynomial3DVariableHolder> yoPolynomial3Ds,
-                                List<YoDouble> waypointTimes, double radius, int resolution, int radialResolution, YoVariableRegistry registry)
+                                List<YoDouble> waypointTimes, double radius, int resolution, int radialResolution, YoRegistry registry)
    {
       this(name, poseFromTrajectoryFrameToWorldFrame, yoPolynomial3Ds.toArray(new Polynomial3DVariableHolder[0]), toArray(waypointTimes), radius, resolution,
            radialResolution, registry);
@@ -363,13 +359,13 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
     * @param radius                              either the radius of the segmented line of the points.
     * @param resolution                          defines the number of trajectory samples to use.
     * @param radialResolution                    used to define the mesh resolution.
-    * @param registry                            the {@link YoVariableRegistry} to which internal
+    * @param registry                            the {@link YoRegistry} to which internal
     *                                            {@link YoVariable}s will be registered to. Modified.
     * @throws RuntimeException if the number of {@link Polynomial3DVariables}s differs from the number
     *                          of waypoint times.
     */
    public YoGraphicPolynomial3D(String name, YoFramePose3D poseFromTrajectoryFrameToWorldFrame, Polynomial3DVariableHolder[] yoPolynomial3Ds,
-                                YoDouble[] waypointTimes, double radius, int resolution, int radialResolution, YoVariableRegistry registry)
+                                YoDouble[] waypointTimes, double radius, int resolution, int radialResolution, YoRegistry registry)
    {
       super(name);
 
@@ -435,12 +431,12 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
     *                    {@link #getConstants()}.
     * @return a YoGraphic setup for remote visualization.
     */
-   public static YoGraphicPolynomial3D createAsRemoteYoGraphic(String name, YoVariable<?>[] yoVariables, double[] constants)
+   public static YoGraphicPolynomial3D createAsRemoteYoGraphic(String name, YoVariable[] yoVariables, double[] constants)
    {
       return new YoGraphicPolynomial3D(name, yoVariables, constants);
    }
 
-   private YoGraphicPolynomial3D(String name, YoVariable<?>[] yoVariables, double[] constants)
+   private YoGraphicPolynomial3D(String name, YoVariable[] yoVariables, double[] constants)
    {
       super(name);
 
@@ -526,7 +522,7 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
 
    private void setupDirtyGraphicListener()
    {
-      getVariablesDefiningGraphic().forEach(variable -> variable.addVariableChangedListener(v -> dirtyGraphic.set(true)));
+      getVariablesDefiningGraphic().forEach(variable -> variable.addListener(v -> dirtyGraphic.set(true)));
    }
 
    private static int[] subArray(double[] source, int start, int length)
@@ -542,7 +538,7 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
       return list.toArray(new YoDouble[0]);
    }
 
-   private static YoDouble[] subArray(YoVariable<?>[] source, int start, int length)
+   private static YoDouble[] subArray(YoVariable[] source, int start, int length)
    {
       YoDouble[] subArray = new YoDouble[length];
       for (int i = 0; i < length; i++)
@@ -768,9 +764,9 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
     * @return The YoVariables needed to create a remote version of this YoGraphic.
     */
    @Override
-   public YoVariable<?>[] getVariables()
+   public YoVariable[] getVariables()
    {
-      List<YoVariable<?>> allVariables = new ArrayList<>();
+      List<YoVariable> allVariables = new ArrayList<>();
       allVariables.addAll(getVariablesDefiningGraphic());
       allVariables.add(readerExists);
 
@@ -780,9 +776,9 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
    /**
     * @return The subset of {@link YoVariable}s on which the graphics depend.
     */
-   private List<YoVariable<?>> getVariablesDefiningGraphic()
+   private List<YoVariable> getVariablesDefiningGraphic()
    {
-      List<YoVariable<?>> graphicVariables = new ArrayList<>();
+      List<YoVariable> graphicVariables = new ArrayList<>();
 
       if (poseToWorldFrame != null)
       {
@@ -878,7 +874,7 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
    }
 
    @Override
-   public YoGraphicPolynomial3D duplicate(YoVariableRegistry newRegistry)
+   public YoGraphicPolynomial3D duplicate(YoRegistry newRegistry)
    {
       return createAsRemoteYoGraphic(getName(), getVariables(), getConstants());
    }
@@ -988,7 +984,7 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
          this(holder.getYoCoefficients(), holder.getYoNumberOfCoefficients());
       }
 
-      PolynomialVariables(String name, int maximumNumberOfCoefficients, YoVariableRegistry registry)
+      PolynomialVariables(String name, int maximumNumberOfCoefficients, YoRegistry registry)
       {
          coefficients = new YoDouble[maximumNumberOfCoefficients];
 

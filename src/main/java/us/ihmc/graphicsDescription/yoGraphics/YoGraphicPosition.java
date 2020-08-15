@@ -16,10 +16,10 @@ import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.graphicsDescription.appearance.YoAppearanceRGBColor;
 import us.ihmc.graphicsDescription.instructions.Graphics3DInstruction;
 import us.ihmc.graphicsDescription.yoGraphics.plotting.YoArtifactPosition;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint2D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint3D;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
-import us.ihmc.yoVariables.variable.YoFramePoint2D;
-import us.ihmc.yoVariables.variable.YoFramePoint3D;
 import us.ihmc.yoVariables.variable.YoVariable;
 
 public class YoGraphicPosition extends YoGraphic implements RemoteYoGraphic
@@ -37,12 +37,12 @@ public class YoGraphicPosition extends YoGraphic implements RemoteYoGraphic
 
    private final ArrayList<Graphics3DInstruction> linkGraphicInstructions = new ArrayList<>();
 
-   public YoGraphicPosition(String namePrefix, String nameSuffix, YoVariableRegistry registry, double scale, AppearanceDefinition appearance)
+   public YoGraphicPosition(String namePrefix, String nameSuffix, YoRegistry registry, double scale, AppearanceDefinition appearance)
    {
       this(namePrefix + nameSuffix, new YoFramePoint3D(namePrefix, nameSuffix, ReferenceFrame.getWorldFrame(), registry), scale, appearance);
    }
 
-   public YoGraphicPosition(String namePrefix, String nameSuffix, YoVariableRegistry registry, double scale, AppearanceDefinition appearance, GraphicType type)
+   public YoGraphicPosition(String namePrefix, String nameSuffix, YoRegistry registry, double scale, AppearanceDefinition appearance, GraphicType type)
    {
       this(namePrefix + nameSuffix, new YoFramePoint3D(namePrefix, nameSuffix, ReferenceFrame.getWorldFrame(), registry), scale, appearance, type);
    }
@@ -313,7 +313,7 @@ public class YoGraphicPosition extends YoGraphic implements RemoteYoGraphic
    }
 
    @Override
-   public YoVariable<?>[] getVariables()
+   public YoVariable[] getVariables()
    {
       if (z != null)
       {
@@ -337,22 +337,22 @@ public class YoGraphicPosition extends YoGraphic implements RemoteYoGraphic
       return appearance;
    }
 
-   public YoVariable<?> getYoX()
+   public YoVariable getYoX()
    {
       return x;
    }
 
-   public YoVariable<?> getYoY()
+   public YoVariable getYoY()
    {
       return y;
    }
 
    @Override
-   public YoGraphicPosition duplicate(YoVariableRegistry newRegistry)
+   public YoGraphicPosition duplicate(YoRegistry newRegistry)
    {
-      YoDouble x = (YoDouble) newRegistry.getVariable(this.x.getFullNameWithNameSpace());
-      YoDouble y = (YoDouble) newRegistry.getVariable(this.y.getFullNameWithNameSpace());
-      YoDouble z = (YoDouble) newRegistry.getVariable(this.z.getFullNameWithNameSpace());
+      YoDouble x = (YoDouble) newRegistry.findVariable(this.x.getFullNameString());
+      YoDouble y = (YoDouble) newRegistry.findVariable(this.y.getFullNameString());
+      YoDouble z = (YoDouble) newRegistry.findVariable(this.z.getFullNameString());
       return new YoGraphicPosition(getName(), x, y, z, scale, appearance, type);
    }
 }

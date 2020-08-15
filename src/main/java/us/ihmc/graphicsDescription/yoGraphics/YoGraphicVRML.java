@@ -5,10 +5,10 @@ import us.ihmc.euclid.referenceFrame.ReferenceFrame;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoFramePoint3D;
-import us.ihmc.yoVariables.variable.YoFramePoseUsingYawPitchRoll;
-import us.ihmc.yoVariables.variable.YoFrameYawPitchRoll;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoseUsingYawPitchRoll;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameYawPitchRoll;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public class YoGraphicVRML extends YoGraphicCoordinateSystem
 {
@@ -19,19 +19,19 @@ public class YoGraphicVRML extends YoGraphicCoordinateSystem
    private final boolean showCoordinateSystem;
    private final AppearanceDefinition appearance;
 
-   public YoGraphicVRML(String name, ReferenceFrame referenceFrame, YoVariableRegistry registry, String modelFilePath, boolean showCoordinateSystem)
+   public YoGraphicVRML(String name, ReferenceFrame referenceFrame, YoRegistry registry, String modelFilePath, boolean showCoordinateSystem)
    {
       this(name, referenceFrame, registry, modelFilePath, new Vector3D(), new RotationMatrix(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0),
            showCoordinateSystem);
    }
 
-   public YoGraphicVRML(String name, ReferenceFrame referenceFrame, YoVariableRegistry registry, String modelFilePath, Vector3D graphicOffset,
+   public YoGraphicVRML(String name, ReferenceFrame referenceFrame, YoRegistry registry, String modelFilePath, Vector3D graphicOffset,
                         RotationMatrix graphicRotation, boolean showCoordinateSystem)
    {
       this(name, referenceFrame, registry, modelFilePath, graphicOffset, graphicRotation, null, showCoordinateSystem, 0.1);
    }
 
-   public YoGraphicVRML(String name, ReferenceFrame referenceFrame, YoVariableRegistry registry, String modelFilePath, Vector3D graphicOffset,
+   public YoGraphicVRML(String name, ReferenceFrame referenceFrame, YoRegistry registry, String modelFilePath, Vector3D graphicOffset,
                         RotationMatrix graphicRotation, AppearanceDefinition appearance, boolean showCoordinateSystem, double coordinateAxisLength)
    {
       super(name, "", registry, true, coordinateAxisLength);
@@ -88,7 +88,7 @@ public class YoGraphicVRML extends YoGraphicCoordinateSystem
    }
 
    @Override
-   public YoGraphicVRML duplicate(YoVariableRegistry newRegistry)
+   public YoGraphicVRML duplicate(YoRegistry newRegistry)
    {
       return new YoGraphicVRML(getName(),
                                referenceFrame,

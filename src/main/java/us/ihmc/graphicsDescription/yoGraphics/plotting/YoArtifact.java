@@ -8,18 +8,18 @@ import us.ihmc.graphicsDescription.appearance.YoAppearanceRGBColor;
 import us.ihmc.graphicsDescription.plotting.Graphics2DAdapter;
 import us.ihmc.graphicsDescription.plotting.artifact.Artifact;
 import us.ihmc.graphicsDescription.yoGraphics.RemoteYoGraphic;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoVariable;
 
 public abstract class YoArtifact extends Artifact implements RemoteYoGraphic
 {
-   private final YoVariable<?>[] variableArray;
+   private final YoVariable[] variableArray;
    private final double[] constants;
    private final AppearanceDefinition appearance;
 
    private final ArrayList<double[]> historicalData = new ArrayList<>();
 
-   public YoArtifact(String name, double[] constants, Color color, YoVariable<?>... variableArray)
+   public YoArtifact(String name, double[] constants, Color color, YoVariable... variableArray)
    {
       super(name);
 
@@ -32,7 +32,7 @@ public abstract class YoArtifact extends Artifact implements RemoteYoGraphic
    public abstract void drawHistoryEntry(Graphics2DAdapter graphics, double[] entry);
 
    @Override
-   public YoVariable<?>[] getVariables()
+   public YoVariable[] getVariables()
    {
       return variableArray;
    }
@@ -85,5 +85,5 @@ public abstract class YoArtifact extends Artifact implements RemoteYoGraphic
    }
 
    @Override
-   public abstract YoArtifact duplicate(YoVariableRegistry newRegistry);
+   public abstract YoArtifact duplicate(YoRegistry newRegistry);
 }

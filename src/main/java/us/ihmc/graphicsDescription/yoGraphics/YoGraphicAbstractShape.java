@@ -11,10 +11,10 @@ import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.transform.interfaces.RigidBodyTransformReadOnly;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.graphicsDescription.plotting.artifact.Artifact;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameQuaternion;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameYawPitchRoll;
 import us.ihmc.yoVariables.variable.YoDouble;
-import us.ihmc.yoVariables.variable.YoFramePoint3D;
-import us.ihmc.yoVariables.variable.YoFrameQuaternion;
-import us.ihmc.yoVariables.variable.YoFrameYawPitchRoll;
 import us.ihmc.yoVariables.variable.YoVariable;
 
 public abstract class YoGraphicAbstractShape extends YoGraphic
@@ -66,7 +66,7 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
     * @param yoVariables the deserialized variables.
     * @param scale       the scale to apply on the graphics.
     */
-   protected YoGraphicAbstractShape(String name, YoVariable<?>[] yoVariables, double scale)
+   protected YoGraphicAbstractShape(String name, YoVariable[] yoVariables, double scale)
    {
       super(name);
 
@@ -230,9 +230,9 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
       return false;
    }
 
-   public YoVariable<?>[] getVariables()
+   public YoVariable[] getVariables()
    {
-      YoVariable<?>[] vars = new YoVariable[isUsingYawPitchRoll() ? 6 : 7];
+      YoVariable[] vars = new YoVariable[isUsingYawPitchRoll() ? 6 : 7];
       int i = 0;
 
       vars[i++] = yoFramePoint.getYoX();

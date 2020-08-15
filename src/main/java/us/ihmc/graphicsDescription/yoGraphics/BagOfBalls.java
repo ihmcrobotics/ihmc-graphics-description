@@ -11,8 +11,8 @@ import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.graphicsDescription.appearance.YoAppearance;
 import us.ihmc.graphicsDescription.yoGraphics.YoGraphicPosition.GraphicType;
 import us.ihmc.graphicsDescription.yoGraphics.plotting.ArtifactList;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoFramePoint3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint3D;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 /**
  * <p>
@@ -37,33 +37,33 @@ public class BagOfBalls
    private YoGraphicsList yoGraphicsList;
    private ArtifactList artifactList;
 
-   public BagOfBalls(YoVariableRegistry parentRegistry, YoGraphicsListRegistry yoGraphicsListRegistry)
+   public BagOfBalls(YoRegistry parentRegistry, YoGraphicsListRegistry yoGraphicsListRegistry)
    {
       this(DEFAULT_NUMBER_OF_BALLS, DEFAULT_SIZE, DEFAULT_NAME, DEFAULT_COLOR, DEFAULT_GRAPHIC_TYPE, parentRegistry, yoGraphicsListRegistry);
    }
 
-   public BagOfBalls(int numberOfBalls, YoVariableRegistry parentRegistry, YoGraphicsListRegistry yoGraphicsListRegistry)
+   public BagOfBalls(int numberOfBalls, YoRegistry parentRegistry, YoGraphicsListRegistry yoGraphicsListRegistry)
    {
       this(numberOfBalls, DEFAULT_SIZE, DEFAULT_NAME, DEFAULT_COLOR, DEFAULT_GRAPHIC_TYPE, parentRegistry, yoGraphicsListRegistry);
    }
 
-   public BagOfBalls(int numberOfBalls, double sizeInMeters, YoVariableRegistry parentRegistry, YoGraphicsListRegistry yoGraphicsListRegistry)
+   public BagOfBalls(int numberOfBalls, double sizeInMeters, YoRegistry parentRegistry, YoGraphicsListRegistry yoGraphicsListRegistry)
    {
       this(numberOfBalls, sizeInMeters, DEFAULT_NAME, DEFAULT_COLOR, DEFAULT_GRAPHIC_TYPE, parentRegistry, yoGraphicsListRegistry);
    }
 
-   public BagOfBalls(int numberOfBalls, double sizeInMeters, String name, YoVariableRegistry parentRegistry, YoGraphicsListRegistry yoGraphicsListRegistry)
+   public BagOfBalls(int numberOfBalls, double sizeInMeters, String name, YoRegistry parentRegistry, YoGraphicsListRegistry yoGraphicsListRegistry)
    {
       this(numberOfBalls, sizeInMeters, name, DEFAULT_COLOR, DEFAULT_GRAPHIC_TYPE, parentRegistry, yoGraphicsListRegistry);
    }
 
-   public BagOfBalls(int numberOfBalls, double sizeInMeters, AppearanceDefinition appearance, YoVariableRegistry parentRegistry,
+   public BagOfBalls(int numberOfBalls, double sizeInMeters, AppearanceDefinition appearance, YoRegistry parentRegistry,
                      YoGraphicsListRegistry yoGraphicsListRegistry)
    {
       this(numberOfBalls, sizeInMeters, DEFAULT_NAME, appearance, DEFAULT_GRAPHIC_TYPE, parentRegistry, yoGraphicsListRegistry);
    }
 
-   public BagOfBalls(int numberOfBalls, double sizeInMeters, AppearanceDefinition appearance, GraphicType graphicType, YoVariableRegistry parentRegistry,
+   public BagOfBalls(int numberOfBalls, double sizeInMeters, AppearanceDefinition appearance, GraphicType graphicType, YoRegistry parentRegistry,
                      YoGraphicsListRegistry yoGraphicsListRegistry)
    {
       this(numberOfBalls, sizeInMeters, DEFAULT_NAME, appearance, graphicType, parentRegistry, yoGraphicsListRegistry);
@@ -76,10 +76,10 @@ public class BagOfBalls
     * @param sizeInMeters           double Size of each ball in meters.
     * @param name                   String Name of the BagOfBalls
     * @param appearance             Appearance for each of the balls.
-    * @param parentRegistry         YoVariableRegistry to register the BagOfBalls with.
+    * @param parentRegistry         YoRegistry to register the BagOfBalls with.
     * @param yoGraphicsListRegistry YoGraphicsListRegistry to register the BagOfBalls with.
     */
-   public BagOfBalls(int numberOfBalls, double sizeInMeters, String name, AppearanceDefinition appearance, YoVariableRegistry parentRegistry,
+   public BagOfBalls(int numberOfBalls, double sizeInMeters, String name, AppearanceDefinition appearance, YoRegistry parentRegistry,
                      YoGraphicsListRegistry yoGraphicsListRegistry)
    {
       this(numberOfBalls, sizeInMeters, name, appearance, DEFAULT_GRAPHIC_TYPE, parentRegistry, yoGraphicsListRegistry);
@@ -92,11 +92,11 @@ public class BagOfBalls
     * @param sizeInMeters           double Size of each ball in meters.
     * @param name                   String Name of the BagOfBalls
     * @param appearance             Appearance for each of the balls.
-    * @param parentRegistry         YoVariableRegistry to register the BagOfBalls with.
+    * @param parentRegistry         YoRegistry to register the BagOfBalls with.
     * @param yoGraphicsListRegistry YoGraphicsListRegistry to register the BagOfBalls with.
     */
    public BagOfBalls(int numberOfBalls, double sizeInMeters, String name, AppearanceDefinition appearance, GraphicType graphicType,
-                     YoVariableRegistry parentRegistry, YoGraphicsListRegistry yoGraphicsListRegistry)
+                     YoRegistry parentRegistry, YoGraphicsListRegistry yoGraphicsListRegistry)
    {
       this(sizeInMeters, name, toList(appearance, numberOfBalls), graphicType, parentRegistry, yoGraphicsListRegistry);
    }
@@ -107,19 +107,19 @@ public class BagOfBalls
     * @param sizeInMeters           double Size of each ball in meters.
     * @param name                   String Name of the BagOfBalls
     * @param appearances            ArrayList of the Appearance for each of the balls.
-    * @param parentRegistry         YoVariableRegistry to register the BagOfBalls with.
+    * @param parentRegistry         YoRegistry to register the BagOfBalls with.
     * @param yoGraphicsListRegistry YoGraphicsListRegistry to register the BagOfBalls with.
     */
-   public BagOfBalls(double sizeInMeters, String name, List<AppearanceDefinition> appearances, YoVariableRegistry parentRegistry,
+   public BagOfBalls(double sizeInMeters, String name, List<AppearanceDefinition> appearances, YoRegistry parentRegistry,
                      YoGraphicsListRegistry yoGraphicsListRegistry)
    {
       this(sizeInMeters, name, appearances, DEFAULT_GRAPHIC_TYPE, parentRegistry, yoGraphicsListRegistry);
    }
 
-   public BagOfBalls(double sizeInMeters, String name, List<AppearanceDefinition> appearances, GraphicType graphicType, YoVariableRegistry parentRegistry,
+   public BagOfBalls(double sizeInMeters, String name, List<AppearanceDefinition> appearances, GraphicType graphicType, YoRegistry parentRegistry,
                      YoGraphicsListRegistry yoGraphicsListRegistry)
    {
-      YoVariableRegistry registry = new YoVariableRegistry(name + "Balls");
+      YoRegistry registry = new YoRegistry(name + "Balls");
 
       for (int i = 0; i < appearances.size(); i++)
       {
@@ -156,11 +156,11 @@ public class BagOfBalls
     * @param numberOfBalls            int Number of balls to create.
     * @param sizeInMeters             double Size of each ball in meters.
     * @param name                     String Name of the BagOfBalls to create.
-    * @param parentYoVariableRegistry YoVariableRegistry to register the BagOfBalls with.
+    * @param parentYoVariableRegistry YoRegistry to register the BagOfBalls with.
     * @param yoGraphicsListRegistry   YoGraphicsListRegistry to register the BagOfBalls with.
     * @return BagOfBalls
     */
-   public static BagOfBalls createPatrioticBag(int numberOfBalls, double sizeInMeters, String name, YoVariableRegistry parentYoVariableRegistry,
+   public static BagOfBalls createPatrioticBag(int numberOfBalls, double sizeInMeters, String name, YoRegistry parentYoVariableRegistry,
                                                YoGraphicsListRegistry yoGraphicsListRegistry)
    {
       AppearanceDefinition[] redWhiteBlue = new AppearanceDefinition[] {YoAppearance.Red(), YoAppearance.White(), YoAppearance.Blue()};
@@ -182,11 +182,11 @@ public class BagOfBalls
     * @param numberOfBalls            int Number of balls to create.
     * @param sizeInMeters             double Size of each ball in meters.
     * @param name                     String Name of the BagOfBalls to create.
-    * @param parentYoVariableRegistry YoVariableRegistry to register the BagOfBalls with.
+    * @param parentYoVariableRegistry YoRegistry to register the BagOfBalls with.
     * @param yoGraphicsListRegistry   YoGraphicsListRegistry to register the BagOfBalls with.
     * @return BagOfBalls
     */
-   public static BagOfBalls createRainbowBag(int numberOfBalls, double sizeInMeters, String name, YoVariableRegistry parentYoVariableRegistry,
+   public static BagOfBalls createRainbowBag(int numberOfBalls, double sizeInMeters, String name, YoRegistry parentYoVariableRegistry,
                                              YoGraphicsListRegistry yoGraphicsListRegistry)
    {
       AppearanceDefinition[] rainbow = YoAppearance.getStandardRoyGBivRainbow();
@@ -201,7 +201,7 @@ public class BagOfBalls
       return new BagOfBalls(sizeInMeters, name, appearances, parentYoVariableRegistry, yoGraphicsListRegistry);
    }
 
-   private void registerYoGraphics(String name, YoVariableRegistry registry, YoVariableRegistry parentYoVariableRegistry,
+   private void registerYoGraphics(String name, YoRegistry registry, YoRegistry parentYoVariableRegistry,
                                    YoGraphicsListRegistry yoGraphicsListRegistry)
    {
       if (yoGraphicsListRegistry != null)

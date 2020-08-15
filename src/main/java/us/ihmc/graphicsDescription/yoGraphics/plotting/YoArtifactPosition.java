@@ -10,9 +10,9 @@ import us.ihmc.euclid.tuple2D.interfaces.Point2DReadOnly;
 import us.ihmc.graphicsDescription.plotting.Graphics2DAdapter;
 import us.ihmc.graphicsDescription.plotting.Plotter2DAdapter;
 import us.ihmc.graphicsDescription.yoGraphics.YoGraphicPosition.GraphicType;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint2D;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
-import us.ihmc.yoVariables.variable.YoFramePoint2D;
 
 public class YoArtifactPosition extends YoArtifact
 {
@@ -26,7 +26,7 @@ public class YoArtifactPosition extends YoArtifact
    private final Point2D tempPoint = new Point2D();
    private final Vector2D legendRadii = new Vector2D();
 
-   public YoArtifactPosition(String namePrefix, String nameSuffix, GraphicType type, Color color, double radius, YoVariableRegistry registry)
+   public YoArtifactPosition(String namePrefix, String nameSuffix, GraphicType type, Color color, double radius, YoRegistry registry)
    {
       this(namePrefix + nameSuffix, new YoDouble(namePrefix + "X" + nameSuffix, registry), new YoDouble(namePrefix + "Y" + nameSuffix, registry), type, color,
            radius);
@@ -175,7 +175,7 @@ public class YoArtifactPosition extends YoArtifact
    }
 
    @Override
-   public YoArtifact duplicate(YoVariableRegistry newRegistry)
+   public YoArtifact duplicate(YoRegistry newRegistry)
    {
       return new YoArtifactPosition(getName(), point.duplicate(newRegistry), graphicType, color, radii.getX());
    }

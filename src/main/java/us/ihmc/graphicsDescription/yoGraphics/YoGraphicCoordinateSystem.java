@@ -17,13 +17,9 @@ import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.graphicsDescription.appearance.YoAppearance;
 import us.ihmc.graphicsDescription.appearance.YoAppearanceRGBColor;
 import us.ihmc.graphicsDescription.plotting.artifact.Artifact;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.euclid.referenceFrame.*;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
-import us.ihmc.yoVariables.variable.YoFramePoint3D;
-import us.ihmc.yoVariables.variable.YoFramePose3D;
-import us.ihmc.yoVariables.variable.YoFramePoseUsingYawPitchRoll;
-import us.ihmc.yoVariables.variable.YoFrameQuaternion;
-import us.ihmc.yoVariables.variable.YoFrameYawPitchRoll;
 import us.ihmc.yoVariables.variable.YoVariable;
 
 public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGraphic
@@ -39,12 +35,12 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
    private double colorRGB32BitInt = arrowColor.getAwtColor().getRGB();
    private double transparency = arrowColor.getTransparency();
 
-   public YoGraphicCoordinateSystem(String namePrefix, String nameSuffix, YoVariableRegistry registry, boolean useYawPitchRoll, double scale)
+   public YoGraphicCoordinateSystem(String namePrefix, String nameSuffix, YoRegistry registry, boolean useYawPitchRoll, double scale)
    {
       this(namePrefix, nameSuffix, registry, useYawPitchRoll, scale, DEFAULT_APPEARANCE);
    }
 
-   public YoGraphicCoordinateSystem(String namePrefix, String nameSuffix, YoVariableRegistry registry, boolean useYawPitchRoll, double scale,
+   public YoGraphicCoordinateSystem(String namePrefix, String nameSuffix, YoRegistry registry, boolean useYawPitchRoll, double scale,
                                     AppearanceDefinition arrowAppearance)
    {
       this(namePrefix + nameSuffix, new YoFramePoint3D(namePrefix, nameSuffix, worldFrame, registry),
@@ -114,7 +110,7 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
       setArrowColor(arrowAppearance);
    }
 
-   static YoGraphicCoordinateSystem createAsRemoteYoGraphic(String name, YoVariable<?>[] yoVariables, double[] constants)
+   static YoGraphicCoordinateSystem createAsRemoteYoGraphic(String name, YoVariable[] yoVariables, double[] constants)
    {
       return new YoGraphicCoordinateSystem(name, yoVariables, constants);
    }
@@ -129,7 +125,7 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
     * @param yoVariables the deserialized variables.
     * @param scale       the scale to apply on the graphics.
     */
-   protected YoGraphicCoordinateSystem(String name, YoVariable<?>[] yoVariables, double[] constants)
+   protected YoGraphicCoordinateSystem(String name, YoVariable[] yoVariables, double[] constants)
    {
       super(name);
 
@@ -349,7 +345,7 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
    }
 
    @Override
-   public YoGraphicCoordinateSystem duplicate(YoVariableRegistry newRegistry)
+   public YoGraphicCoordinateSystem duplicate(YoRegistry newRegistry)
    {
       if (isUsingYawPitchRoll())
          return new YoGraphicCoordinateSystem(getName(), position.duplicate(newRegistry), yawPitchRoll.duplicate(newRegistry), scale, arrowColor);

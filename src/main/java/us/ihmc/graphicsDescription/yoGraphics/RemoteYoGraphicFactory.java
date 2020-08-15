@@ -13,10 +13,10 @@ import us.ihmc.graphicsDescription.yoGraphics.plotting.YoArtifactLineSegment2d;
 import us.ihmc.graphicsDescription.yoGraphics.plotting.YoArtifactOval;
 import us.ihmc.graphicsDescription.yoGraphics.plotting.YoArtifactPolygon;
 import us.ihmc.graphicsDescription.yoGraphics.plotting.YoArtifactPosition;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameConvexPolygon2D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameLineSegment2D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint2D;
 import us.ihmc.yoVariables.variable.YoDouble;
-import us.ihmc.yoVariables.variable.YoFrameConvexPolygon2D;
-import us.ihmc.yoVariables.variable.YoFrameLineSegment2D;
-import us.ihmc.yoVariables.variable.YoFramePoint2D;
 import us.ihmc.yoVariables.variable.YoInteger;
 import us.ihmc.yoVariables.variable.YoVariable;
 
@@ -30,7 +30,7 @@ public class RemoteYoGraphicFactory
 {
    public interface YoGraphicFromMessageBuilder<T extends RemoteYoGraphic>
    {
-      T yoGraphicFromMessage(String name, YoVariable<?>[] vars, double[] consts, AppearanceDefinition appearance);
+      T yoGraphicFromMessage(String name, YoVariable[] vars, double[] consts, AppearanceDefinition appearance);
    }
 
    private final List<Class<? extends RemoteYoGraphic>> classList = new ArrayList<>();
@@ -89,7 +89,7 @@ public class RemoteYoGraphicFactory
       return registrationIDs.get(clazz);
    }
 
-   public RemoteYoGraphic yoGraphicFromMessage(int registrationID, String name, YoVariable<?>[] vars, double[] consts, AppearanceDefinition appearance)
+   public RemoteYoGraphic yoGraphicFromMessage(int registrationID, String name, YoVariable[] vars, double[] consts, AppearanceDefinition appearance)
    {
       YoGraphicFromMessageBuilder<?> builder = registrationBuilders.get(registrationID);
 
@@ -99,7 +99,7 @@ public class RemoteYoGraphicFactory
       return builder.yoGraphicFromMessage(name, vars, consts, appearance);
    }
 
-   private static YoArtifactPolygon yoArtifactPolygonFromMessage(String name, YoVariable<?>[] vars, double[] consts, AppearanceDefinition appearance)
+   private static YoArtifactPolygon yoArtifactPolygonFromMessage(String name, YoVariable[] vars, double[] consts, AppearanceDefinition appearance)
    {
       ReferenceFrame referenceFrame = ReferenceFrame.getWorldFrame();
       int i = 0;
@@ -115,7 +115,7 @@ public class RemoteYoGraphicFactory
       return new YoArtifactPolygon(name, convexPolygon2d, appearance.getColor().get(), consts[0] > 0);
    }
 
-   private static YoArtifactLineSegment2d yoArtifactLineSegment2DFromMessage(String name, YoVariable<?>[] vars, double[] consts,
+   private static YoArtifactLineSegment2d yoArtifactLineSegment2DFromMessage(String name, YoVariable[] vars, double[] consts,
                                                                              AppearanceDefinition appearance)
    {
       YoFrameLineSegment2D segment = new YoFrameLineSegment2D((YoDouble) vars[0],
@@ -127,12 +127,12 @@ public class RemoteYoGraphicFactory
       return new YoArtifactLineSegment2d(name, segment, appearance.getColor().get());
    }
 
-   private static YoArtifactOval yoArtifactOvalFromMessage(String name, YoVariable<?>[] vars, double[] consts, AppearanceDefinition appearance)
+   private static YoArtifactOval yoArtifactOvalFromMessage(String name, YoVariable[] vars, double[] consts, AppearanceDefinition appearance)
    {
       return new YoArtifactOval(name, (YoDouble) vars[0], (YoDouble) vars[1], (YoDouble) vars[2], appearance.getColor().get());
    }
 
-   private static YoArtifactPosition yoArtifactPositionFromMessage(String name, YoVariable<?>[] vars, double[] consts, AppearanceDefinition appearance)
+   private static YoArtifactPosition yoArtifactPositionFromMessage(String name, YoVariable[] vars, double[] consts, AppearanceDefinition appearance)
    {
       return new YoArtifactPosition(name,
                                     (YoDouble) vars[0],
@@ -142,12 +142,12 @@ public class RemoteYoGraphicFactory
                                     consts[0]);
    }
 
-   private static YoGraphicPolygon yoGraphicPolygonFromMessage(String name, YoVariable<?>[] vars, double[] consts, AppearanceDefinition appearance)
+   private static YoGraphicPolygon yoGraphicPolygonFromMessage(String name, YoVariable[] vars, double[] consts, AppearanceDefinition appearance)
    {
       return YoGraphicPolygon.createAsRemoteYoGraphic(name, vars, consts, appearance);
    }
 
-   private static YoGraphicLineSegment yoGraphicLineSegmentFromMessage(String name, YoVariable<?>[] vars, double[] consts, AppearanceDefinition appearance)
+   private static YoGraphicLineSegment yoGraphicLineSegmentFromMessage(String name, YoVariable[] vars, double[] consts, AppearanceDefinition appearance)
    {
       return new YoGraphicLineSegment(name,
                                       (YoDouble) vars[0],
@@ -160,19 +160,19 @@ public class RemoteYoGraphicFactory
                                       appearance);
    }
 
-   private static YoGraphicCoordinateSystem yoGraphicCoordinateSystemFromMessage(String name, YoVariable<?>[] vars, double[] consts,
+   private static YoGraphicCoordinateSystem yoGraphicCoordinateSystemFromMessage(String name, YoVariable[] vars, double[] consts,
                                                                                  AppearanceDefinition appearance)
    {
       return YoGraphicCoordinateSystem.createAsRemoteYoGraphic(name, vars, consts);
    }
 
-   private static YoGraphicReferenceFrame yoGraphicReferenceFrameFromMessage(String name, YoVariable<?>[] vars, double[] consts,
+   private static YoGraphicReferenceFrame yoGraphicReferenceFrameFromMessage(String name, YoVariable[] vars, double[] consts,
                                                                              AppearanceDefinition appearance)
    {
       return YoGraphicReferenceFrame.createAsRemoteYoGraphic(name, vars, consts);
    }
 
-   private static YoGraphicPosition yoGraphicPositionFromMessage(String name, YoVariable<?>[] vars, double[] consts, AppearanceDefinition appearance)
+   private static YoGraphicPosition yoGraphicPositionFromMessage(String name, YoVariable[] vars, double[] consts, AppearanceDefinition appearance)
    {
       return new YoGraphicPosition(name,
                                    (YoDouble) vars[0],
@@ -183,7 +183,7 @@ public class RemoteYoGraphicFactory
                                    YoGraphicPosition.GraphicType.values()[(int) consts[1]]);
    }
 
-   private static YoGraphicVector yoGraphicVectorFromMessage(String name, YoVariable<?>[] vars, double[] consts, AppearanceDefinition appearance)
+   private static YoGraphicVector yoGraphicVectorFromMessage(String name, YoVariable[] vars, double[] consts, AppearanceDefinition appearance)
    {
       return new YoGraphicVector(name,
                                  (YoDouble) vars[0],
@@ -197,7 +197,7 @@ public class RemoteYoGraphicFactory
                                  true);
    }
 
-   private static YoGraphicTriangle yoGraphicTriangleFromMessage(String name, YoVariable<?>[] vars, double[] consts, AppearanceDefinition appearance)
+   private static YoGraphicTriangle yoGraphicTriangleFromMessage(String name, YoVariable[] vars, double[] consts, AppearanceDefinition appearance)
    {
       return new YoGraphicTriangle(name,
                                    (YoDouble) vars[0],
@@ -212,7 +212,7 @@ public class RemoteYoGraphicFactory
                                    appearance);
    }
 
-   private static YoGraphicCylinder yoGraphicCylinderFromMessage(String name, YoVariable<?>[] vars, double[] consts, AppearanceDefinition appearance)
+   private static YoGraphicCylinder yoGraphicCylinderFromMessage(String name, YoVariable[] vars, double[] consts, AppearanceDefinition appearance)
    {
       return new YoGraphicCylinder(name,
                                    (YoDouble) vars[0],
@@ -225,7 +225,7 @@ public class RemoteYoGraphicFactory
                                    consts[0]);
    }
 
-   private static YoVariable<?> getVariableOrNull(YoVariable<?>[] vars, int i)
+   private static YoVariable getVariableOrNull(YoVariable[] vars, int i)
    {
       if (i < vars.length)
       {
