@@ -12,10 +12,10 @@ import us.ihmc.graphicsDescription.MeshDataGenerator;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.graphicsDescription.instructions.Graphics3DAddMeshDataInstruction;
 import us.ihmc.graphicsDescription.plotting.artifact.Artifact;
-import us.ihmc.yoVariables.listener.VariableChangedListener;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint3D;
+import us.ihmc.yoVariables.listener.YoVariableChangedListener;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
-import us.ihmc.yoVariables.variable.YoFramePoint3D;
 import us.ihmc.yoVariables.variable.YoVariable;
 
 public class YoGraphicTriangle extends YoGraphic implements RemoteYoGraphic, GraphicsUpdatable
@@ -31,7 +31,7 @@ public class YoGraphicTriangle extends YoGraphic implements RemoteYoGraphic, Gra
 
    private final AtomicBoolean hasChanged = new AtomicBoolean(false);
 
-   public YoGraphicTriangle(String name, AppearanceDefinition appearance, YoVariableRegistry registry)
+   public YoGraphicTriangle(String name, AppearanceDefinition appearance, YoRegistry registry)
    {
       this(name, new YoFramePoint3D(name + "0", ReferenceFrame.getWorldFrame(), registry),
            new YoFramePoint3D(name + "1", ReferenceFrame.getWorldFrame(), registry), new YoFramePoint3D(name + "2", ReferenceFrame.getWorldFrame(), registry),
@@ -53,10 +53,10 @@ public class YoGraphicTriangle extends YoGraphic implements RemoteYoGraphic, Gra
 
       instruction = graphics3dObject.addPolygon(appearance, pointOne, pointTwo, pointThree);
 
-      VariableChangedListener listener = new VariableChangedListener()
+      YoVariableChangedListener listener = new YoVariableChangedListener()
       {
          @Override
-         public void notifyOfVariableChange(YoVariable<?> v)
+         public void changed(YoVariable v)
          {
             hasChanged.set(true);
          }
@@ -131,9 +131,9 @@ public class YoGraphicTriangle extends YoGraphic implements RemoteYoGraphic, Gra
    }
 
    @Override
-   public YoVariable<?>[] getVariables()
+   public YoVariable[] getVariables()
    {
-      YoVariable<?>[] vars = new YoVariable[9];
+      YoVariable[] vars = new YoVariable[9];
       int i = 0;
       vars[i++] = pointOne.getYoX();
       vars[i++] = pointOne.getYoY();
@@ -192,7 +192,7 @@ public class YoGraphicTriangle extends YoGraphic implements RemoteYoGraphic, Gra
    }
 
    @Override
-   public YoGraphicTriangle duplicate(YoVariableRegistry newRegistry)
+   public YoGraphicTriangle duplicate(YoRegistry newRegistry)
    {
       return new YoGraphicTriangle(getName(), pointOne.duplicate(newRegistry), pointTwo.duplicate(newRegistry), pointThree.duplicate(newRegistry), appearance);
    }

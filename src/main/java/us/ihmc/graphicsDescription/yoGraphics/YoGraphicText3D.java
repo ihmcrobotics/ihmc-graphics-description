@@ -4,9 +4,9 @@ import us.ihmc.euclid.referenceFrame.ReferenceFrame;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.graphicsDescription.instructions.Graphics3DAddExtrusionInstruction;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoFramePoint3D;
-import us.ihmc.yoVariables.variable.YoFrameYawPitchRoll;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameYawPitchRoll;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public class YoGraphicText3D extends YoGraphicAbstractShape
 {
@@ -25,7 +25,7 @@ public class YoGraphicText3D extends YoGraphicAbstractShape
       instruction = graphics3dObject.addText(text, 20.0, appearance);
    }
 
-   public YoGraphicText3D(String name, String text, String namePrefix, String nameSuffix, YoVariableRegistry registry, double scale,
+   public YoGraphicText3D(String name, String text, String namePrefix, String nameSuffix, YoRegistry registry, double scale,
                           AppearanceDefinition appearance)
    {
       this(name, text, new YoFramePoint3D(namePrefix, nameSuffix, ReferenceFrame.getWorldFrame(), registry),
@@ -49,7 +49,7 @@ public class YoGraphicText3D extends YoGraphicAbstractShape
    }
 
    @Override
-   public YoGraphic duplicate(YoVariableRegistry newRegistry)
+   public YoGraphic duplicate(YoRegistry newRegistry)
    {
       return new YoGraphicText3D(getName(), text, yoFramePoint.duplicate(newRegistry), yoFrameYawPitchRoll.duplicate(newRegistry), scale, appearance);
    }

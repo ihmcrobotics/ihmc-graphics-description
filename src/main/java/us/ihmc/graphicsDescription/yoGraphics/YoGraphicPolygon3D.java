@@ -15,8 +15,8 @@ import us.ihmc.graphicsDescription.MeshDataHolder;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.graphicsDescription.instructions.Graphics3DAddMeshDataInstruction;
 import us.ihmc.graphicsDescription.plotting.artifact.Artifact;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoFramePoint3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint3D;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoInteger;
 import us.ihmc.yoVariables.variable.YoVariable;
 
@@ -38,7 +38,7 @@ public class YoGraphicPolygon3D extends YoGraphic implements RemoteYoGraphic, Gr
    private final Graphics3DObject graphics3dObject;
    private final Graphics3DAddMeshDataInstruction instruction;
 
-   public YoGraphicPolygon3D(String name, int maxNumberOfPolygonVertices, double height, AppearanceDefinition appearance, YoVariableRegistry registry)
+   public YoGraphicPolygon3D(String name, int maxNumberOfPolygonVertices, double height, AppearanceDefinition appearance, YoRegistry registry)
    {
       super(name);
 
@@ -83,9 +83,9 @@ public class YoGraphicPolygon3D extends YoGraphic implements RemoteYoGraphic, Gr
    }
 
    @Override
-   public YoVariable<?>[] getVariables()
+   public YoVariable[] getVariables()
    {
-      YoVariable<?>[] yoVariableList = new YoVariable<?>[3 * ccwOrderedYoFramePoints.length + 1];
+      YoVariable[] yoVariableList = new YoVariable[3 * ccwOrderedYoFramePoints.length + 1];
 
       for (int i = 0; i < ccwOrderedYoFramePoints.length; i++)
       {
@@ -195,7 +195,7 @@ public class YoGraphicPolygon3D extends YoGraphic implements RemoteYoGraphic, Gr
    }
 
    @Override
-   public YoGraphicPolygon3D duplicate(YoVariableRegistry newRegistry)
+   public YoGraphicPolygon3D duplicate(YoRegistry newRegistry)
    {
       return new YoGraphicPolygon3D(getName(), numberOfPoints, ccwOrderedYoFramePoints, height, appearance);
    }

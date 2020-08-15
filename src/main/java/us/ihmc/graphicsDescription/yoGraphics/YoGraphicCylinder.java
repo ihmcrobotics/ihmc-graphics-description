@@ -11,10 +11,10 @@ import us.ihmc.euclid.tuple3D.interfaces.Vector3DBasics;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.graphicsDescription.plotting.artifact.Artifact;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameVector3D;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
-import us.ihmc.yoVariables.variable.YoFramePoint3D;
-import us.ihmc.yoVariables.variable.YoFrameVector3D;
 import us.ihmc.yoVariables.variable.YoVariable;
 
 public class YoGraphicCylinder extends YoGraphic implements RemoteYoGraphic
@@ -126,7 +126,7 @@ public class YoGraphicCylinder extends YoGraphic implements RemoteYoGraphic
    }
 
    @Override
-   public YoVariable<?>[] getVariables()
+   public YoVariable[] getVariables()
    {
       return new YoDouble[] {base.getYoX(), base.getYoY(), base.getYoZ(), vector.getYoX(), vector.getYoY(), vector.getYoZ()};
    }
@@ -148,7 +148,7 @@ public class YoGraphicCylinder extends YoGraphic implements RemoteYoGraphic
 
    /** {@inheritDoc} */
    @Override
-   public YoGraphicCylinder duplicate(YoVariableRegistry newRegistry)
+   public YoGraphicCylinder duplicate(YoRegistry newRegistry)
    {
       return new YoGraphicCylinder(getName(), base.duplicate(newRegistry), vector.duplicate(newRegistry), appearance, lineThickness);
    }

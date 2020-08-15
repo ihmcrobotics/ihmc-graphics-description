@@ -5,10 +5,10 @@ import us.ihmc.euclid.referenceFrame.interfaces.FramePoint3DReadOnly;
 import us.ihmc.euclid.transform.AffineTransform;
 import us.ihmc.euclid.tuple3D.interfaces.Point3DReadOnly;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameVector3D;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
-import us.ihmc.yoVariables.variable.YoFramePoint3D;
-import us.ihmc.yoVariables.variable.YoFrameVector3D;
 
 public class YoGraphicLineSegment extends YoGraphicVector
 {
@@ -16,7 +16,7 @@ public class YoGraphicLineSegment extends YoGraphicVector
    private final YoFrameVector3D vector;
 
    public YoGraphicLineSegment(String namePrefix, String nameSuffix, ReferenceFrame referenceFrame, AppearanceDefinition appearance,
-                               YoVariableRegistry registry)
+                               YoRegistry registry)
    {
       this(namePrefix, new YoFramePoint3D(namePrefix, nameSuffix + "Start", referenceFrame, registry),
            new YoFramePoint3D(namePrefix, nameSuffix + "End", referenceFrame, registry), appearance);
@@ -53,10 +53,10 @@ public class YoGraphicLineSegment extends YoGraphicVector
    public YoGraphicLineSegment(String name, YoDouble baseX, YoDouble baseY, YoDouble baseZ, YoDouble endX, YoDouble endY, YoDouble endZ, double scaleFactor,
                                AppearanceDefinition appearance, boolean drawArrowhead)
    {
-      this(name, baseX, baseY, baseZ, endX, endY, endZ, createDirectionVector(name, baseX.getYoVariableRegistry()), scaleFactor, appearance, drawArrowhead);
+      this(name, baseX, baseY, baseZ, endX, endY, endZ, createDirectionVector(name, baseX.getRegistry()), scaleFactor, appearance, drawArrowhead);
    }
 
-   private static YoFrameVector3D createDirectionVector(String name, YoVariableRegistry registry)
+   private static YoFrameVector3D createDirectionVector(String name, YoRegistry registry)
    {
       YoFrameVector3D directionVector = new YoFrameVector3D(name, "Direction", ReferenceFrame.getWorldFrame(), registry);
       return directionVector;
@@ -121,7 +121,7 @@ public class YoGraphicLineSegment extends YoGraphicVector
 
    /** {@inheritDoc} */
    @Override
-   public YoGraphicLineSegment duplicate(YoVariableRegistry newRegistry)
+   public YoGraphicLineSegment duplicate(YoRegistry newRegistry)
    {
       return new YoGraphicLineSegment(getName(), start, end, scaleFactor, getAppearance(), getDrawArrowhead());
    }

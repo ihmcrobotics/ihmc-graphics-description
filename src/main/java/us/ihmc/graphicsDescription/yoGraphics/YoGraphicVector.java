@@ -17,11 +17,11 @@ import us.ihmc.graphicsDescription.appearance.YoAppearance;
 import us.ihmc.graphicsDescription.color.MutableColor;
 import us.ihmc.graphicsDescription.plotting.artifact.Artifact;
 import us.ihmc.graphicsDescription.yoGraphics.plotting.YoArtifactLineSegment2d;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameLineSegment2D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameVector3D;
+import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
-import us.ihmc.yoVariables.variable.YoFrameLineSegment2D;
-import us.ihmc.yoVariables.variable.YoFramePoint3D;
-import us.ihmc.yoVariables.variable.YoFrameVector3D;
 
 public class YoGraphicVector extends YoGraphic implements RemoteYoGraphic, GraphicsUpdatable
 {
@@ -203,13 +203,13 @@ public class YoGraphicVector extends YoGraphic implements RemoteYoGraphic, Graph
    public Artifact createArtifact()
    {
       MutableColor color3f = appearance.getColor();
-      YoDouble endPointX = new YoDouble(getName() + "ArtifactEndPointX", base.getYoX().getYoVariableRegistry());
-      YoDouble endPointY = new YoDouble(getName() + "ArtifactEndPointY", base.getYoY().getYoVariableRegistry());
+      YoDouble endPointX = new YoDouble(getName() + "ArtifactEndPointX", base.getYoX().getRegistry());
+      YoDouble endPointY = new YoDouble(getName() + "ArtifactEndPointY", base.getYoY().getRegistry());
 
-      base.getYoX().addVariableChangedListener(v -> endPointX.set(base.getX() + vector.getX()));
-      base.getYoY().addVariableChangedListener(v -> endPointY.set(base.getY() + vector.getY()));
-      vector.getYoX().addVariableChangedListener(v -> endPointX.set(base.getX() + vector.getX()));
-      vector.getYoY().addVariableChangedListener(v -> endPointY.set(base.getY() + vector.getY()));
+      base.getYoX().addListener(v -> endPointX.set(base.getX() + vector.getX()));
+      base.getYoY().addListener(v -> endPointY.set(base.getY() + vector.getY()));
+      vector.getYoX().addListener(v -> endPointX.set(base.getX() + vector.getX()));
+      vector.getYoY().addListener(v -> endPointY.set(base.getY() + vector.getY()));
 
       return new YoArtifactLineSegment2d(getName(),
                                          new YoFrameLineSegment2D(base.getYoX(), base.getYoY(), endPointX, endPointY, ReferenceFrame.getWorldFrame()),
@@ -271,7 +271,7 @@ public class YoGraphicVector extends YoGraphic implements RemoteYoGraphic, Graph
    }
 
    @Override
-   public YoGraphicVector duplicate(YoVariableRegistry newRegistry)
+   public YoGraphicVector duplicate(YoRegistry newRegistry)
    {
       return new YoGraphicVector(getName(),
                                  base.duplicate(newRegistry),

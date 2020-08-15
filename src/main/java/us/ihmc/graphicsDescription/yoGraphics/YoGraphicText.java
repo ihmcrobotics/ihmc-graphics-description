@@ -9,9 +9,9 @@ import java.awt.image.BufferedImage;
 
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.appearance.YoAppearanceTexture;
-import us.ihmc.yoVariables.registry.YoVariableRegistry;
-import us.ihmc.yoVariables.variable.YoFramePoint3D;
-import us.ihmc.yoVariables.variable.YoFrameYawPitchRoll;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameYawPitchRoll;
+import us.ihmc.yoVariables.registry.YoRegistry;
 
 public class YoGraphicText extends YoGraphicAbstractShape
 {
@@ -82,7 +82,7 @@ public class YoGraphicText extends YoGraphicAbstractShape
    }
 
    @Override
-   public YoGraphic duplicate(YoVariableRegistry newRegistry)
+   public YoGraphic duplicate(YoRegistry newRegistry)
    {
       return new YoGraphicText(getName(),
                                text,
