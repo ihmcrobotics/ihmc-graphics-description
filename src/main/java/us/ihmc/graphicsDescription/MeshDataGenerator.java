@@ -18,9 +18,22 @@ import us.ihmc.euclid.tuple3D.Point3D32;
 import us.ihmc.euclid.tuple3D.Vector3D32;
 import us.ihmc.euclid.tuple3D.interfaces.Point3DReadOnly;
 
+/**
+ * This class provides factories to create generic meshes, i.e. {@code MeshDataHolder}, to represent
+ * a 3D shape.
+ * <p>
+ * The generic mesh can be used to construct a triangle mesh in the format of the graphics engine in
+ * which it will be rendered.
+ * </p>
+ * <p>
+ * The construction methods assumes the following coordinate system convention: x is pointing
+ * forward, y pointing left, z pointing upward.
+ * </p>
+ * 
+ * @author Sylvain Bertrand
+ */
 public class MeshDataGenerator
 {
-
    private static final float TwoPi = 2.0f * (float) Math.PI;
    private static final float HalfPi = (float) Math.PI / 2.0f;
 
@@ -40,41 +53,105 @@ public class MeshDataGenerator
       // Prevent an object being generated.
    }
 
-   public static MeshDataHolder Sphere(double radius, int latitudeN, int longitudeN)
+   /**
+    * Creates a generic mesh for a 3D sphere.
+    * <p>
+    * The sphere is centered at the origin and is a UV sphere, see
+    * <a href="https://en.wikipedia.org/wiki/UV_mapping">UV mapping</a>.
+    * </p>
+    * 
+    * @param radius              the radius of the sphere. Each vertex is positioned at that distance
+    *                            from the origin.
+    * @param latitudeResolution  the resolution along the vertical axis, i.e. z-axis.
+    * @param longitudeResolution the resolution around the vertical axis, i.e. the number of vertices
+    *                            per latitude.
+    * @return the generic triangle mesh.
+    */
+   public static MeshDataHolder Sphere(double radius, int latitudeResolution, int longitudeResolution)
    {
-      return Sphere((float) radius, latitudeN, longitudeN);
+      return Sphere((float) radius, latitudeResolution, longitudeResolution);
    }
 
-   public static MeshDataHolder Sphere(float radius, int latitudeN, int longitudeN)
+   /**
+    * Creates a generic mesh for a 3D sphere.
+    * <p>
+    * The sphere is centered at the origin and is a UV sphere, see
+    * <a href="https://en.wikipedia.org/wiki/UV_mapping">UV mapping</a>.
+    * </p>
+    * 
+    * @param radius              the radius of the sphere. Each vertex is positioned at that distance
+    *                            from the origin.
+    * @param latitudeResolution  the resolution along the vertical axis, i.e. z-axis.
+    * @param longitudeResolution the resolution around the vertical axis, i.e. the number of vertices
+    *                            per latitude.
+    * @return the generic triangle mesh.
+    */
+   public static MeshDataHolder Sphere(float radius, int latitudeResolution, int longitudeResolution)
    {
-      return Ellipsoid(radius, radius, radius, latitudeN, longitudeN);
+      return Ellipsoid(radius, radius, radius, latitudeResolution, longitudeResolution);
    }
 
-   public static MeshDataHolder Ellipsoid(double xRadius, double yRadius, double zRadius, int latitudeN, int longitudeN)
+   /**
+    * Creates a generic mesh for a 3D ellipsoid.
+    * <p>
+    * The ellipsoid is centered at the origin and the algorithm is similar to a UV sphere, see
+    * <a href="https://en.wikipedia.org/wiki/UV_mapping">UV mapping</a>.
+    * </p>
+    * 
+    * @param xRadius             radius of the ellipsoid along the x-axis.
+    * @param yRadius             radius of the ellipsoid along the y-axis.
+    * @param zRadius             radius of the ellipsoid along the z-axis.
+    * @param latitudeResolution  the resolution along the vertical axis, i.e. z-axis.
+    * @param longitudeResolution the resolution around the vertical axis, i.e. the number of vertices
+    *                            per latitude.
+    * @return the generic triangle mesh.
+    */
+   public static MeshDataHolder Ellipsoid(double xRadius, double yRadius, double zRadius, int latitudeResolution, int longitudeResolution)
    {
-      return Ellipsoid((float) xRadius, (float) yRadius, (float) zRadius, latitudeN, longitudeN);
+      return Ellipsoid((float) xRadius, (float) yRadius, (float) zRadius, latitudeResolution, longitudeResolution);
    }
 
-   public static MeshDataHolder Ellipsoid(float xRadius, float yRadius, float zRadius, int latitudeN, int longitudeN)
+   /**
+    * Creates a generic mesh for a 3D ellipsoid.
+    * <p>
+    * The ellipsoid is centered at the origin and the algorithm is similar to a UV sphere, see
+    * <a href="https://en.wikipedia.org/wiki/UV_mapping">UV mapping</a>.
+    * </p>
+    * 
+    * @param xRadius             radius of the ellipsoid along the x-axis.
+    * @param yRadius             radius of the ellipsoid along the y-axis.
+    * @param zRadius             radius of the ellipsoid along the z-axis.
+    * @param latitudeResolution  the resolution along the vertical axis, i.e. z-axis.
+    * @param longitudeResolution the resolution around the vertical axis, i.e. the number of vertices
+    *                            per latitude.
+    * @return the generic triangle mesh.
+    */
+   public static MeshDataHolder Ellipsoid(float xRadius, float yRadius, float zRadius, int latitudeResolution, int longitudeResolution)
    {
+      if (longitudeResolution % 2 == 1)
+         longitudeResolution += 1;
+      int nPointsLongitude = longitudeResolution + 1;
+      int nPointsLatitude = latitudeResolution + 1;
+
       // Reminder of longitude and latitude: http://www.geographyalltheway.com/ks3_geography/maps_atlases/longitude_latitude.htm
-      Point3D32 points[] = new Point3D32[(latitudeN - 1) * longitudeN + 2];
-      Vector3D32[] normals = new Vector3D32[(latitudeN - 1) * longitudeN + 2];
-      TexCoord2f textPoints[] = new TexCoord2f[(latitudeN - 1) * longitudeN + 2];
+      Point3D32 points[] = new Point3D32[nPointsLatitude * nPointsLongitude];
+      Vector3D32[] normals = new Vector3D32[nPointsLatitude * nPointsLongitude];
+      TexCoord2f textPoints[] = new TexCoord2f[nPointsLatitude * nPointsLongitude];
 
-      for (int longitudeIndex = 0; longitudeIndex < longitudeN; longitudeIndex++)
+      for (int longitudeIndex = 0; longitudeIndex < nPointsLongitude; longitudeIndex++)
       {
-         float longitudeAngle = TwoPi * ((float) longitudeIndex / (float) longitudeN);
+         float longitudeAngle = TwoPi * ((float) longitudeIndex / (float) (nPointsLongitude - 1));
          float cosLongitude = (float) Math.cos(longitudeAngle);
          float sinLongitude = (float) Math.sin(longitudeAngle);
+         float textureX = (float) longitudeIndex / (float) (nPointsLongitude - 1);
 
-         for (int latitudeIndex = 1; latitudeIndex < latitudeN; latitudeIndex++)
+         for (int latitudeIndex = 1; latitudeIndex < nPointsLatitude - 1; latitudeIndex++)
          {
-            float latitudeAngle = (float) (-HalfPi + Math.PI * ((float) latitudeIndex / (float) latitudeN));
+            float latitudeAngle = (float) (-HalfPi + Math.PI * ((float) latitudeIndex / (float) (nPointsLatitude - 1)));
             float cosLatitude = (float) Math.cos(latitudeAngle);
             float sinLatitude = (float) Math.sin(latitudeAngle);
 
-            int currentIndex = (latitudeIndex - 1) * longitudeN + longitudeIndex;
+            int currentIndex = latitudeIndex * nPointsLongitude + longitudeIndex;
             float normalX = cosLongitude * cosLatitude;
             float normalY = sinLongitude * cosLatitude;
             float normalZ = sinLatitude;
@@ -85,64 +162,64 @@ public class MeshDataGenerator
 
             normals[currentIndex] = new Vector3D32(normalX, normalY, normalZ);
 
-            float textureX = longitudeAngle / TwoPi;
-            float textureY = (float) (0.5 * sinLatitude + 0.5);
+            float textureY = (float) (-0.5 * sinLatitude + 0.5);
             textPoints[currentIndex] = new TexCoord2f(textureX, textureY);
          }
+
+         textureX += 0.5f / (float) (nPointsLongitude - 1);
+         // South pole
+         int southPoleIndex = longitudeIndex;
+         points[southPoleIndex] = new Point3D32(0.0f, 0.0f, -zRadius);
+         normals[southPoleIndex] = new Vector3D32(0.0f, 0.0f, -1.0f);
+         textPoints[southPoleIndex] = new TexCoord2f(textureX, 1.0f - 1.0f / 256.0f);
+
+         // North pole
+         int northPoleIndex = (nPointsLatitude - 1) * nPointsLongitude + longitudeIndex;
+         points[northPoleIndex] = new Point3D32(0.0f, 0.0f, zRadius);
+         normals[northPoleIndex] = new Vector3D32(0.0f, 0.0f, 1.0f);
+         textPoints[northPoleIndex] = new TexCoord2f(textureX, 1.0f / 256.0f);
       }
 
-      // South pole
-      int southPoleIndex = (latitudeN - 1) * longitudeN;
-      points[southPoleIndex] = new Point3D32(0.0f, 0.0f, -zRadius);
-      normals[southPoleIndex] = new Vector3D32(0.0f, 0.0f, -1.0f);
-      textPoints[southPoleIndex] = new TexCoord2f(0.5f, 0.0f);
-
-      // North pole
-      int northPoleIndex = (latitudeN - 1) * longitudeN + 1;
-      points[northPoleIndex] = new Point3D32(0.0f, 0.0f, zRadius);
-      normals[northPoleIndex] = new Vector3D32(0.0f, 0.0f, 1.0f);
-      textPoints[northPoleIndex] = new TexCoord2f(1.0f, 1.0f);
-
-      int numberOfTriangles = 2 * (latitudeN - 1) * longitudeN + 2 * longitudeN;
+      int numberOfTriangles = 2 * ((nPointsLatitude - 2) * nPointsLongitude - 1);
       int[] triangleIndices = new int[3 * numberOfTriangles];
 
       int index = 0;
 
       // Mid-latitude faces
-      for (int latitudeIndex = 0; latitudeIndex < latitudeN - 2; latitudeIndex++)
+      for (int latitudeIndex = 1; latitudeIndex < nPointsLatitude - 2; latitudeIndex++)
       {
-         for (int longitudeIndex = 0; longitudeIndex < longitudeN; longitudeIndex++)
+         for (int longitudeIndex = 0; longitudeIndex < nPointsLongitude - 1; longitudeIndex++)
          {
-            int nextLongitudeIndex = (longitudeIndex + 1) % longitudeN;
+            int nextLongitudeIndex = (longitudeIndex + 1) % nPointsLongitude;
             int nextLatitudeIndex = latitudeIndex + 1;
 
             // Lower triangles
-            triangleIndices[index++] = latitudeIndex * longitudeN + longitudeIndex;
-            triangleIndices[index++] = latitudeIndex * longitudeN + nextLongitudeIndex;
-            triangleIndices[index++] = nextLatitudeIndex * longitudeN + longitudeIndex;
+            triangleIndices[index++] = latitudeIndex * nPointsLongitude + longitudeIndex;
+            triangleIndices[index++] = latitudeIndex * nPointsLongitude + nextLongitudeIndex;
+            triangleIndices[index++] = nextLatitudeIndex * nPointsLongitude + longitudeIndex;
             // Upper triangles
-            triangleIndices[index++] = latitudeIndex * longitudeN + nextLongitudeIndex;
-            triangleIndices[index++] = nextLatitudeIndex * longitudeN + nextLongitudeIndex;
-            triangleIndices[index++] = nextLatitudeIndex * longitudeN + longitudeIndex;
+            triangleIndices[index++] = latitudeIndex * nPointsLongitude + nextLongitudeIndex;
+            triangleIndices[index++] = nextLatitudeIndex * nPointsLongitude + nextLongitudeIndex;
+            triangleIndices[index++] = nextLatitudeIndex * nPointsLongitude + longitudeIndex;
          }
       }
 
       // South pole faces
-      for (int longitudeIndex = 0; longitudeIndex < longitudeN; longitudeIndex++)
+      for (int longitudeIndex = 0; longitudeIndex < nPointsLongitude - 1; longitudeIndex++)
       {
-         int nextLongitudeIndex = (longitudeIndex + 1) % longitudeN;
-         triangleIndices[index++] = southPoleIndex;
-         triangleIndices[index++] = nextLongitudeIndex;
+         int nextLongitudeIndex = (longitudeIndex + 1) % nPointsLongitude;
          triangleIndices[index++] = longitudeIndex;
+         triangleIndices[index++] = nPointsLongitude + nextLongitudeIndex;
+         triangleIndices[index++] = nPointsLongitude + longitudeIndex;
       }
 
       // North pole faces
-      for (int longitudeIndex = 0; longitudeIndex < longitudeN; longitudeIndex++)
+      for (int longitudeIndex = 0; longitudeIndex < nPointsLongitude - 1; longitudeIndex++)
       {
-         int nextLongitudeIndex = (longitudeIndex + 1) % longitudeN;
-         triangleIndices[index++] = northPoleIndex;
-         triangleIndices[index++] = (latitudeN - 2) * longitudeN + longitudeIndex;
-         triangleIndices[index++] = (latitudeN - 2) * longitudeN + nextLongitudeIndex;
+         int nextLongitudeIndex = (longitudeIndex + 1) % nPointsLongitude;
+         triangleIndices[index++] = (nPointsLatitude - 1) * nPointsLongitude + longitudeIndex;
+         triangleIndices[index++] = (nPointsLatitude - 2) * nPointsLongitude + longitudeIndex;
+         triangleIndices[index++] = (nPointsLatitude - 2) * nPointsLongitude + nextLongitudeIndex;
       }
 
       return new MeshDataHolder(points, textPoints, triangleIndices, normals);
@@ -155,7 +232,7 @@ public class MeshDataGenerator
     * </p>
     *
     * @param ccwOrderedConvexPolygonPoints the counter-clockwise-ordered vertices of the polygon.
-    * @return the created triangle mesh.
+    * @return the generic triangle mesh.
     */
    public static MeshDataHolder Polygon(List<? extends Point3DReadOnly> ccwOrderedConvexPolygonPoints)
    {
@@ -170,7 +247,7 @@ public class MeshDataGenerator
     *
     * @param ccwOrderedConvexPolygonPoints the counter-clockwise-ordered vertices of the polygon.
     * @param numberOfVertices              will read only the vertices from 0 to numberOfVertices - 1.
-    * @return the created triangle mesh.
+    * @return the generic triangle mesh.
     */
    public static MeshDataHolder Polygon(List<? extends Point3DReadOnly> ccwOrderedConvexPolygonPoints, int numberOfVertices)
    {
@@ -190,7 +267,7 @@ public class MeshDataGenerator
     * </p>
     *
     * @param ccwOrderedConvexPolygonPoints the counter-clockwise-ordered vertices of the polygon.
-    * @return the created triangle mesh.
+    * @return the generic triangle mesh.
     */
    public static MeshDataHolder Polygon(Point2DReadOnly... ccwOrderedConvexPolygonPoints)
    {
@@ -211,7 +288,7 @@ public class MeshDataGenerator
     *
     * @param polygonTransformToWorld       transform to use to obtain polygon 3D coordinates in world.
     * @param ccwOrderedConvexPolygonPoints the counter-clockwise-ordered vertices of the polygon.
-    * @return the created triangle mesh.
+    * @return the generic triangle mesh.
     */
    public static MeshDataHolder Polygon(RigidBodyTransformReadOnly polygonTransformToWorld, List<? extends Point2DReadOnly> ccwOrderedConvexPolygonPoints)
    {
@@ -231,7 +308,7 @@ public class MeshDataGenerator
     * Create a triangle mesh for the given polygon.
     *
     * @param convexPolygon the polygon to create a mesh from.
-    * @return the created triangle mesh.
+    * @return the generic triangle mesh.
     */
    public static MeshDataHolder Polygon(ConvexPolygon2DReadOnly convexPolygon)
    {
@@ -251,7 +328,7 @@ public class MeshDataGenerator
     *
     * @param polygonTransformToWorld transform to use to obtain polygon 3D coordinates in world.
     * @param convexPolygon           the polygon to create a mesh from.
-    * @return the created triangle mesh.
+    * @return the generic triangle mesh.
     */
    public static MeshDataHolder Polygon(RigidBodyTransformReadOnly polygonTransformToWorld, ConvexPolygon2DReadOnly convexPolygon)
    {
@@ -274,7 +351,7 @@ public class MeshDataGenerator
     * </p>
     *
     * @param ccwOrderedConvexPolygonPoints the counter-clockwise-ordered vertices of the polygon.
-    * @return the created triangle mesh.
+    * @return the generic triangle mesh.
     */
    public static MeshDataHolder Polygon(Point3DReadOnly... ccwOrderedConvexPolygonPoints)
    {
