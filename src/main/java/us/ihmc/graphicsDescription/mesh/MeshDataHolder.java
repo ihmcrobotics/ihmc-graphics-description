@@ -42,6 +42,12 @@ public class MeshDataHolder implements Transformable
       this.vertexNormals = vertexNormals;
    }
 
+   /**
+    * Tests this mesh for {@link Double#NaN}.
+    * 
+    * @return {@code true} if either this mesh's vertices, normals, or texture points contain
+    *         {@link Double#NaN}, {@code false} otherwise.
+    */
    public boolean containsNaN()
    {
       for (Point3D32 vertex : vertices)
