@@ -6,6 +6,7 @@ import us.ihmc.euclid.matrix.RotationMatrix;
 import us.ihmc.euclid.matrix.interfaces.Matrix3DReadOnly;
 import us.ihmc.euclid.matrix.interfaces.RotationMatrixBasics;
 import us.ihmc.euclid.matrix.interfaces.RotationMatrixReadOnly;
+import us.ihmc.euclid.tuple2D.Point2D32;
 import us.ihmc.euclid.tuple3D.Point3D32;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.Vector3D32;
@@ -230,7 +231,7 @@ public final class SegmentedLine3DMeshDataGenerator
          int radialResolution = currentCircle.getNumberOfVertices();
          int numberOfVertices = 2 * radialResolution;
 
-         TexCoord2f[] texturePoints = new TexCoord2f[numberOfVertices];
+         Point2D32[] texturePoints = new Point2D32[numberOfVertices];
          Point3D32[] vertices = new Point3D32[numberOfVertices];
          Vector3D32[] vertexNormals = new Vector3D32[numberOfVertices];
 
@@ -261,7 +262,7 @@ public final class SegmentedLine3DMeshDataGenerator
 
          for (int i = 0; i < numberOfVertices; i++)
          {
-            texturePoints[i] = new TexCoord2f();
+            texturePoints[i] = new Point2D32();
          }
          meshDataHolders[waypointIndex] = new MeshDataHolder(vertices, texturePoints, triangleIndices, vertexNormals);
       }

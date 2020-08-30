@@ -9,6 +9,7 @@ import us.ihmc.euclid.geometry.interfaces.LineSegment3DReadOnly;
 import us.ihmc.euclid.geometry.tools.EuclidGeometryTools;
 import us.ihmc.euclid.matrix.RotationMatrix;
 import us.ihmc.euclid.transform.interfaces.RigidBodyTransformReadOnly;
+import us.ihmc.euclid.tuple2D.Point2D32;
 import us.ihmc.euclid.tuple2D.interfaces.Point2DReadOnly;
 import us.ihmc.euclid.tuple3D.Point3D32;
 import us.ihmc.euclid.tuple3D.Vector3D;
@@ -132,7 +133,7 @@ public class MeshDataGenerator
       // Reminder of longitude and latitude: http://www.geographyalltheway.com/ks3_geography/maps_atlases/longitude_latitude.htm
       Point3D32 points[] = new Point3D32[nPointsLatitude * nPointsLongitude];
       Vector3D32[] normals = new Vector3D32[nPointsLatitude * nPointsLongitude];
-      TexCoord2f textPoints[] = new TexCoord2f[nPointsLatitude * nPointsLongitude];
+      Point2D32 textPoints[] = new Point2D32[nPointsLatitude * nPointsLongitude];
 
       for (int longitudeIndex = 0; longitudeIndex < nPointsLongitude; longitudeIndex++)
       {
@@ -158,7 +159,7 @@ public class MeshDataGenerator
             normals[currentIndex] = new Vector3D32(normalX, normalY, normalZ);
 
             float textureY = 0.5f * (1.0f - sinLatitude);
-            textPoints[currentIndex] = new TexCoord2f(textureX, textureY);
+            textPoints[currentIndex] = new Point2D32(textureX, textureY);
          }
 
          textureX += 0.5f / (nPointsLongitude - 1.0f);
@@ -166,13 +167,13 @@ public class MeshDataGenerator
          int southPoleIndex = longitudeIndex;
          points[southPoleIndex] = new Point3D32(0.0f, 0.0f, -zRadius);
          normals[southPoleIndex] = new Vector3D32(0.0f, 0.0f, -1.0f);
-         textPoints[southPoleIndex] = new TexCoord2f(textureX, 1.0f - 1.0f / 256.0f);
+         textPoints[southPoleIndex] = new Point2D32(textureX, 1.0f - 1.0f / 256.0f);
 
          // North pole
          int northPoleIndex = (nPointsLatitude - 1) * nPointsLongitude + longitudeIndex;
          points[northPoleIndex] = new Point3D32(0.0f, 0.0f, zRadius);
          normals[northPoleIndex] = new Vector3D32(0.0f, 0.0f, 1.0f);
-         textPoints[northPoleIndex] = new TexCoord2f(textureX, 1.0f / 256.0f);
+         textPoints[northPoleIndex] = new Point2D32(textureX, 1.0f / 256.0f);
       }
 
       int numberOfTriangles = 2 * ((nPointsLatitude - 2) * nPointsLongitude - 1);
@@ -308,7 +309,7 @@ public class MeshDataGenerator
 
       Point3D32[] vertices = new Point3D32[numberOfVertices];
       Vector3D32[] normals = new Vector3D32[numberOfVertices];
-      TexCoord2f[] texturePoints = new TexCoord2f[numberOfVertices];
+      Point2D32[] texturePoints = new Point2D32[numberOfVertices];
 
       normals[0] = new Vector3D32(Axis3D.Z);
       if (polygonPose != null)
@@ -352,7 +353,7 @@ public class MeshDataGenerator
 
          float textureX = 1.0f - (vertex2D.getY32() - minY) / (maxY - minY);
          float textureY = 1.0f - (vertex2D.getX32() - minX) / (maxX - minX);
-         texturePoints[i] = new TexCoord2f(textureX, textureY);
+         texturePoints[i] = new Point2D32(textureX, textureY);
       }
 
       if (!counterClockwiseOrdered)
@@ -456,7 +457,7 @@ public class MeshDataGenerator
       polygonNormal.normalize();
       RotationMatrix polygonOrientation = new RotationMatrix();
       EuclidGeometryTools.orientation3DFromZUpToVector3D(polygonNormal, polygonOrientation);
-      TexCoord2f[] texturePoints = new TexCoord2f[numberOfVertices];
+      Point2D32[] texturePoints = new Point2D32[numberOfVertices];
 
       float minX = Float.POSITIVE_INFINITY;
       float minY = Float.POSITIVE_INFINITY;
@@ -467,7 +468,7 @@ public class MeshDataGenerator
       for (int i = 0; i < numberOfVertices; i++)
       {
          polygonOrientation.inverseTransform(convexPolygonVertices.get(i), point);
-         TexCoord2f texturePoint = new TexCoord2f();
+         Point2D32 texturePoint = new Point2D32();
          texturePoint.set(-point.getY(), -point.getX());
          texturePoints[i] = texturePoint;
          minX = Math.min(minX, texturePoint.getX32());
@@ -600,7 +601,7 @@ public class MeshDataGenerator
 
       Point3D32 vertices[] = new Point3D32[6 * numberOfVertices + 4];
       Vector3D32 normals[] = new Vector3D32[6 * numberOfVertices + 4];
-      TexCoord2f[] texturePoints = new TexCoord2f[6 * numberOfVertices + 4];
+      Point2D32[] texturePoints = new Point2D32[6 * numberOfVertices + 4];
 
       float minX = polygonVertices.get(0).getX32();
       float minY = polygonVertices.get(0).getY32();
@@ -637,12 +638,12 @@ public class MeshDataGenerator
          // Vertices for bottom face
          vertices[i] = new Point3D32(vertexX, vertexY, (float) zBottom);
          normals[i] = new Vector3D32(0.0f, 0.0f, -1.0f);
-         texturePoints[i] = new TexCoord2f(0.5f - 0.5f * (vertexY - minY) / (maxY - minY) + 0.5f, 0.5f - 0.5f * (vertexX - minX) / (maxX - minX));
+         texturePoints[i] = new Point2D32(0.5f - 0.5f * (vertexY - minY) / (maxY - minY) + 0.5f, 0.5f - 0.5f * (vertexX - minX) / (maxX - minX));
 
          // Vertices for top face
          vertices[i + numberOfVertices] = new Point3D32(vertexX, vertexY, (float) (zTop));
          normals[i + numberOfVertices] = new Vector3D32(0.0f, 0.0f, 1.0f);
-         texturePoints[i + numberOfVertices] = new TexCoord2f(0.5f - 0.5f * (vertexY - minY) / (maxY - minY), 0.5f - 0.5f * (vertexX - minX) / (maxX - minX));
+         texturePoints[i + numberOfVertices] = new Point2D32(0.5f - 0.5f * (vertexY - minY) / (maxY - minY), 0.5f - 0.5f * (vertexX - minX) / (maxX - minX));
       }
 
       double perimeter = 0.0;
@@ -702,20 +703,20 @@ public class MeshDataGenerator
          // Bottom
          vertices[vertexBottomIndex] = vertexBottom;
          normals[vertexBottomIndex] = new Vector3D32(normal);
-         texturePoints[vertexBottomIndex] = new TexCoord2f((float) (distanceAlongPerimeter / perimeter), 1.0f);
+         texturePoints[vertexBottomIndex] = new Point2D32((float) (distanceAlongPerimeter / perimeter), 1.0f);
 
          vertices[nextVertexBottomIndex] = nextVertexBottom;
          normals[nextVertexBottomIndex] = new Vector3D32(normal);
-         texturePoints[nextVertexBottomIndex] = new TexCoord2f((float) (nextDistanceAlongPerimeter / perimeter), 1.0f);
+         texturePoints[nextVertexBottomIndex] = new Point2D32((float) (nextDistanceAlongPerimeter / perimeter), 1.0f);
 
          // Top
          vertices[vertexTopIndex] = vertexTop;
          normals[vertexTopIndex] = new Vector3D32(normal);
-         texturePoints[vertexTopIndex] = new TexCoord2f((float) (distanceAlongPerimeter / perimeter), 0.5f);
+         texturePoints[vertexTopIndex] = new Point2D32((float) (distanceAlongPerimeter / perimeter), 0.5f);
 
          vertices[nextVertexTopIndex] = nextVertexTop;
          normals[nextVertexTopIndex] = new Vector3D32(normal);
-         texturePoints[nextVertexTopIndex] = new TexCoord2f((float) (nextDistanceAlongPerimeter / perimeter), 0.5f);
+         texturePoints[nextVertexTopIndex] = new Point2D32((float) (nextDistanceAlongPerimeter / perimeter), 0.5f);
 
          distanceAlongPerimeter = nextDistanceAlongPerimeter;
       }
@@ -793,7 +794,7 @@ public class MeshDataGenerator
       // Reminder of longitude and latitude: http://www.geographyalltheway.com/ks3_geography/maps_atlases/longitude_latitude.htm
       Point3D32 points[] = new Point3D32[(nPointsLatitude + 1) * nPointsLongitude];
       Vector3D32[] normals = new Vector3D32[(nPointsLatitude + 1) * nPointsLongitude];
-      TexCoord2f textPoints[] = new TexCoord2f[(nPointsLatitude + 1) * nPointsLongitude];
+      Point2D32 textPoints[] = new Point2D32[(nPointsLatitude + 1) * nPointsLongitude];
 
       for (int longitudeIndex = 0; longitudeIndex < nPointsLongitude; longitudeIndex++)
       {
@@ -819,7 +820,7 @@ public class MeshDataGenerator
             normals[currentIndex] = new Vector3D32(normalX, normalY, normalZ);
 
             float textureY = 0.5f * (1.0f - sinLatitude);
-            textPoints[currentIndex] = new TexCoord2f(textureX, textureY);
+            textPoints[currentIndex] = new Point2D32(textureX, textureY);
          }
 
          // Bottom side
@@ -829,7 +830,7 @@ public class MeshDataGenerator
          float vertexZ = 0.0f;
          points[currentIndex] = new Point3D32(vertexX, vertexY, vertexZ);
          normals[currentIndex] = new Vector3D32(0.0f, 0.0f, -1.0f);
-         textPoints[currentIndex] = new TexCoord2f(textureX, 0.5f);
+         textPoints[currentIndex] = new Point2D32(textureX, 0.5f);
 
          textureX += 0.5f / (nPointsLongitude - 1);
 
@@ -837,13 +838,13 @@ public class MeshDataGenerator
          int southPoleIndex = longitudeIndex;
          points[southPoleIndex] = new Point3D32(0.0f, 0.0f, 0.0f);
          normals[southPoleIndex] = new Vector3D32(0.0f, 0.0f, -1.0f);
-         textPoints[southPoleIndex] = new TexCoord2f(textureX, 1.0f - 1.0f / 256.0f);
+         textPoints[southPoleIndex] = new Point2D32(textureX, 1.0f - 1.0f / 256.0f);
 
          // North pole
          int northPoleIndex = nPointsLatitude * nPointsLongitude + longitudeIndex;
          points[northPoleIndex] = new Point3D32(0.0f, 0.0f, zRadius);
          normals[northPoleIndex] = new Vector3D32(0.0f, 0.0f, 1.0f);
-         textPoints[northPoleIndex] = new TexCoord2f(textureX, 1.0f / 256.0f);
+         textPoints[northPoleIndex] = new Point2D32(textureX, 1.0f / 256.0f);
       }
 
       int numberOfTriangles = 2 * (nPointsLatitude - 1) * (nPointsLongitude - 1);
@@ -928,7 +929,7 @@ public class MeshDataGenerator
    {
       Point3D32 points[] = new Point3D32[4 * resolution + 2];
       Vector3D32 normals[] = new Vector3D32[4 * resolution + 2];
-      TexCoord2f texturePoints[] = new TexCoord2f[4 * resolution + 2];
+      Point2D32 texturePoints[] = new Point2D32[4 * resolution + 2];
 
       float zTop = centered ? 0.5f * height : height;
       float zBottom = centered ? -0.5f * height : 0.0f;
@@ -945,33 +946,33 @@ public class MeshDataGenerator
          // Bottom vertices
          points[i] = new Point3D32(vertexX, vertexY, zBottom);
          normals[i] = new Vector3D32(0.0f, 0.0f, -1.0f);
-         texturePoints[i] = new TexCoord2f(0.25f * (1f + sinAngle) + 0.5f, 0.25f * (1f - cosAngle));
+         texturePoints[i] = new Point2D32(0.25f * (1f + sinAngle) + 0.5f, 0.25f * (1f - cosAngle));
 
          // Top vertices
          points[i + resolution] = new Point3D32(vertexX, vertexY, zTop);
          normals[i + resolution] = new Vector3D32(0.0f, 0.0f, 1.0f);
-         texturePoints[i + resolution] = new TexCoord2f(0.25f * (1f - sinAngle), 0.25f * (1f - cosAngle));
+         texturePoints[i + resolution] = new Point2D32(0.25f * (1f - sinAngle), 0.25f * (1f - cosAngle));
 
          // Outer vertices
          // Bottom
          points[i + 2 * resolution] = new Point3D32(vertexX, vertexY, zBottom);
          normals[i + 2 * resolution] = new Vector3D32(cosAngle, sinAngle, 0.0f);
-         texturePoints[i + 2 * resolution] = new TexCoord2f(i / (resolution - 1.0f), 1.0f);
+         texturePoints[i + 2 * resolution] = new Point2D32(i / (resolution - 1.0f), 1.0f);
 
          // Top
          points[i + 3 * resolution] = new Point3D32(vertexX, vertexY, zTop);
          normals[i + 3 * resolution] = new Vector3D32(cosAngle, sinAngle, 0.0f);
-         texturePoints[i + 3 * resolution] = new TexCoord2f(i / (resolution - 1.0f), 0.5f);
+         texturePoints[i + 3 * resolution] = new Point2D32(i / (resolution - 1.0f), 0.5f);
       }
 
       // Center of bottom cap
       points[4 * resolution] = new Point3D32(0.0f, 0.0f, zBottom);
       normals[4 * resolution] = new Vector3D32(0.0f, 0.0f, -1.0f);
-      texturePoints[4 * resolution] = new TexCoord2f(0.75f, 0.25f);
+      texturePoints[4 * resolution] = new Point2D32(0.75f, 0.25f);
       // Center of top cap
       points[4 * resolution + 1] = new Point3D32(0.0f, 0.0f, zTop);
       normals[4 * resolution + 1] = new Vector3D32(0.0f, 0.0f, 1.0f);
-      texturePoints[4 * resolution + 1] = new TexCoord2f(0.25f, 0.25f);
+      texturePoints[4 * resolution + 1] = new Point2D32(0.25f, 0.25f);
 
       int numberOfTriangles = 4 * resolution;
       int[] triangleIndices = new int[6 * numberOfTriangles];
@@ -1040,7 +1041,7 @@ public class MeshDataGenerator
    {
       Point3D32[] vertices = new Point3D32[3 * resolution + 1];
       Vector3D32[] normals = new Vector3D32[3 * resolution + 1];
-      TexCoord2f[] texturePoints = new TexCoord2f[3 * resolution + 1];
+      Point2D32[] texturePoints = new Point2D32[3 * resolution + 1];
 
       // This is equal to half of the opening angle of the cone at its top. Used to compute the normals.
       float slopeAngle = (float) Math.atan2(radius, height);
@@ -1059,22 +1060,22 @@ public class MeshDataGenerator
          // Vertices for the bottom part.
          vertices[i] = new Point3D32(vertexX, vertexY, 0.0f);
          normals[i] = new Vector3D32(0.0f, 0.0f, -1.0f);
-         texturePoints[i] = new TexCoord2f(0.25f * (1f + sinAngle), 0.25f * (1f - cosAngle));
+         texturePoints[i] = new Point2D32(0.25f * (1f + sinAngle), 0.25f * (1f - cosAngle));
 
          // Vertices for the side part.
          vertices[i + resolution] = new Point3D32(vertexX, vertexY, 0.0f);
          normals[i + resolution] = new Vector3D32(cosSlopeAngle * cosAngle, cosSlopeAngle * sinAngle, sinSlopeAngle);
-         texturePoints[i + resolution] = new TexCoord2f(i / (resolution - 1.0f), 1.0f);
+         texturePoints[i + resolution] = new Point2D32(i / (resolution - 1.0f), 1.0f);
          vertices[i + 2 * resolution] = new Point3D32(0.0f, 0.0f, height);
          normals[i + 2 * resolution] = new Vector3D32(cosSlopeAngle * cosAngle, cosSlopeAngle * sinAngle, sinSlopeAngle);
-         texturePoints[i + 2 * resolution] = new TexCoord2f(i / (resolution - 1.0f), 0.5f);
+         texturePoints[i + 2 * resolution] = new Point2D32(i / (resolution - 1.0f), 0.5f);
       }
 
       // The center of the bottom
       int bottomCenterIndex = 3 * resolution;
       vertices[bottomCenterIndex] = new Point3D32(0.0f, 0.0f, 0.0f);
       normals[bottomCenterIndex] = new Vector3D32(0.0f, 0.0f, -1.0f);
-      texturePoints[bottomCenterIndex] = new TexCoord2f(0.25f, 0.25f);
+      texturePoints[bottomCenterIndex] = new Point2D32(0.25f, 0.25f);
 
       int numberOfTriangles = 2 * resolution;
       int[] triangleIndices = new int[3 * numberOfTriangles];
@@ -1136,7 +1137,7 @@ public class MeshDataGenerator
    {
       Point3D32 points[] = new Point3D32[4 * resolution + 2];
       Vector3D32[] normals = new Vector3D32[4 * resolution + 2];
-      TexCoord2f[] textPoints = new TexCoord2f[4 * resolution + 2];
+      Point2D32[] textPoints = new Point2D32[4 * resolution + 2];
 
       for (int i = 0; i < resolution; i++)
       {
@@ -1152,12 +1153,12 @@ public class MeshDataGenerator
          // Bottom face vertices
          points[i] = new Point3D32(baseX, baseY, 0.0f);
          normals[i] = new Vector3D32(0.0f, 0.0f, -1.0f);
-         textPoints[i] = new TexCoord2f(0.25f * (1f + sinAngle) + 0.5f, 0.25f * (1f - cosAngle));
+         textPoints[i] = new Point2D32(0.25f * (1f + sinAngle) + 0.5f, 0.25f * (1f - cosAngle));
 
          // Top face vertices
          points[i + resolution] = new Point3D32(topX, topY, height);
          normals[i + resolution] = new Vector3D32(0.0f, 0.0f, 1.0f);
-         textPoints[i + resolution] = new TexCoord2f(0.25f * (1f - sinAngle), 0.25f * (1f - cosAngle));
+         textPoints[i + resolution] = new Point2D32(0.25f * (1f - sinAngle), 0.25f * (1f - cosAngle));
 
          // Cone face
          float currentBaseRadius = (float) Math.sqrt(baseX * baseX + baseY * baseY);
@@ -1169,22 +1170,22 @@ public class MeshDataGenerator
          normals[i + 2 * resolution] = new Vector3D32((float) (Math.cos(baseAngle) * Math.cos(openingAngle)),
                                                       (float) (Math.sin(baseAngle) * Math.cos(openingAngle)),
                                                       (float) Math.sin(openingAngle));
-         textPoints[i + 2 * resolution] = new TexCoord2f(i / (resolution - 1.0f), 1.0f);
+         textPoints[i + 2 * resolution] = new Point2D32(i / (resolution - 1.0f), 1.0f);
          points[i + 3 * resolution] = new Point3D32(topX, topY, height);
          normals[i + 3 * resolution] = new Vector3D32((float) (Math.cos(topAngle) * Math.cos(openingAngle)),
                                                       (float) (Math.sin(topAngle) * Math.cos(openingAngle)),
                                                       (float) Math.sin(openingAngle));
-         textPoints[i + 3 * resolution] = new TexCoord2f(i / (resolution - 1.0f), 0.5f);
+         textPoints[i + 3 * resolution] = new Point2D32(i / (resolution - 1.0f), 0.5f);
       }
 
       // Bottom center
       points[4 * resolution] = new Point3D32(0.0f, 0.0f, 0.0f);
       normals[4 * resolution] = new Vector3D32(0.0f, 0.0f, -1.0f);
-      textPoints[4 * resolution] = new TexCoord2f(0.75f, 0.25f);
+      textPoints[4 * resolution] = new Point2D32(0.75f, 0.25f);
       // Top center
       points[4 * resolution + 1] = new Point3D32(0.0f, 0.0f, height);
       normals[4 * resolution + 1] = new Vector3D32(0.0f, 0.0f, 1.0f);
-      textPoints[4 * resolution + 1] = new TexCoord2f(0.25f, 0.25f);
+      textPoints[4 * resolution + 1] = new Point2D32(0.25f, 0.25f);
 
       int numberOfTriangles = 4 * resolution;
       int[] triangleIndices = new int[3 * numberOfTriangles];
@@ -1299,7 +1300,7 @@ public class MeshDataGenerator
       int numberOfVertices = isClosed ? majorN * minorN : majorN * minorN + 2 * (resolution + 1);
       Point3D32 points[] = new Point3D32[numberOfVertices];
       Vector3D32[] normals = new Vector3D32[numberOfVertices];
-      TexCoord2f[] texturePoints = new TexCoord2f[numberOfVertices];
+      Point2D32[] texturePoints = new Point2D32[numberOfVertices];
 
       float centerX, centerY;
       float pX, pY, pZ;
@@ -1330,7 +1331,7 @@ public class MeshDataGenerator
             textureX = (float) minorIndex / (float) (minorN - 1);
             if (!isClosed)
                textureX *= 0.5f;
-            texturePoints[currentIndex] = new TexCoord2f(textureX, textureY);
+            texturePoints[currentIndex] = new Point2D32(textureX, textureY);
          }
       }
 
@@ -1382,14 +1383,14 @@ public class MeshDataGenerator
             normals[currentIndex] = new Vector3D32(sinStartAngle, -cosStartAngle, 0.0f);
             textureX = 0.75f + 0.25f * cosMinorAngle;
             textureY = 0.25f - 0.25f * sinMinorAngle;
-            texturePoints[currentIndex] = new TexCoord2f(textureX, textureY);
+            texturePoints[currentIndex] = new Point2D32(textureX, textureY);
          }
 
          // First end center
          int firstEndCenterIndex = numberOfVertices - 2;
          points[firstEndCenterIndex] = new Point3D32(centerX, centerY, 0.0f);
          normals[firstEndCenterIndex] = new Vector3D32(sinStartAngle, -cosStartAngle, 0.0f);
-         texturePoints[firstEndCenterIndex] = new TexCoord2f(0.75f, 0.25f);
+         texturePoints[firstEndCenterIndex] = new Point2D32(0.75f, 0.25f);
 
          // Second end
          float cosEndAngle = (float) Math.cos(endAngle);
@@ -1410,14 +1411,14 @@ public class MeshDataGenerator
             normals[currentIndex] = new Vector3D32(-sinEndAngle, cosEndAngle, 0.0f);
             textureX = 0.75f - 0.25f * cosMinorAngle;
             textureY = 0.75f - 0.25f * sinMinorAngle;
-            texturePoints[currentIndex] = new TexCoord2f(textureX, textureY);
+            texturePoints[currentIndex] = new Point2D32(textureX, textureY);
          }
 
          // Second end center
          int secondEndCenterIndex = numberOfVertices - 1;
          points[secondEndCenterIndex] = new Point3D32(centerX, centerY, 0.0f);
          normals[secondEndCenterIndex] = new Vector3D32(-sinEndAngle, cosEndAngle, 0.0f);
-         texturePoints[secondEndCenterIndex] = new TexCoord2f(0.75f, 0.75f);
+         texturePoints[secondEndCenterIndex] = new Point2D32(0.75f, 0.75f);
 
          // Setting up indices
          for (int minorIndex = 0; minorIndex < minorN; minorIndex++)
@@ -1466,7 +1467,7 @@ public class MeshDataGenerator
    {
       Point3D32 points[] = new Point3D32[24];
       Vector3D32[] normals = new Vector3D32[24];
-      TexCoord2f textPoints[] = new TexCoord2f[24];
+      Point2D32 textPoints[] = new Point2D32[24];
 
       float zBottom = centered ? -lz / 2f : 0;
       float zTop = centered ? lz / 2f : lz;
@@ -1474,86 +1475,86 @@ public class MeshDataGenerator
       // Bottom vertices for bottom face
       points[0] = new Point3D32(-lx / 2.0f, -ly / 2.0f, zBottom);
       normals[0] = new Vector3D32(0.0f, 0.0f, -1.0f);
-      textPoints[0] = new TexCoord2f(0.5f, 0.5f);
+      textPoints[0] = new Point2D32(0.5f, 0.5f);
       points[1] = new Point3D32(lx / 2.0f, -ly / 2.0f, zBottom);
       normals[1] = new Vector3D32(0.0f, 0.0f, -1.0f);
-      textPoints[1] = new TexCoord2f(0.25f, 0.5f);
+      textPoints[1] = new Point2D32(0.25f, 0.5f);
       points[2] = new Point3D32(lx / 2.0f, ly / 2.0f, zBottom);
       normals[2] = new Vector3D32(0.0f, 0.0f, -1.0f);
-      textPoints[2] = new TexCoord2f(0.25f, 0.25f);
+      textPoints[2] = new Point2D32(0.25f, 0.25f);
       points[3] = new Point3D32(-lx / 2.0f, ly / 2.0f, zBottom);
       normals[3] = new Vector3D32(0.0f, 0.0f, -1.0f);
-      textPoints[3] = new TexCoord2f(0.5f, 0.25f);
+      textPoints[3] = new Point2D32(0.5f, 0.25f);
 
       // Top vertices for top face
       points[4] = new Point3D32(-lx / 2.0f, -ly / 2.0f, zTop);
       normals[4] = new Vector3D32(0.0f, 0.0f, 1.0f);
-      textPoints[4] = new TexCoord2f(0.75f, 0.5f);
+      textPoints[4] = new Point2D32(0.75f, 0.5f);
       points[5] = new Point3D32(lx / 2.0f, -ly / 2.0f, zTop);
       normals[5] = new Vector3D32(0.0f, 0.0f, 1.0f);
-      textPoints[5] = new TexCoord2f(1.0f, 0.5f);
+      textPoints[5] = new Point2D32(1.0f, 0.5f);
       points[6] = new Point3D32(lx / 2.0f, ly / 2.0f, zTop);
       normals[6] = new Vector3D32(0.0f, 0.0f, 1.0f);
-      textPoints[6] = new TexCoord2f(1.0f, 0.25f);
+      textPoints[6] = new Point2D32(1.0f, 0.25f);
       points[7] = new Point3D32(-lx / 2.0f, ly / 2.0f, zTop);
       normals[7] = new Vector3D32(0.0f, 0.0f, 1.0f);
-      textPoints[7] = new TexCoord2f(0.75f, 0.25f);
+      textPoints[7] = new Point2D32(0.75f, 0.25f);
 
       // Left face vertices
       points[8] = new Point3D32(points[2]);
       normals[8] = new Vector3D32(0.0f, 1.0f, 0.0f);
-      textPoints[8] = new TexCoord2f(0.25f, 0.25f);
+      textPoints[8] = new Point2D32(0.25f, 0.25f);
       points[9] = new Point3D32(points[3]);
       normals[9] = new Vector3D32(0.0f, 1.0f, 0.0f);
-      textPoints[9] = new TexCoord2f(0.5f, 0.25f);
+      textPoints[9] = new Point2D32(0.5f, 0.25f);
       points[10] = new Point3D32(points[6]);
       normals[10] = new Vector3D32(0.0f, 1.0f, 0.0f);
-      textPoints[10] = new TexCoord2f(0.25f, 0.0f);
+      textPoints[10] = new Point2D32(0.25f, 0.0f);
       points[11] = new Point3D32(points[7]);
       normals[11] = new Vector3D32(0.0f, 1.0f, 0.0f);
-      textPoints[11] = new TexCoord2f(0.5f, 0.0f);
+      textPoints[11] = new Point2D32(0.5f, 0.0f);
 
       // Right face vertices
       points[12] = new Point3D32(points[0]);
       normals[12] = new Vector3D32(0.0f, -1.0f, 0.0f);
-      textPoints[12] = new TexCoord2f(0.5f, 0.5f);
+      textPoints[12] = new Point2D32(0.5f, 0.5f);
       points[13] = new Point3D32(points[1]);
       normals[13] = new Vector3D32(0.0f, -1.0f, 0.0f);
-      textPoints[13] = new TexCoord2f(0.25f, 0.5f);
+      textPoints[13] = new Point2D32(0.25f, 0.5f);
       points[14] = new Point3D32(points[4]);
       normals[14] = new Vector3D32(0.0f, -1.0f, 0.0f);
-      textPoints[14] = new TexCoord2f(0.5f, 0.75f);
+      textPoints[14] = new Point2D32(0.5f, 0.75f);
       points[15] = new Point3D32(points[5]);
       normals[15] = new Vector3D32(0.0f, -1.0f, 0.0f);
-      textPoints[15] = new TexCoord2f(0.25f, 0.75f);
+      textPoints[15] = new Point2D32(0.25f, 0.75f);
 
       // Front face vertices
       points[16] = new Point3D32(points[0]);
       normals[16] = new Vector3D32(-1.0f, 0.0f, 0.0f);
-      textPoints[16] = new TexCoord2f(0.5f, 0.5f);
+      textPoints[16] = new Point2D32(0.5f, 0.5f);
       points[17] = new Point3D32(points[3]);
       normals[17] = new Vector3D32(-1.0f, 0.0f, 0.0f);
-      textPoints[17] = new TexCoord2f(0.5f, 0.25f);
+      textPoints[17] = new Point2D32(0.5f, 0.25f);
       points[18] = new Point3D32(points[4]);
       normals[18] = new Vector3D32(-1.0f, 0.0f, 0.0f);
-      textPoints[18] = new TexCoord2f(0.75f, 0.5f);
+      textPoints[18] = new Point2D32(0.75f, 0.5f);
       points[19] = new Point3D32(points[7]);
       normals[19] = new Vector3D32(-1.0f, 0.0f, 0.0f);
-      textPoints[19] = new TexCoord2f(0.75f, 0.25f);
+      textPoints[19] = new Point2D32(0.75f, 0.25f);
 
       // Back face vertices
       points[20] = new Point3D32(points[1]);
       normals[20] = new Vector3D32(1.0f, 0.0f, 0.0f);
-      textPoints[20] = new TexCoord2f(0.25f, 0.5f);
+      textPoints[20] = new Point2D32(0.25f, 0.5f);
       points[21] = new Point3D32(points[2]);
       normals[21] = new Vector3D32(1.0f, 0.0f, 0.0f);
-      textPoints[21] = new TexCoord2f(0.25f, 0.25f);
+      textPoints[21] = new Point2D32(0.25f, 0.25f);
       points[22] = new Point3D32(points[5]);
       normals[22] = new Vector3D32(1.0f, 0.0f, 0.0f);
-      textPoints[22] = new TexCoord2f(0.0f, 0.5f);
+      textPoints[22] = new Point2D32(0.0f, 0.5f);
       points[23] = new Point3D32(points[6]);
       normals[23] = new Vector3D32(1.0f, 0.0f, 0.0f);
-      textPoints[23] = new TexCoord2f(0.0f, 0.25f);
+      textPoints[23] = new Point2D32(0.0f, 0.25f);
 
       int numberOfTriangles = 2 * 6;
 
@@ -1673,17 +1674,17 @@ public class MeshDataGenerator
    {
       Point3D32[] points = new Point3D32[4];
       Vector3D32[] normals = new Vector3D32[4];
-      TexCoord2f[] textPoints = new TexCoord2f[4];
+      Point2D32[] textPoints = new Point2D32[4];
 
       points[0] = new Point3D32(xMin, yMin, z);
       points[1] = new Point3D32(xMax, yMin, z);
       points[2] = new Point3D32(xMax, yMax, z);
       points[3] = new Point3D32(xMin, yMax, z);
 
-      textPoints[0] = new TexCoord2f(1.0f, 1.0f);
-      textPoints[1] = new TexCoord2f(1.0f, 0.0f);
-      textPoints[2] = new TexCoord2f(0.0f, 0.0f);
-      textPoints[3] = new TexCoord2f(0.0f, 1.0f);
+      textPoints[0] = new Point2D32(1.0f, 1.0f);
+      textPoints[1] = new Point2D32(1.0f, 0.0f);
+      textPoints[2] = new Point2D32(0.0f, 0.0f);
+      textPoints[3] = new Point2D32(0.0f, 1.0f);
 
       normals[0] = new Vector3D32(0.0f, 0.0f, 1.0f);
       normals[1] = new Vector3D32(0.0f, 0.0f, 1.0f);
@@ -1734,7 +1735,7 @@ public class MeshDataGenerator
    {
       Point3D32[] points = new Point3D32[18];
       Vector3D32[] normals = new Vector3D32[18];
-      TexCoord2f[] textPoints = new TexCoord2f[18];
+      Point2D32[] textPoints = new Point2D32[18];
 
       float tex0 = 0.0f;
       float tex1 = 1.0f / 3.0f;
@@ -1744,67 +1745,67 @@ public class MeshDataGenerator
       // Bottom face vertices
       points[0] = new Point3D32(-lx / 2.0f, -ly / 2.0f, 0.0f);
       normals[0] = new Vector3D32(0.0f, 0.0f, -1.0f);
-      textPoints[0] = new TexCoord2f(tex2, tex2);
+      textPoints[0] = new Point2D32(tex2, tex2);
       points[1] = new Point3D32(lx / 2.0f, -ly / 2.0f, 0.0f);
       normals[1] = new Vector3D32(0.0f, 0.0f, -1.0f);
-      textPoints[1] = new TexCoord2f(tex1, tex2);
+      textPoints[1] = new Point2D32(tex1, tex2);
       points[2] = new Point3D32(lx / 2.0f, ly / 2.0f, 0.0f);
       normals[2] = new Vector3D32(0.0f, 0.0f, -1.0f);
-      textPoints[2] = new TexCoord2f(tex1, tex1);
+      textPoints[2] = new Point2D32(tex1, tex1);
       points[3] = new Point3D32(-lx / 2.0f, ly / 2.0f, 0.0f);
       normals[3] = new Vector3D32(0.0f, 0.0f, -1.0f);
-      textPoints[3] = new TexCoord2f(tex2, tex1);
+      textPoints[3] = new Point2D32(tex2, tex1);
 
       // Back face vertices
       points[4] = new Point3D32(lx / 2.0f, -ly / 2.0f, lz);
       normals[4] = new Vector3D32(1.0f, 0.0f, 0.0f);
-      textPoints[4] = new TexCoord2f(tex0, tex2);
+      textPoints[4] = new Point2D32(tex0, tex2);
       points[5] = new Point3D32(lx / 2.0f, ly / 2.0f, lz);
       normals[5] = new Vector3D32(1.0f, 0.0f, 0.0f);
-      textPoints[5] = new TexCoord2f(tex0, tex1);
+      textPoints[5] = new Point2D32(tex0, tex1);
       points[6] = new Point3D32(points[2]);
       normals[6] = new Vector3D32(1.0f, 0.0f, 0.0f);
-      textPoints[6] = new TexCoord2f(tex1, tex1);
+      textPoints[6] = new Point2D32(tex1, tex1);
       points[7] = new Point3D32(points[1]);
       normals[7] = new Vector3D32(1.0f, 0.0f, 0.0f);
-      textPoints[7] = new TexCoord2f(tex1, tex2);
+      textPoints[7] = new Point2D32(tex1, tex2);
 
       // Top face vertices
       float wedgeAngle = (float) Math.atan2(lz, lx);
       points[8] = new Point3D32(points[0]);
       normals[8] = new Vector3D32(-(float) Math.sin(wedgeAngle), 0.0f, (float) Math.cos(wedgeAngle));
-      textPoints[8] = new TexCoord2f(tex2, tex2);
+      textPoints[8] = new Point2D32(tex2, tex2);
       points[9] = new Point3D32(points[4]);
       normals[9] = new Vector3D32(-(float) Math.sin(wedgeAngle), 0.0f, (float) Math.cos(wedgeAngle));
-      textPoints[9] = new TexCoord2f(tex3, tex2);
+      textPoints[9] = new Point2D32(tex3, tex2);
       points[10] = new Point3D32(points[5]);
       normals[10] = new Vector3D32(-(float) Math.sin(wedgeAngle), 0.0f, (float) Math.cos(wedgeAngle));
-      textPoints[10] = new TexCoord2f(tex3, tex1);
+      textPoints[10] = new Point2D32(tex3, tex1);
       points[11] = new Point3D32(points[3]);
       normals[11] = new Vector3D32(-(float) Math.sin(wedgeAngle), 0.0f, (float) Math.cos(wedgeAngle));
-      textPoints[11] = new TexCoord2f(tex2, tex1);
+      textPoints[11] = new Point2D32(tex2, tex1);
 
       // Right face vertices
       points[12] = new Point3D32(points[0]);
       normals[12] = new Vector3D32(0.0f, -1.0f, 0.0f);
-      textPoints[12] = new TexCoord2f(tex2, tex2);
+      textPoints[12] = new Point2D32(tex2, tex2);
       points[13] = new Point3D32(points[1]);
       normals[13] = new Vector3D32(0.0f, -1.0f, 0.0f);
-      textPoints[13] = new TexCoord2f(tex1, tex2);
+      textPoints[13] = new Point2D32(tex1, tex2);
       points[14] = new Point3D32(points[4]);
       normals[14] = new Vector3D32(0.0f, -1.0f, 0.0f);
-      textPoints[14] = new TexCoord2f(tex1, tex3);
+      textPoints[14] = new Point2D32(tex1, tex3);
 
       // Left face vertices
       points[15] = new Point3D32(points[2]);
       normals[15] = new Vector3D32(0.0f, 1.0f, 0.0f);
-      textPoints[15] = new TexCoord2f(tex1, tex1);
+      textPoints[15] = new Point2D32(tex1, tex1);
       points[16] = new Point3D32(points[3]);
       normals[16] = new Vector3D32(0.0f, 1.0f, 0.0f);
-      textPoints[16] = new TexCoord2f(tex2, tex1);
+      textPoints[16] = new Point2D32(tex2, tex1);
       points[17] = new Point3D32(points[5]);
       normals[17] = new Vector3D32(0.0f, 1.0f, 0.0f);
-      textPoints[17] = new TexCoord2f(tex1, tex0);
+      textPoints[17] = new Point2D32(tex1, tex0);
 
       int numberOfTriangles = 2 * 3 + 2;
       int[] triangleIndices = new int[3 * numberOfTriangles];
@@ -1878,64 +1879,64 @@ public class MeshDataGenerator
    {
       Point3D32 points[] = new Point3D32[40];
       Vector3D32[] normals = new Vector3D32[40];
-      TexCoord2f textPoints[] = new TexCoord2f[40];
+      Point2D32 textPoints[] = new Point2D32[40];
       float totalHeight = 2.0f * lh + lz;
 
       // Box front face
       points[0] = new Point3D32(-lx / 2.0f, -ly / 2.0f, -0.5f * lz);
       normals[0] = new Vector3D32(-1.0f, 0.0f, 0.0f);
-      textPoints[0] = new TexCoord2f(0.75f, 1.0f - lh / totalHeight);
+      textPoints[0] = new Point2D32(0.75f, 1.0f - lh / totalHeight);
       points[1] = new Point3D32(-lx / 2.0f, -ly / 2.0f, 0.5f * lz);
       normals[1] = new Vector3D32(-1.0f, 0.0f, 0.0f);
-      textPoints[1] = new TexCoord2f(0.75f, lh / totalHeight);
+      textPoints[1] = new Point2D32(0.75f, lh / totalHeight);
       points[2] = new Point3D32(-lx / 2.0f, ly / 2.0f, 0.5f * lz);
       normals[2] = new Vector3D32(-1.0f, 0.0f, 0.0f);
-      textPoints[2] = new TexCoord2f(0.5f, lh / totalHeight);
+      textPoints[2] = new Point2D32(0.5f, lh / totalHeight);
       points[3] = new Point3D32(-lx / 2.0f, ly / 2.0f, -0.5f * lz);
       normals[3] = new Vector3D32(-1.0f, 0.0f, 0.0f);
-      textPoints[3] = new TexCoord2f(0.5f, 1.0f - lh / totalHeight);
+      textPoints[3] = new Point2D32(0.5f, 1.0f - lh / totalHeight);
 
       // Box back face
       points[4] = new Point3D32(lx / 2.0f, -ly / 2.0f, -0.5f * lz);
       normals[4] = new Vector3D32(1.0f, 0.0f, 0.0f);
-      textPoints[4] = new TexCoord2f(0.0f, 1.0f - lh / totalHeight);
+      textPoints[4] = new Point2D32(0.0f, 1.0f - lh / totalHeight);
       points[5] = new Point3D32(lx / 2.0f, -ly / 2.0f, 0.5f * lz);
       normals[5] = new Vector3D32(1.0f, 0.0f, 0.0f);
-      textPoints[5] = new TexCoord2f(0.0f, lh / totalHeight);
+      textPoints[5] = new Point2D32(0.0f, lh / totalHeight);
       points[6] = new Point3D32(lx / 2.0f, ly / 2.0f, 0.5f * lz);
       normals[6] = new Vector3D32(1.0f, 0.0f, 0.0f);
-      textPoints[6] = new TexCoord2f(0.25f, lh / totalHeight);
+      textPoints[6] = new Point2D32(0.25f, lh / totalHeight);
       points[7] = new Point3D32(lx / 2.0f, ly / 2.0f, -0.5f * lz);
       normals[7] = new Vector3D32(1.0f, 0.0f, 0.0f);
-      textPoints[7] = new TexCoord2f(0.25f, 1.0f - lh / totalHeight);
+      textPoints[7] = new Point2D32(0.25f, 1.0f - lh / totalHeight);
 
       // Box left face
       points[8] = new Point3D32(-lx / 2.0f, ly / 2.0f, -0.5f * lz);
       normals[8] = new Vector3D32(0.0f, 1.0f, 0.0f);
-      textPoints[8] = new TexCoord2f(0.5f, 1.0f - lh / totalHeight);
+      textPoints[8] = new Point2D32(0.5f, 1.0f - lh / totalHeight);
       points[9] = new Point3D32(-lx / 2.0f, ly / 2.0f, 0.5f * lz);
       normals[9] = new Vector3D32(0.0f, 1.0f, 0.0f);
-      textPoints[9] = new TexCoord2f(0.5f, lh / totalHeight);
+      textPoints[9] = new Point2D32(0.5f, lh / totalHeight);
       points[10] = new Point3D32(lx / 2.0f, ly / 2.0f, 0.5f * lz);
       normals[10] = new Vector3D32(0.0f, 1.0f, 0.0f);
-      textPoints[10] = new TexCoord2f(0.25f, lh / totalHeight);
+      textPoints[10] = new Point2D32(0.25f, lh / totalHeight);
       points[11] = new Point3D32(lx / 2.0f, ly / 2.0f, -0.5f * lz);
       normals[11] = new Vector3D32(0.0f, 1.0f, 0.0f);
-      textPoints[11] = new TexCoord2f(0.25f, 1.0f - lh / totalHeight);
+      textPoints[11] = new Point2D32(0.25f, 1.0f - lh / totalHeight);
 
       // Box right face
       points[12] = new Point3D32(-lx / 2.0f, -ly / 2.0f, -0.5f * lz);
       normals[12] = new Vector3D32(0.0f, -1.0f, 0.0f);
-      textPoints[12] = new TexCoord2f(0.75f, 1.0f - lh / totalHeight);
+      textPoints[12] = new Point2D32(0.75f, 1.0f - lh / totalHeight);
       points[13] = new Point3D32(-lx / 2.0f, -ly / 2.0f, 0.5f * lz);
       normals[13] = new Vector3D32(0.0f, -1.0f, 0.0f);
-      textPoints[13] = new TexCoord2f(0.75f, lh / totalHeight);
+      textPoints[13] = new Point2D32(0.75f, lh / totalHeight);
       points[14] = new Point3D32(lx / 2.0f, -ly / 2.0f, 0.5f * lz);
       normals[14] = new Vector3D32(0.0f, -1.0f, 0.0f);
-      textPoints[14] = new TexCoord2f(1.0f, lh / totalHeight);
+      textPoints[14] = new Point2D32(1.0f, lh / totalHeight);
       points[15] = new Point3D32(lx / 2.0f, -ly / 2.0f, -0.5f * lz);
       normals[15] = new Vector3D32(0.0f, -1.0f, 0.0f);
-      textPoints[15] = new TexCoord2f(1.0f, 1.0f - lh / totalHeight);
+      textPoints[15] = new Point2D32(1.0f, 1.0f - lh / totalHeight);
 
       float frontBackAngle = (float) Math.atan2(lx / 2.0, lh);
       float leftRightAngle = (float) Math.atan2(ly / 2.0, lh);
@@ -1944,91 +1945,91 @@ public class MeshDataGenerator
       // Front face
       points[16] = new Point3D32(0.0f, 0.0f, 0.5f * lz + lh);
       normals[16] = new Vector3D32(-(float) Math.cos(frontBackAngle), 0.0f, (float) Math.sin(frontBackAngle));
-      textPoints[16] = new TexCoord2f(0.625f, 0.0f);
+      textPoints[16] = new Point2D32(0.625f, 0.0f);
       points[17] = new Point3D32(-lx / 2.0f, -ly / 2.0f, 0.5f * lz);
       normals[17] = new Vector3D32(-(float) Math.cos(frontBackAngle), 0.0f, (float) Math.sin(frontBackAngle));
-      textPoints[17] = new TexCoord2f(0.75f, lh / totalHeight);
+      textPoints[17] = new Point2D32(0.75f, lh / totalHeight);
       points[18] = new Point3D32(-lx / 2.0f, ly / 2.0f, 0.5f * lz);
       normals[18] = new Vector3D32(-(float) Math.cos(frontBackAngle), 0.0f, (float) Math.sin(frontBackAngle));
-      textPoints[18] = new TexCoord2f(0.5f, lh / totalHeight);
+      textPoints[18] = new Point2D32(0.5f, lh / totalHeight);
 
       // Back face
       points[19] = new Point3D32(0.0f, 0.0f, 0.5f * lz + lh);
       normals[19] = new Vector3D32((float) Math.cos(frontBackAngle), 0.0f, (float) Math.sin(frontBackAngle));
-      textPoints[19] = new TexCoord2f(0.125f, 0.0f);
+      textPoints[19] = new Point2D32(0.125f, 0.0f);
       points[20] = new Point3D32(lx / 2.0f, -ly / 2.0f, 0.5f * lz);
       normals[20] = new Vector3D32((float) Math.cos(frontBackAngle), 0.0f, (float) Math.sin(frontBackAngle));
-      textPoints[20] = new TexCoord2f(0.0f, lh / totalHeight);
+      textPoints[20] = new Point2D32(0.0f, lh / totalHeight);
       points[21] = new Point3D32(lx / 2.0f, ly / 2.0f, 0.5f * lz);
       normals[21] = new Vector3D32((float) Math.cos(frontBackAngle), 0.0f, (float) Math.sin(frontBackAngle));
-      textPoints[21] = new TexCoord2f(0.25f, lh / totalHeight);
+      textPoints[21] = new Point2D32(0.25f, lh / totalHeight);
 
       // Left face
       points[22] = new Point3D32(0.0f, 0.0f, 0.5f * lz + lh);
       normals[22] = new Vector3D32(0.0f, (float) Math.cos(leftRightAngle), (float) Math.sin(leftRightAngle));
-      textPoints[22] = new TexCoord2f(0.375f, 0.0f);
+      textPoints[22] = new Point2D32(0.375f, 0.0f);
       points[23] = new Point3D32(-lx / 2.0f, ly / 2.0f, 0.5f * lz);
       normals[23] = new Vector3D32(0.0f, (float) Math.cos(leftRightAngle), (float) Math.sin(leftRightAngle));
-      textPoints[23] = new TexCoord2f(0.5f, lh / totalHeight);
+      textPoints[23] = new Point2D32(0.5f, lh / totalHeight);
       points[24] = new Point3D32(lx / 2.0f, ly / 2.0f, 0.5f * lz);
       normals[24] = new Vector3D32(0.0f, (float) Math.cos(leftRightAngle), (float) Math.sin(leftRightAngle));
-      textPoints[24] = new TexCoord2f(0.25f, lh / totalHeight);
+      textPoints[24] = new Point2D32(0.25f, lh / totalHeight);
 
       // Right face
       points[25] = new Point3D32(0.0f, 0.0f, 0.5f * lz + lh);
       normals[25] = new Vector3D32(0.0f, -(float) Math.cos(leftRightAngle), (float) Math.sin(leftRightAngle));
-      textPoints[25] = new TexCoord2f(0.875f, 0.0f);
+      textPoints[25] = new Point2D32(0.875f, 0.0f);
       points[26] = new Point3D32(-lx / 2.0f, -ly / 2.0f, 0.5f * lz);
       normals[26] = new Vector3D32(0.0f, -(float) Math.cos(leftRightAngle), (float) Math.sin(leftRightAngle));
-      textPoints[26] = new TexCoord2f(0.75f, lh / totalHeight);
+      textPoints[26] = new Point2D32(0.75f, lh / totalHeight);
       points[27] = new Point3D32(lx / 2.0f, -ly / 2.0f, 0.5f * lz);
       normals[27] = new Vector3D32(0.0f, -(float) Math.cos(leftRightAngle), (float) Math.sin(leftRightAngle));
-      textPoints[27] = new TexCoord2f(1.0f, lh / totalHeight);
+      textPoints[27] = new Point2D32(1.0f, lh / totalHeight);
 
       // Bottom pyramid
       // Front face
       points[28] = new Point3D32(0.0f, 0.0f, -lh - 0.5f * lz);
       normals[28] = new Vector3D32(-(float) Math.cos(frontBackAngle), 0.0f, -(float) Math.sin(frontBackAngle));
-      textPoints[28] = new TexCoord2f(0.625f, 1.0f);
+      textPoints[28] = new Point2D32(0.625f, 1.0f);
       points[29] = new Point3D32(-lx / 2.0f, -ly / 2.0f, -0.5f * lz);
       normals[29] = new Vector3D32(-(float) Math.cos(frontBackAngle), 0.0f, -(float) Math.sin(frontBackAngle));
-      textPoints[29] = new TexCoord2f(0.75f, 1.0f - lh / totalHeight);
+      textPoints[29] = new Point2D32(0.75f, 1.0f - lh / totalHeight);
       points[30] = new Point3D32(-lx / 2.0f, ly / 2.0f, -0.5f * lz);
       normals[30] = new Vector3D32(-(float) Math.cos(frontBackAngle), 0.0f, -(float) Math.sin(frontBackAngle));
-      textPoints[30] = new TexCoord2f(0.5f, 1.0f - lh / totalHeight);
+      textPoints[30] = new Point2D32(0.5f, 1.0f - lh / totalHeight);
 
       // Back face
       points[31] = new Point3D32(0.0f, 0.0f, -lh - 0.5f * lz);
       normals[31] = new Vector3D32((float) Math.cos(frontBackAngle), 0.0f, -(float) Math.sin(frontBackAngle));
-      textPoints[31] = new TexCoord2f(0.125f, 1.0f);
+      textPoints[31] = new Point2D32(0.125f, 1.0f);
       points[32] = new Point3D32(lx / 2.0f, -ly / 2.0f, -0.5f * lz);
       normals[32] = new Vector3D32((float) Math.cos(frontBackAngle), 0.0f, -(float) Math.sin(frontBackAngle));
-      textPoints[32] = new TexCoord2f(0.0f, 1.0f - lh / totalHeight);
+      textPoints[32] = new Point2D32(0.0f, 1.0f - lh / totalHeight);
       points[33] = new Point3D32(lx / 2.0f, ly / 2.0f, -0.5f * lz);
       normals[33] = new Vector3D32((float) Math.cos(frontBackAngle), 0.0f, -(float) Math.sin(frontBackAngle));
-      textPoints[33] = new TexCoord2f(0.25f, 1.0f - lh / totalHeight);
+      textPoints[33] = new Point2D32(0.25f, 1.0f - lh / totalHeight);
 
       // Left face
       points[34] = new Point3D32(0.0f, 0.0f, -lh - 0.5f * lz);
       normals[34] = new Vector3D32(0.0f, (float) Math.cos(leftRightAngle), -(float) Math.sin(leftRightAngle));
-      textPoints[34] = new TexCoord2f(0.375f, 1.0f);
+      textPoints[34] = new Point2D32(0.375f, 1.0f);
       points[35] = new Point3D32(-lx / 2.0f, ly / 2.0f, -0.5f * lz);
       normals[35] = new Vector3D32(0.0f, (float) Math.cos(leftRightAngle), -(float) Math.sin(leftRightAngle));
-      textPoints[35] = new TexCoord2f(0.5f, 1.0f - lh / totalHeight);
+      textPoints[35] = new Point2D32(0.5f, 1.0f - lh / totalHeight);
       points[36] = new Point3D32(lx / 2.0f, ly / 2.0f, -0.5f * lz);
       normals[36] = new Vector3D32(0.0f, (float) Math.cos(leftRightAngle), -(float) Math.sin(leftRightAngle));
-      textPoints[36] = new TexCoord2f(0.25f, 1.0f - lh / totalHeight);
+      textPoints[36] = new Point2D32(0.25f, 1.0f - lh / totalHeight);
 
       // Right face
       points[37] = new Point3D32(0.0f, 0.0f, -lh - 0.5f * lz);
       normals[37] = new Vector3D32(0.0f, -(float) Math.cos(leftRightAngle), -(float) Math.sin(leftRightAngle));
-      textPoints[37] = new TexCoord2f(0.875f, 1.0f);
+      textPoints[37] = new Point2D32(0.875f, 1.0f);
       points[38] = new Point3D32(-lx / 2.0f, -ly / 2.0f, -0.5f * lz);
       normals[38] = new Vector3D32(0.0f, -(float) Math.cos(leftRightAngle), -(float) Math.sin(leftRightAngle));
-      textPoints[38] = new TexCoord2f(0.75f, 1.0f - lh / totalHeight);
+      textPoints[38] = new Point2D32(0.75f, 1.0f - lh / totalHeight);
       points[39] = new Point3D32(lx / 2.0f, -ly / 2.0f, -0.5f * lz);
       normals[39] = new Vector3D32(0.0f, -(float) Math.cos(leftRightAngle), -(float) Math.sin(leftRightAngle));
-      textPoints[39] = new TexCoord2f(1.0f, 1.0f - lh / totalHeight);
+      textPoints[39] = new Point2D32(1.0f, 1.0f - lh / totalHeight);
 
       int numberOfTriangles = 2 * 4 + 2 * 4;
       int[] polygonIndices = new int[3 * numberOfTriangles];
@@ -2289,7 +2290,7 @@ public class MeshDataGenerator
       int numberOfVertices = latitudeResolution * longitudeResolution;
       Point3D32 points[] = new Point3D32[numberOfVertices];
       Vector3D32[] normals = new Vector3D32[numberOfVertices];
-      TexCoord2f textPoints[] = new TexCoord2f[numberOfVertices];
+      Point2D32 textPoints[] = new Point2D32[numberOfVertices];
 
       float texRatio = zRadius / (2.0f * zRadius + height);
 
@@ -2321,7 +2322,7 @@ public class MeshDataGenerator
             normals[currentIndex] = new Vector3D32(normalX, normalY, normalZ);
 
             float textureY = 1.0f - (1.0f + sinLatitude) * texRatio;
-            textPoints[currentIndex] = new TexCoord2f(textureX, textureY);
+            textPoints[currentIndex] = new Point2D32(textureX, textureY);
          }
 
          // Top hemi-ellipsoid
@@ -2345,7 +2346,7 @@ public class MeshDataGenerator
             normals[currentIndex] = new Vector3D32(normalX, normalY, normalZ);
 
             float textureY = (1.0f - sinLatitude) * texRatio;
-            textPoints[currentIndex] = new TexCoord2f(textureX, textureY);
+            textPoints[currentIndex] = new Point2D32(textureX, textureY);
          }
 
          textureX += 0.5f / (longitudeResolution - 1.0f);
@@ -2353,13 +2354,13 @@ public class MeshDataGenerator
          int southPoleIndex = longitudeIndex;
          points[southPoleIndex] = new Point3D32(0.0f, 0.0f, -zRadius - halfHeight);
          normals[southPoleIndex] = new Vector3D32(0.0f, 0.0f, -1.0f);
-         textPoints[southPoleIndex] = new TexCoord2f(textureX, 1.0f - 1.0f / 256.0f);
+         textPoints[southPoleIndex] = new Point2D32(textureX, 1.0f - 1.0f / 256.0f);
 
          // North pole
          int northPoleIndex = (latitudeResolution - 1) * longitudeResolution + longitudeIndex;
          points[northPoleIndex] = new Point3D32(0.0f, 0.0f, zRadius + halfHeight);
          normals[northPoleIndex] = new Vector3D32(0.0f, 0.0f, 1.0f);
-         textPoints[northPoleIndex] = new TexCoord2f(textureX, 1.0f / 256.0f);
+         textPoints[northPoleIndex] = new Point2D32(textureX, 1.0f / 256.0f);
       }
 
       int numberOfTriangles = 2 * latitudeResolution * longitudeResolution + 1 * longitudeResolution;
@@ -2470,51 +2471,51 @@ public class MeshDataGenerator
       int numberOfVertices = 12;
       Point3D32[] vertices = new Point3D32[numberOfVertices];
       Vector3D32[] normals = new Vector3D32[numberOfVertices];
-      TexCoord2f[] texturePoints = new TexCoord2f[numberOfVertices];
+      Point2D32[] texturePoints = new Point2D32[numberOfVertices];
 
       // Front face
       vertices[0] = new Point3D32(baseVertex2);
       normals[0] = new Vector3D32(frontNormal);
-      texturePoints[0] = new TexCoord2f(0.25f, 0.5f);
+      texturePoints[0] = new Point2D32(0.25f, 0.5f);
       vertices[1] = new Point3D32(baseVertex1);
       normals[1] = new Vector3D32(frontNormal);
-      texturePoints[1] = new TexCoord2f(0.75f, 0.5f);
+      texturePoints[1] = new Point2D32(0.75f, 0.5f);
       vertices[2] = new Point3D32(topVertex);
       normals[2] = new Vector3D32(frontNormal);
-      texturePoints[2] = new TexCoord2f(0.5f, 1.0f);
+      texturePoints[2] = new Point2D32(0.5f, 1.0f);
 
       // Right face
       vertices[3] = new Point3D32(baseVertex1);
       normals[3] = new Vector3D32(rightNormal);
-      texturePoints[3] = new TexCoord2f(0.75f, 0.5f);
+      texturePoints[3] = new Point2D32(0.75f, 0.5f);
       vertices[4] = new Point3D32(baseVertex0);
       normals[4] = new Vector3D32(rightNormal);
-      texturePoints[4] = new TexCoord2f(0.5f, 0.0f);
+      texturePoints[4] = new Point2D32(0.5f, 0.0f);
       vertices[5] = new Point3D32(topVertex);
       normals[5] = new Vector3D32(rightNormal);
-      texturePoints[5] = new TexCoord2f(1.0f, 0.0f);
+      texturePoints[5] = new Point2D32(1.0f, 0.0f);
 
       // Left face
       vertices[6] = new Point3D32(baseVertex0);
       normals[6] = new Vector3D32(leftNormal);
-      texturePoints[6] = new TexCoord2f(0.5f, 0.0f);
+      texturePoints[6] = new Point2D32(0.5f, 0.0f);
       vertices[7] = new Point3D32(baseVertex2);
       normals[7] = new Vector3D32(leftNormal);
-      texturePoints[7] = new TexCoord2f(0.25f, 0.5f);
+      texturePoints[7] = new Point2D32(0.25f, 0.5f);
       vertices[8] = new Point3D32(topVertex);
       normals[8] = new Vector3D32(leftNormal);
-      texturePoints[8] = new TexCoord2f(0.0f, 0.0f);
+      texturePoints[8] = new Point2D32(0.0f, 0.0f);
 
       // Bottom face
       vertices[9] = new Point3D32(baseVertex0);
       normals[9] = new Vector3D32(baseNormal);
-      texturePoints[9] = new TexCoord2f(0.5f, 0.0f);
+      texturePoints[9] = new Point2D32(0.5f, 0.0f);
       vertices[10] = new Point3D32(baseVertex1);
       normals[10] = new Vector3D32(baseNormal);
-      texturePoints[10] = new TexCoord2f(0.75f, 0.5f);
+      texturePoints[10] = new Point2D32(0.75f, 0.5f);
       vertices[11] = new Point3D32(baseVertex2);
       normals[11] = new Vector3D32(baseNormal);
-      texturePoints[11] = new TexCoord2f(0.25f, 0.5f);
+      texturePoints[11] = new Point2D32(0.25f, 0.5f);
 
       int numberOfTriangles = 4;
 

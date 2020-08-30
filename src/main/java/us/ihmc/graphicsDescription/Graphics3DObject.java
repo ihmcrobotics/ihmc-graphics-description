@@ -24,6 +24,7 @@ import us.ihmc.euclid.shape.primitives.interfaces.Sphere3DReadOnly;
 import us.ihmc.euclid.shape.primitives.interfaces.Torus3DReadOnly;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.transform.interfaces.RigidBodyTransformReadOnly;
+import us.ihmc.euclid.tuple2D.Point2D32;
 import us.ihmc.euclid.tuple2D.interfaces.Point2DReadOnly;
 import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.Point3D32;
@@ -739,7 +740,7 @@ public class Graphics3DObject
    {
       if (meshData == null)
       {
-         meshData = new MeshDataHolder(new Point3D32[0], new TexCoord2f[0], new int[0], new Vector3D32[0]);
+         meshData = new MeshDataHolder(new Point3D32[0], new Point2D32[0], new int[0], new Vector3D32[0]);
          meshData.setName("nullMesh");
       }
       Graphics3DAddMeshDataInstruction instruction = new Graphics3DAddMeshDataInstruction(meshData, meshAppearance);

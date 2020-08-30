@@ -5,6 +5,7 @@ import java.lang.reflect.Array;
 import us.ihmc.euclid.interfaces.Transformable;
 import us.ihmc.euclid.orientation.interfaces.Orientation3DReadOnly;
 import us.ihmc.euclid.transform.interfaces.Transform;
+import us.ihmc.euclid.tuple2D.Point2D32;
 import us.ihmc.euclid.tuple3D.Point3D32;
 import us.ihmc.euclid.tuple3D.Vector3D32;
 import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
@@ -18,7 +19,7 @@ import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 public class MeshDataHolder implements Transformable
 {
    private final Point3D32[] vertices;
-   private final TexCoord2f[] texturePoints;
+   private final Point2D32[] texturePoints;
    private final int[] triangleIndices;
    private final Vector3D32[] vertexNormals;
    private String name = "MeshDataHolder";
@@ -33,7 +34,7 @@ public class MeshDataHolder implements Transformable
     *                        coordinates to render a 3D triangle.
     * @param vertexNormals   the 3D normal coordinates to be used for each vertex of the mesh.
     */
-   public MeshDataHolder(Point3D32[] vertices, TexCoord2f[] texturePoints, int[] triangleIndices, Vector3D32[] vertexNormals)
+   public MeshDataHolder(Point3D32[] vertices, Point2D32[] texturePoints, int[] triangleIndices, Vector3D32[] vertexNormals)
    {
       this.vertices = vertices;
       this.texturePoints = texturePoints;
@@ -48,7 +49,7 @@ public class MeshDataHolder implements Transformable
          if (vertex.containsNaN())
             return true;
       }
-      for (TexCoord2f texturePoint : texturePoints)
+      for (Point2D32 texturePoint : texturePoints)
       {
          if (texturePoint.containsNaN())
             return true;
@@ -72,7 +73,7 @@ public class MeshDataHolder implements Transformable
    /**
     * @return the 2D texture coordinates to be used for each vertex of the mesh.
     */
-   public TexCoord2f[] getTexturePoints()
+   public Point2D32[] getTexturePoints()
    {
       return texturePoints;
    }
@@ -134,7 +135,7 @@ public class MeshDataHolder implements Transformable
     */
    public static MeshDataHolder rotate(MeshDataHolder input, Orientation3DReadOnly rotation)
    {
-      TexCoord2f[] texturePoints = input.getTexturePoints();
+      Point2D32[] texturePoints = input.getTexturePoints();
       int[] triangleIndices = input.getTriangleIndices();
       Point3D32[] inputVertices = input.getVertices();
       Vector3D32[] inputNormals = input.getVertexNormals();
@@ -164,7 +165,7 @@ public class MeshDataHolder implements Transformable
    public static MeshDataHolder translate(MeshDataHolder input, float offsetX, float offsetY, float offsetZ)
    {
       Point3D32[] inputVertices = input.getVertices();
-      TexCoord2f[] texturePoints = input.getTexturePoints();
+      Point2D32[] texturePoints = input.getTexturePoints();
       int[] triangleIndices = input.getTriangleIndices();
       Vector3D32[] normals = input.getVertexNormals();
 
@@ -203,7 +204,7 @@ public class MeshDataHolder implements Transformable
    public static MeshDataHolder combine(MeshDataHolder meshData1, MeshDataHolder meshData2, boolean updateMeshData2TrianglesIndices)
    {
       Point3D32[] vertices = combineArrays(meshData1.vertices, meshData2.vertices);
-      TexCoord2f[] texturePoints = combineArrays(meshData1.texturePoints, meshData2.texturePoints);
+      Point2D32[] texturePoints = combineArrays(meshData1.texturePoints, meshData2.texturePoints);
       Vector3D32[] vertexNormals = combineArrays(meshData1.vertexNormals, meshData2.vertexNormals);
       int[] triangleIndices = combineArrays(meshData1.triangleIndices, meshData2.triangleIndices);
 

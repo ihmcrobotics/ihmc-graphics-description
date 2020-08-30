@@ -2,6 +2,7 @@ package us.ihmc.graphicsDescription;
 
 import gnu.trove.list.array.TIntArrayList;
 import us.ihmc.commons.lists.RecyclingArrayList;
+import us.ihmc.euclid.tuple2D.Point2D32;
 import us.ihmc.euclid.tuple3D.Point3D32;
 import us.ihmc.euclid.tuple3D.Vector3D32;
 
@@ -14,7 +15,7 @@ import us.ihmc.euclid.tuple3D.Vector3D32;
 public class ModifiableMeshDataHolder
 {
    private final RecyclingArrayList<Point3D32> vertices = new RecyclingArrayList<>(Point3D32.class);
-   private final RecyclingArrayList<TexCoord2f> texturePoints = new RecyclingArrayList<>(TexCoord2f.class);
+   private final RecyclingArrayList<Point2D32> texturePoints = new RecyclingArrayList<>(Point2D32.class);
    private final TIntArrayList triangleIndices = new TIntArrayList();
    private final RecyclingArrayList<Vector3D32> vertexNormals = new RecyclingArrayList<>(Vector3D32.class);
 
@@ -45,7 +46,7 @@ public class ModifiableMeshDataHolder
    public MeshDataHolder createMeshDataHolder()
    {
       Point3D32[] vertexArray = vertices.toArray(new Point3D32[0]);
-      TexCoord2f[] texturePointArray = texturePoints.toArray(new TexCoord2f[0]);
+      Point2D32[] texturePointArray = texturePoints.toArray(new Point2D32[0]);
       int[] triangleIndexArray = triangleIndices.toArray();
       Vector3D32[] vertexNormalArray = vertexNormals.toArray(new Vector3D32[0]);
       return new MeshDataHolder(vertexArray, texturePointArray, triangleIndexArray, vertexNormalArray);
@@ -82,7 +83,7 @@ public class ModifiableMeshDataHolder
       }
       for (Point3D32 vertex : otherVertices)
          vertices.add().set(vertex);
-      for (TexCoord2f texturePoint : meshDataHolder.getTexturePoints())
+      for (Point2D32 texturePoint : meshDataHolder.getTexturePoints())
          texturePoints.add().set(texturePoint);
       for (Vector3D32 normal : meshDataHolder.getVertexNormals())
          vertexNormals.add().set(normal);
