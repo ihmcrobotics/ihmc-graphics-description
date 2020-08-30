@@ -1,5 +1,6 @@
 package us.ihmc.graphicsDescription;
 
+import us.ihmc.euclid.tools.EuclidCoreIOTools;
 import us.ihmc.euclid.transform.interfaces.Transform;
 import us.ihmc.euclid.tuple2D.interfaces.Tuple2DBasics;
 
@@ -61,5 +62,11 @@ public class TexCoord2f implements Tuple2DBasics
    public void applyInverseTransform(Transform transform, boolean checkIfTransformInXYplane)
    {
       throw new UnsupportedOperationException();
+   }
+
+   @Override
+   public String toString()
+   {
+      return "Texture point: " + EuclidCoreIOTools.getTuple2DString(this);
    }
 }

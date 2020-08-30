@@ -1,5 +1,7 @@
 package us.ihmc.graphicsDescription.yoGraphics;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import us.ihmc.euclid.referenceFrame.ReferenceFrame;
@@ -23,6 +25,7 @@ public class YoGraphicTriangle extends YoGraphic implements RemoteYoGraphic, Gra
    private final YoFramePoint3D pointOne;
    private final YoFramePoint3D pointTwo;
    private final YoFramePoint3D pointThree;
+   private final List<YoFramePoint3D> pointList;
 
    private final Graphics3DObject graphics3dObject;
    private final Graphics3DAddMeshDataInstruction instruction;
@@ -45,6 +48,7 @@ public class YoGraphicTriangle extends YoGraphic implements RemoteYoGraphic, Gra
       this.pointOne = pointOne;
       this.pointTwo = pointTwo;
       this.pointThree = pointThree;
+      pointList = Arrays.asList(pointOne, pointTwo, pointThree);
 
       this.appearance = appearance;
 
@@ -88,7 +92,7 @@ public class YoGraphicTriangle extends YoGraphic implements RemoteYoGraphic, Gra
       {
          if (!pointOne.containsNaN() && !pointTwo.containsNaN() && !pointThree.containsNaN())
          {
-            instruction.setMesh(MeshDataGenerator.Polygon(pointOne, pointTwo, pointThree));
+            instruction.setMesh(MeshDataGenerator.PolygonCounterClockwise(pointList));
          }
          else
          {

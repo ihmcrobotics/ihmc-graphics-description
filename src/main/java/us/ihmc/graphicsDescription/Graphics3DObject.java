@@ -3,6 +3,7 @@ package us.ihmc.graphicsDescription;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import us.ihmc.euclid.Axis3D;
@@ -1203,7 +1204,7 @@ public class Graphics3DObject
     */
    public Graphics3DAddMeshDataInstruction addPolygon(Point3DReadOnly[] polygonPoints, AppearanceDefinition yoAppearance)
    {
-      MeshDataHolder meshData = MeshDataGenerator.Polygon(polygonPoints);
+      MeshDataHolder meshData = MeshDataGenerator.PolygonCounterClockwise(Arrays.asList(polygonPoints));
 
       return addMeshData(meshData, yoAppearance);
    }

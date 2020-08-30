@@ -43,7 +43,7 @@ public class MeshDataBuilder
     */
    public void addBox(double lx, double ly, double lz, Tuple3DReadOnly offset)
    {
-      addMesh(MeshDataGenerator.Cube(lx, ly, lz, true, null), offset);
+      addMesh(MeshDataGenerator.Cube(lx, ly, lz, true), offset);
    }
 
    /**
@@ -55,7 +55,7 @@ public class MeshDataBuilder
     */
    public void addBox(float lx, float ly, float lz)
    {
-      addMesh(MeshDataGenerator.Cube(lx, ly, lz, true, null));
+      addMesh(MeshDataGenerator.Cube(lx, ly, lz, true));
    }
 
    /**
@@ -68,7 +68,7 @@ public class MeshDataBuilder
     */
    public void addBox(float lx, float ly, float lz, Tuple3DReadOnly offset)
    {
-      addMesh(MeshDataGenerator.Cube(lx, ly, lz, true, null), offset);
+      addMesh(MeshDataGenerator.Cube(lx, ly, lz, true), offset);
    }
 
    /**
@@ -156,7 +156,7 @@ public class MeshDataBuilder
     */
    public void addCylinder(double height, double radius, Tuple3DReadOnly offset)
    {
-      addMesh(MeshDataGenerator.Cylinder(radius, height, DEFAULT_RES), offset);
+      addMesh(MeshDataGenerator.Cylinder(radius, height, DEFAULT_RES, false), offset);
    }
 
    /**
@@ -171,7 +171,7 @@ public class MeshDataBuilder
     */
    public void addCylinder(double height, double radius, Tuple3DReadOnly offset, Orientation3DReadOnly orientation)
    {
-      addMesh(MeshDataGenerator.Cylinder(radius, height, DEFAULT_RES), offset, orientation);
+      addMesh(MeshDataGenerator.Cylinder(radius, height, DEFAULT_RES, false), offset, orientation);
    }
 
    /**
@@ -183,7 +183,7 @@ public class MeshDataBuilder
     */
    public void addCylinder(float height, float radius, Tuple3DReadOnly offset)
    {
-      addMesh(MeshDataGenerator.Cylinder(radius, height, DEFAULT_RES), offset);
+      addMesh(MeshDataGenerator.Cylinder(radius, height, DEFAULT_RES, false), offset);
    }
 
    /**
@@ -367,7 +367,7 @@ public class MeshDataBuilder
     */
    public void addPolygon(RigidBodyTransformReadOnly transformToWorld, List<? extends Point2DReadOnly> polygon)
    {
-      addMesh(MeshDataGenerator.Polygon(transformToWorld, polygon));
+      addMesh(MeshDataGenerator.PolygonCounterClockwise(transformToWorld, polygon));
    }
 
    /**

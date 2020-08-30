@@ -155,7 +155,7 @@ public class YoGraphicPolygon3D extends YoGraphic implements RemoteYoGraphic, Gr
       for (int i = 0; i < numberOfPoints.getIntegerValue(); i++)
          ccwOrderedPoints.get(i).set(ccwOrderedYoFramePoints[i]);
 
-      instruction.setMesh(MeshDataGenerator.Polygon(ccwOrderedPoints, numberOfPoints.getIntegerValue()));
+      instruction.setMesh(MeshDataGenerator.PolygonCounterClockwise(ccwOrderedPoints.subList(0, numberOfPoints.getIntegerValue())));
       instruction.setAppearance(appearance);
    }
 
