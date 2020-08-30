@@ -1,4 +1,4 @@
-package us.ihmc.graphicsDescription;
+package us.ihmc.graphicsDescription.mesh;
 
 import java.util.List;
 

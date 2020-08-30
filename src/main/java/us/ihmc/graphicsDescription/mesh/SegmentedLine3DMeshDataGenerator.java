@@ -1,4 +1,4 @@
-package us.ihmc.graphicsDescription;
+package us.ihmc.graphicsDescription.mesh;
 
 import us.ihmc.commons.Epsilons;
 import us.ihmc.euclid.geometry.tools.EuclidGeometryTools;

@@ -1,8 +1,8 @@
 package us.ihmc.graphicsDescription.instructions;
 
-import us.ihmc.graphicsDescription.MeshDataHolder;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.graphicsDescription.instructions.listeners.MeshChangedListener;
+import us.ihmc.graphicsDescription.mesh.MeshDataHolder;
 
 public class Graphics3DAddMeshDataInstruction extends Graphics3DInstruction
 {

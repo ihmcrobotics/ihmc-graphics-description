@@ -1,6 +1,6 @@
 package us.ihmc.graphicsDescription.instructions.listeners;
 
-import us.ihmc.graphicsDescription.MeshDataHolder;
+import us.ihmc.graphicsDescription.mesh.MeshDataHolder;
 
 public interface MeshChangedListener
 {

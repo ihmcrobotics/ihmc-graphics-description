@@ -61,6 +61,8 @@ import us.ihmc.graphicsDescription.instructions.primitives.Graphics3DIdentityIns
 import us.ihmc.graphicsDescription.instructions.primitives.Graphics3DRotateInstruction;
 import us.ihmc.graphicsDescription.instructions.primitives.Graphics3DScaleInstruction;
 import us.ihmc.graphicsDescription.instructions.primitives.Graphics3DTranslateInstruction;
+import us.ihmc.graphicsDescription.mesh.MeshDataGenerator;
+import us.ihmc.graphicsDescription.mesh.MeshDataHolder;
 import us.ihmc.graphicsDescription.structure.Graphics3DNode;
 import us.ihmc.tools.inputDevices.keyboard.ModifierKeyInterface;
 

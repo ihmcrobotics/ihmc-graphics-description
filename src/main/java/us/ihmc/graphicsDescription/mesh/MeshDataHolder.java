@@ -1,4 +1,4 @@
-package us.ihmc.graphicsDescription;
+package us.ihmc.graphicsDescription.mesh;
 
 import java.lang.reflect.Array;
 
@@ -96,16 +96,29 @@ public class MeshDataHolder implements Transformable
       return vertexNormals;
    }
 
+   /**
+    * Returns the name associated with this mesh.
+    * 
+    * @return this mesh's name.
+    */
    public String getName()
    {
       return name;
    }
 
+   /**
+    * Sets this mesh's name.
+    * 
+    * @param name the new name for this mesh.
+    */
    public void setName(String name)
    {
       this.name = name;
    }
 
+   /**
+    * Applies the given {@code transform} to this mesh's vertices and normals.
+    */
    @Override
    public void applyTransform(Transform transform)
    {
@@ -116,6 +129,9 @@ public class MeshDataHolder implements Transformable
          vertexNormals[i].applyTransform(transform);
    }
 
+   /**
+    * Applies the inverse of the given {@code transform} to this mesh's vertices and normals.
+    */
    @Override
    public void applyInverseTransform(Transform transform)
    {

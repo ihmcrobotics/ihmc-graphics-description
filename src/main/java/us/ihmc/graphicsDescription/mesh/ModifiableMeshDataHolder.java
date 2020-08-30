@@ -1,4 +1,4 @@
-package us.ihmc.graphicsDescription;
+package us.ihmc.graphicsDescription.mesh;
 
 import gnu.trove.list.array.TIntArrayList;
 import us.ihmc.commons.lists.RecyclingArrayList;

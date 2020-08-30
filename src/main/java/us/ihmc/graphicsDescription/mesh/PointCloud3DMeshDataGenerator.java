@@ -1,4 +1,4 @@
-package us.ihmc.graphicsDescription;
+package us.ihmc.graphicsDescription.mesh;
 
 import us.ihmc.euclid.tuple3D.Point3D32;
 import us.ihmc.euclid.tuple3D.interfaces.Point3DBasics;
@@ -12,7 +12,7 @@ import us.ihmc.euclid.tuple3D.interfaces.Point3DReadOnly;
  *
  * @author Sylvain Bertrand
  */
-public class PointCloud3DMeshGenerator
+public class PointCloud3DMeshDataGenerator
 {
    /**
     * The meshes for this generator. Not that the meshes are recycled.
@@ -39,7 +39,7 @@ public class PointCloud3DMeshGenerator
     *                       result in a smooth sphere, while a low value result in a polygonized
     *                       sphere.
     */
-   public PointCloud3DMeshGenerator(int numberOfPoints, int resolution)
+   public PointCloud3DMeshDataGenerator(int numberOfPoints, int resolution)
    {
       this(numberOfPoints, resolution, 1.0);
    }
@@ -54,7 +54,7 @@ public class PointCloud3DMeshGenerator
     *                       sphere.
     * @param pointRadius    radius used to create all the spheres.
     */
-   public PointCloud3DMeshGenerator(int numberOfPoints, int resolution, double pointRadius)
+   public PointCloud3DMeshDataGenerator(int numberOfPoints, int resolution, double pointRadius)
    {
       this.pointRadius = pointRadius;
       meshDataHolders = new MeshDataHolder[numberOfPoints];

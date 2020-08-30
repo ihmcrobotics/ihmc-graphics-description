@@ -19,11 +19,11 @@ import us.ihmc.euclid.tuple3D.interfaces.Point3DReadOnly;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.GraphicsUpdatable;
-import us.ihmc.graphicsDescription.PointCloud3DMeshGenerator;
-import us.ihmc.graphicsDescription.SegmentedLine3DMeshDataGenerator;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.graphicsDescription.appearance.YoAppearance;
 import us.ihmc.graphicsDescription.instructions.Graphics3DAddMeshDataInstruction;
+import us.ihmc.graphicsDescription.mesh.PointCloud3DMeshDataGenerator;
+import us.ihmc.graphicsDescription.mesh.SegmentedLine3DMeshDataGenerator;
 import us.ihmc.graphicsDescription.plotting.artifact.Artifact;
 import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint3D;
 import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePose3D;
@@ -126,7 +126,7 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
    private final Graphics3DObject graphics3dObject = new Graphics3DObject();
    private final AppearanceDefinition[] colorPalette = createColorPalette(COLOR_RESOLUTION);
    private final SegmentedLine3DMeshDataGenerator segmentedLine3DMeshGenerator;
-   private final PointCloud3DMeshGenerator pointCloud3DMeshGenerator;
+   private final PointCloud3DMeshDataGenerator pointCloud3DMeshGenerator;
    private final Graphics3DAddMeshDataInstruction[] graphics3DAddMeshDataInstructions;
    private final Point3D[] intermediatePositions;
    private final Vector3D[] intermediateVelocities;
@@ -410,7 +410,7 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
       }
 
       segmentedLine3DMeshGenerator = new SegmentedLine3DMeshDataGenerator(resolution, radialResolution, radius);
-      pointCloud3DMeshGenerator = new PointCloud3DMeshGenerator(resolution, radialResolution, radius);
+      pointCloud3DMeshGenerator = new PointCloud3DMeshDataGenerator(resolution, radialResolution, radius);
       graphics3DAddMeshDataInstructions = new Graphics3DAddMeshDataInstruction[resolution - 1];
 
       graphics3dObject.setChangeable(true);
@@ -510,7 +510,7 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
       }
 
       segmentedLine3DMeshGenerator = new SegmentedLine3DMeshDataGenerator(resolution, radialResolution, radius);
-      pointCloud3DMeshGenerator = new PointCloud3DMeshGenerator(resolution, radialResolution);
+      pointCloud3DMeshGenerator = new PointCloud3DMeshDataGenerator(resolution, radialResolution);
       graphics3DAddMeshDataInstructions = new Graphics3DAddMeshDataInstruction[resolution - 1];
 
       graphics3dObject.setChangeable(true);
