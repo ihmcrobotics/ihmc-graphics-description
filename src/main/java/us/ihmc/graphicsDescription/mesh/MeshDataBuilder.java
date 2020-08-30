@@ -43,7 +43,7 @@ public class MeshDataBuilder
     */
    public void addBox(double lx, double ly, double lz, Tuple3DReadOnly offset)
    {
-      addMesh(MeshDataGenerator.Cube(lx, ly, lz, true), offset);
+      addMesh(MeshDataGenerator.Box(lx, ly, lz, true), offset);
    }
 
    /**
@@ -55,7 +55,7 @@ public class MeshDataBuilder
     */
    public void addBox(float lx, float ly, float lz)
    {
-      addMesh(MeshDataGenerator.Cube(lx, ly, lz, true));
+      addMesh(MeshDataGenerator.Box(lx, ly, lz, true));
    }
 
    /**
@@ -68,7 +68,7 @@ public class MeshDataBuilder
     */
    public void addBox(float lx, float ly, float lz, Tuple3DReadOnly offset)
    {
-      addMesh(MeshDataGenerator.Cube(lx, ly, lz, true), offset);
+      addMesh(MeshDataGenerator.Box(lx, ly, lz, true), offset);
    }
 
    /**

@@ -1439,31 +1439,31 @@ public class MeshDataGenerator
    }
 
    /**
-    * Creates a triangle mesh for a 3D cube of size (lx, ly, lz).
+    * Creates a triangle mesh for a 3D box of size (lx, ly, lz).
     *
-    * @param lx       cube size along the x-axis.
-    * @param ly       cube size along the y-axis.
-    * @param lz       cube size along the z-axis.
+    * @param lx       box size along the x-axis.
+    * @param ly       box size along the y-axis.
+    * @param lz       box size along the z-axis.
     * @param centered when {@code true} the generated mesh is centered at the origin, when
-    *                 {@code false} the bottom face of the cube is centered at the origin.
+    *                 {@code false} the bottom face of the box is centered at the origin.
     * @return the generic triangle mesh.
     */
-   public static MeshDataHolder Cube(double lx, double ly, double lz, boolean centered)
+   public static MeshDataHolder Box(double lx, double ly, double lz, boolean centered)
    {
-      return Cube((float) lx, (float) ly, (float) lz, centered);
+      return Box((float) lx, (float) ly, (float) lz, centered);
    }
 
    /**
-    * Creates a triangle mesh for a 3D cube of size (lx, ly, lz).
+    * Creates a triangle mesh for a 3D box of size (lx, ly, lz).
     *
-    * @param lx       cube size along the x-axis.
-    * @param ly       cube size along the y-axis.
-    * @param lz       cube size along the z-axis.
+    * @param lx       box size along the x-axis.
+    * @param ly       box size along the y-axis.
+    * @param lz       box size along the z-axis.
     * @param centered when {@code true} the generated mesh is centered at the origin, when
-    *                 {@code false} the bottom face of the cube is centered at the origin.
+    *                 {@code false} the bottom face of the box is centered at the origin.
     * @return the generic triangle mesh.
     */
-   public static MeshDataHolder Cube(float lx, float ly, float lz, boolean centered)
+   public static MeshDataHolder Box(float lx, float ly, float lz, boolean centered)
    {
       Point3D32 points[] = new Point3D32[24];
       Vector3D32[] normals = new Vector3D32[24];
@@ -2185,7 +2185,7 @@ public class MeshDataGenerator
       Vector3D32 lineDirection = new Vector3D32(x1 - x0, y1 - y0, z1 - z0);
       float lineLength = (float) lineDirection.length();
       lineDirection.scale(1.0f / lineLength);
-      MeshDataHolder line = Cube(width, width, lineLength, false);
+      MeshDataHolder line = Box(width, width, lineLength, false);
       Point3D32[] vertices = line.getVertices();
       Vector3D32[] normals = line.getVertexNormals();
 
