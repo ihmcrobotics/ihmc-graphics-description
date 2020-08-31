@@ -29,11 +29,11 @@ public abstract class Graphics3DInstructionExecutor
             Graphics3DAddMeshDataInstruction meshDataInstruction = (Graphics3DAddMeshDataInstruction) instruction;
             doAddMeshDataInstruction(meshDataInstruction);
          }
-         else if (instruction instanceof PrimitiveGraphics3DInstruction)
+         else if (instruction instanceof GeometryGraphics3DInstruction)
          {
-            PrimitiveGraphics3DInstruction primitiveInstruction = (PrimitiveGraphics3DInstruction) instruction;
+            GeometryGraphics3DInstruction primitiveInstruction = (GeometryGraphics3DInstruction) instruction;
 
-            doAddPrimitiveInstruction(primitiveInstruction);
+            doAddGeometryInstruction(primitiveInstruction);
          }
          else if (instruction instanceof Graphics3DIdentityInstruction)
          {
@@ -73,7 +73,7 @@ public abstract class Graphics3DInstructionExecutor
 
    }
 
-   protected abstract void doAddPrimitiveInstruction(PrimitiveGraphics3DInstruction primitiveInstruction);
+   protected abstract void doAddGeometryInstruction(GeometryGraphics3DInstruction primitiveInstruction);
 
    protected abstract void doAddMeshDataInstruction(Graphics3DAddMeshDataInstruction graphics3DAddMeshData);
 

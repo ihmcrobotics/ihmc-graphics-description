@@ -2,7 +2,7 @@ package us.ihmc.graphicsDescription.instructions;
 
 import us.ihmc.graphicsDescription.geometry.GeometryDescription;
 
-public class GeometryGraphics3DInstruction
+public class GeometryGraphics3DInstruction extends Graphics3DInstruction
 {
    private GeometryDescription geometry;
 
