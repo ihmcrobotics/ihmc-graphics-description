@@ -15,6 +15,24 @@ import us.ihmc.euclid.tuple3D.Point3D32;
 import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.Vector3D32;
 import us.ihmc.euclid.tuple3D.interfaces.Point3DReadOnly;
+import us.ihmc.graphicsDescription.geometry.ArcTorus3DDescription;
+import us.ihmc.graphicsDescription.geometry.Box3DDescription;
+import us.ihmc.graphicsDescription.geometry.Capsule3DDescription;
+import us.ihmc.graphicsDescription.geometry.Cone3DDescription;
+import us.ihmc.graphicsDescription.geometry.Cylinder3DDescription;
+import us.ihmc.graphicsDescription.geometry.Ellipsoid3DDescription;
+import us.ihmc.graphicsDescription.geometry.ExtrudedPolygon2DDescription;
+import us.ihmc.graphicsDescription.geometry.GeometryDescription;
+import us.ihmc.graphicsDescription.geometry.HemiEllipsoid3DDescription;
+import us.ihmc.graphicsDescription.geometry.Polygon2DDescription;
+import us.ihmc.graphicsDescription.geometry.Polygon3DDescription;
+import us.ihmc.graphicsDescription.geometry.PyramidBox3DDescription;
+import us.ihmc.graphicsDescription.geometry.Sphere3DDescription;
+import us.ihmc.graphicsDescription.geometry.Tetrahedron3DDescription;
+import us.ihmc.graphicsDescription.geometry.Torus3DDescription;
+import us.ihmc.graphicsDescription.geometry.TruncatedCone3DDescription;
+import us.ihmc.graphicsDescription.geometry.Wedge3DDescription;
+import us.ihmc.log.LogTools;
 
 /**
  * This class provides factories to create generic meshes, i.e. {@code MeshDataHolder}, to represent
@@ -48,6 +66,54 @@ public class MeshDataGenerator
    private MeshDataGenerator()
    {
       // Prevent an object being generated.
+   }
+
+   public static MeshDataHolder Mesh(GeometryDescription description)
+   {
+      if (description == null)
+         return null;
+      if (description instanceof ArcTorus3DDescription)
+         return ArcTorus((ArcTorus3DDescription) description);
+      if (description instanceof Box3DDescription)
+         return Box((Box3DDescription) description);
+      if (description instanceof Capsule3DDescription)
+         return Capsule((Capsule3DDescription) description);
+      if (description instanceof Cone3DDescription)
+         return Cone((Cone3DDescription) description);
+      if (description instanceof Cylinder3DDescription)
+         return Cylinder((Cylinder3DDescription) description);
+      if (description instanceof Ellipsoid3DDescription)
+         return Ellipsoid((Ellipsoid3DDescription) description);
+      if (description instanceof ExtrudedPolygon2DDescription)
+         return ExtrudedPolygon((ExtrudedPolygon2DDescription) description);
+      if (description instanceof HemiEllipsoid3DDescription)
+         return HemiEllipsoid((HemiEllipsoid3DDescription) description);
+      if (description instanceof Polygon2DDescription)
+         return Polygon((Polygon2DDescription) description);
+      if (description instanceof Polygon3DDescription)
+         return Polygon((Polygon2DDescription) description);
+      if (description instanceof PyramidBox3DDescription)
+         return PyramidBox((PyramidBox3DDescription) description);
+      if (description instanceof Sphere3DDescription)
+         return Sphere((Sphere3DDescription) description);
+      if (description instanceof Tetrahedron3DDescription)
+         return Tetrahedron((Tetrahedron3DDescription) description);
+      if (description instanceof Torus3DDescription)
+         return Torus((Torus3DDescription) description);
+      if (description instanceof TruncatedCone3DDescription)
+         return TruncatedCone((TruncatedCone3DDescription) description);
+      if (description instanceof Wedge3DDescription)
+         return Wedge((Wedge3DDescription) description);
+      LogTools.error("Unrecognized " + GeometryDescription.class.getSimpleName() + ": " + description.getClass().getSimpleName());
+      return null;
+   }
+
+   public static MeshDataHolder Sphere(Sphere3DDescription description)
+   {
+      MeshDataHolder meshDataHolder = Sphere(description.getRadius(), description.getResolution(), description.getResolution());
+      if (meshDataHolder != null)
+         meshDataHolder.setName(description.getName());
+      return meshDataHolder;
    }
 
    /**
@@ -88,24 +154,16 @@ public class MeshDataGenerator
       return Ellipsoid(radius, radius, radius, latitudeResolution, longitudeResolution);
    }
 
-   /**
-    * Creates a triangle mesh for a 3D ellipsoid.
-    * <p>
-    * The ellipsoid is centered at the origin and the algorithm is similar to a UV sphere, see
-    * <a href="https://en.wikipedia.org/wiki/UV_mapping">UV mapping</a>.
-    * </p>
-    *
-    * @param xRadius             radius of the ellipsoid along the x-axis.
-    * @param yRadius             radius of the ellipsoid along the y-axis.
-    * @param zRadius             radius of the ellipsoid along the z-axis.
-    * @param latitudeResolution  the resolution along the vertical axis, i.e. z-axis.
-    * @param longitudeResolution the resolution around the vertical axis, i.e. the number of vertices
-    *                            per latitude.
-    * @return the generic triangle mesh.
-    */
-   public static MeshDataHolder Ellipsoid(double xRadius, double yRadius, double zRadius, int latitudeResolution, int longitudeResolution)
+   public static MeshDataHolder Ellipsoid(Ellipsoid3DDescription description)
    {
-      return Ellipsoid((float) xRadius, (float) yRadius, (float) zRadius, latitudeResolution, longitudeResolution);
+      MeshDataHolder meshDataHolder = Ellipsoid(description.getRadiusX(),
+                                                description.getRadiusY(),
+                                                description.getRadiusZ(),
+                                                description.getResolution(),
+                                                description.getResolution());
+      if (meshDataHolder != null)
+         meshDataHolder.setName(description.getName());
+      return meshDataHolder;
    }
 
    /**
@@ -115,15 +173,35 @@ public class MeshDataGenerator
     * <a href="https://en.wikipedia.org/wiki/UV_mapping">UV mapping</a>.
     * </p>
     *
-    * @param xRadius             radius of the ellipsoid along the x-axis.
-    * @param yRadius             radius of the ellipsoid along the y-axis.
-    * @param zRadius             radius of the ellipsoid along the z-axis.
+    * @param radiusX             radius of the ellipsoid along the x-axis.
+    * @param radiusY             radius of the ellipsoid along the y-axis.
+    * @param radiusZ             radius of the ellipsoid along the z-axis.
     * @param latitudeResolution  the resolution along the vertical axis, i.e. z-axis.
     * @param longitudeResolution the resolution around the vertical axis, i.e. the number of vertices
     *                            per latitude.
     * @return the generic triangle mesh.
     */
-   public static MeshDataHolder Ellipsoid(float xRadius, float yRadius, float zRadius, int latitudeResolution, int longitudeResolution)
+   public static MeshDataHolder Ellipsoid(double radiusX, double radiusY, double radiusZ, int latitudeResolution, int longitudeResolution)
+   {
+      return Ellipsoid((float) radiusX, (float) radiusY, (float) radiusZ, latitudeResolution, longitudeResolution);
+   }
+
+   /**
+    * Creates a triangle mesh for a 3D ellipsoid.
+    * <p>
+    * The ellipsoid is centered at the origin and the algorithm is similar to a UV sphere, see
+    * <a href="https://en.wikipedia.org/wiki/UV_mapping">UV mapping</a>.
+    * </p>
+    *
+    * @param radiusX             radius of the ellipsoid along the x-axis.
+    * @param radiusY             radius of the ellipsoid along the y-axis.
+    * @param radiusZ             radius of the ellipsoid along the z-axis.
+    * @param latitudeResolution  the resolution along the vertical axis, i.e. z-axis.
+    * @param longitudeResolution the resolution around the vertical axis, i.e. the number of vertices
+    *                            per latitude.
+    * @return the generic triangle mesh.
+    */
+   public static MeshDataHolder Ellipsoid(float radiusX, float radiusY, float radiusZ, int latitudeResolution, int longitudeResolution)
    {
       if (longitudeResolution % 2 == 1)
          longitudeResolution += 1;
@@ -152,9 +230,9 @@ public class MeshDataGenerator
             float normalX = cosLongitude * cosLatitude;
             float normalY = sinLongitude * cosLatitude;
             float normalZ = sinLatitude;
-            float vertexX = xRadius * normalX;
-            float vertexY = yRadius * normalY;
-            float vertexZ = zRadius * normalZ;
+            float vertexX = radiusX * normalX;
+            float vertexY = radiusY * normalY;
+            float vertexZ = radiusZ * normalZ;
             points[currentIndex] = new Point3D32(vertexX, vertexY, vertexZ);
             normals[currentIndex] = new Vector3D32(normalX, normalY, normalZ);
 
@@ -165,13 +243,13 @@ public class MeshDataGenerator
          textureX += 0.5f / (nPointsLongitude - 1.0f);
          // South pole
          int southPoleIndex = longitudeIndex;
-         points[southPoleIndex] = new Point3D32(0.0f, 0.0f, -zRadius);
+         points[southPoleIndex] = new Point3D32(0.0f, 0.0f, -radiusZ);
          normals[southPoleIndex] = new Vector3D32(0.0f, 0.0f, -1.0f);
          textPoints[southPoleIndex] = new Point2D32(textureX, 1.0f - 1.0f / 256.0f);
 
          // North pole
          int northPoleIndex = (nPointsLatitude - 1) * nPointsLongitude + longitudeIndex;
-         points[northPoleIndex] = new Point3D32(0.0f, 0.0f, zRadius);
+         points[northPoleIndex] = new Point3D32(0.0f, 0.0f, radiusZ);
          normals[northPoleIndex] = new Vector3D32(0.0f, 0.0f, 1.0f);
          textPoints[northPoleIndex] = new Point2D32(textureX, 1.0f / 256.0f);
       }
@@ -219,6 +297,14 @@ public class MeshDataGenerator
       }
 
       return new MeshDataHolder(points, textPoints, triangleIndices, normals);
+   }
+
+   public static MeshDataHolder Polygon(Polygon2DDescription description)
+   {
+      MeshDataHolder meshDataHolder = Polygon(null, description.getPolygonVertices(), description.isCounterClockwiseOrdered());
+      if (meshDataHolder != null)
+         meshDataHolder.setName(description.getName());
+      return meshDataHolder;
    }
 
    /**
@@ -376,6 +462,14 @@ public class MeshDataGenerator
       return new MeshDataHolder(vertices, texturePoints, triangleIndices, normals);
    }
 
+   public static MeshDataHolder Polygon(Polygon3DDescription description)
+   {
+      MeshDataHolder meshDataHolder = Polygon(description.getPolygonVertices(), description.isCounterClockwiseOrdered());
+      if (meshDataHolder != null)
+         meshDataHolder.setName(description.getName());
+      return meshDataHolder;
+   }
+
    /**
     * Create a triangle mesh for the given polygon.
     * <p>
@@ -528,6 +622,17 @@ public class MeshDataGenerator
       return new MeshDataHolder(vertices, texturePoints, triangleIndices, normals);
    }
 
+   public static MeshDataHolder ExtrudedPolygon(ExtrudedPolygon2DDescription description)
+   {
+      MeshDataHolder meshDataHolder = ExtrudedPolygon(description.getPolygonVertices(),
+                                                      description.isCounterClockwiseOrdered(),
+                                                      description.getTopZ(),
+                                                      description.getBottomZ());
+      if (meshDataHolder != null)
+         meshDataHolder.setName(description.getName());
+      return meshDataHolder;
+   }
+
    /**
     * Create a triangle mesh for the given polygon 2d and extrude it along the z-axis.
     *
@@ -567,16 +672,16 @@ public class MeshDataGenerator
     * </p>
     *
     * @param ccwOrderedPolygonVertices the counter-clockwise-ordered vertices of the polygon.
-    * @param zTop                      thickness of the extrusion. If {@code extrusionHeight < 0}, the
+    * @param topZ                      thickness of the extrusion. If {@code extrusionHeight < 0}, the
     *                                  polygon is extruded toward z negative.
-    * @param zBottom                   offset along the z-axis that is applied on all the vertices of
+    * @param bottomZ                   offset along the z-axis that is applied on all the vertices of
     *                                  the resulting mesh.
     * @return the generic triangle mesh or {@code null} if {@code ccwOrderedPolygonVertices} is
     *         {@code null}.
     */
-   public static MeshDataHolder ExtrudedPolygonCounterClockwise(List<? extends Point2DReadOnly> ccwOrderedPolygonVertices, double zTop, double zBottom)
+   public static MeshDataHolder ExtrudedPolygonCounterClockwise(List<? extends Point2DReadOnly> ccwOrderedPolygonVertices, double topZ, double bottomZ)
    {
-      return ExtrudedPolygon(ccwOrderedPolygonVertices, true, zTop, zBottom);
+      return ExtrudedPolygon(ccwOrderedPolygonVertices, true, topZ, bottomZ);
    }
 
    /**
@@ -588,11 +693,11 @@ public class MeshDataGenerator
     * @param polygonVertices         the counter-clockwise-ordered vertices of the polygon.
     * @param counterClockwiseOrdered {@code true} to indicate that the vertices are counter-clockwise
     *                                ordered, {@code false} for clockwise ordered.
-    * @param zTop                    z-coordinate of the bottom face.
-    * @param zBottom                 z-coordinate of the top face.
+    * @param topZ                    z-coordinate of the bottom face.
+    * @param bottomZ                 z-coordinate of the top face.
     * @return the generic triangle mesh or {@code null} if {@code polygonVertices} is {@code null}.
     */
-   public static MeshDataHolder ExtrudedPolygon(List<? extends Point2DReadOnly> polygonVertices, boolean counterClockwiseOrdered, double zTop, double zBottom)
+   public static MeshDataHolder ExtrudedPolygon(List<? extends Point2DReadOnly> polygonVertices, boolean counterClockwiseOrdered, double topZ, double bottomZ)
    {
       if (polygonVertices == null || polygonVertices.size() < 3)
          return null;
@@ -636,12 +741,12 @@ public class MeshDataGenerator
          float vertexY = vertex.getY32();
 
          // Vertices for bottom face
-         vertices[i] = new Point3D32(vertexX, vertexY, (float) zBottom);
+         vertices[i] = new Point3D32(vertexX, vertexY, (float) bottomZ);
          normals[i] = new Vector3D32(0.0f, 0.0f, -1.0f);
          texturePoints[i] = new Point2D32(0.5f - 0.5f * (vertexY - minY) / (maxY - minY) + 0.5f, 0.5f - 0.5f * (vertexX - minX) / (maxX - minX));
 
          // Vertices for top face
-         vertices[i + numberOfVertices] = new Point3D32(vertexX, vertexY, (float) (zTop));
+         vertices[i + numberOfVertices] = new Point3D32(vertexX, vertexY, (float) (topZ));
          normals[i + numberOfVertices] = new Vector3D32(0.0f, 0.0f, 1.0f);
          texturePoints[i + numberOfVertices] = new Point2D32(0.5f - 0.5f * (vertexY - minY) / (maxY - minY), 0.5f - 0.5f * (vertexX - minX) / (maxX - minX));
       }
@@ -682,11 +787,11 @@ public class MeshDataGenerator
          float vertexX = vertex.getX32();
          float vertexY = vertex.getY32();
 
-         Point3D32 vertexBottom = new Point3D32(vertexX, vertexY, (float) zBottom);
-         Point3D32 vertexTop = new Point3D32(vertexX, vertexY, (float) (zTop));
+         Point3D32 vertexBottom = new Point3D32(vertexX, vertexY, (float) bottomZ);
+         Point3D32 vertexTop = new Point3D32(vertexX, vertexY, (float) (topZ));
 
-         Point3D32 nextVertexBottom = new Point3D32(nextVertex.getX32(), nextVertex.getY32(), (float) zBottom);
-         Point3D32 nextVertexTop = new Point3D32(nextVertex.getX32(), nextVertex.getY32(), (float) (zTop));
+         Point3D32 nextVertexBottom = new Point3D32(nextVertex.getX32(), nextVertex.getY32(), (float) bottomZ);
+         Point3D32 nextVertexTop = new Point3D32(nextVertex.getX32(), nextVertex.getY32(), (float) (topZ));
 
          Vector3D normal = new Vector3D();
          normal.sub(nextVertexTop, vertexTop);
@@ -755,36 +860,48 @@ public class MeshDataGenerator
       return new MeshDataHolder(vertices, texturePoints, triangleIndices, normals);
    }
 
-   /**
-    * Creates a triangle mesh for a 3D hemi-ellipsoid, i.e. top half of an ellipsoid with the bottom
-    * closed by a flat cap.
-    *
-    * @param xRadius             radius of the ellipsoid along the x-axis.
-    * @param yRadius             radius of the ellipsoid along the y-axis.
-    * @param zRadius             radius of the ellipsoid along the z-axis.
-    * @param latitudeResolution  the resolution along the vertical axis, i.e. z-axis.
-    * @param longitudeResolution the resolution around the vertical axis, i.e. the number of vertices
-    *                            per latitude.
-    * @return the generic triangle mesh.
-    */
-   public static MeshDataHolder HemiEllipsoid(double xRadius, double yRadius, double zRadius, int latitudeResolution, int longitudeResolution)
+   public static MeshDataHolder HemiEllipsoid(HemiEllipsoid3DDescription description)
    {
-      return HemiEllipsoid((float) xRadius, (float) yRadius, (float) zRadius, latitudeResolution, longitudeResolution);
+      MeshDataHolder meshDataHolder = HemiEllipsoid(description.getRadiusX(),
+                                                    description.getRadiusY(),
+                                                    description.getRadiusZ(),
+                                                    description.getResolution(),
+                                                    description.getResolution());
+      if (meshDataHolder != null)
+         meshDataHolder.setName(description.getName());
+      return meshDataHolder;
    }
 
    /**
     * Creates a triangle mesh for a 3D hemi-ellipsoid, i.e. top half of an ellipsoid with the bottom
     * closed by a flat cap.
     *
-    * @param xRadius             radius of the ellipsoid along the x-axis.
-    * @param yRadius             radius of the ellipsoid along the y-axis.
-    * @param zRadius             radius of the ellipsoid along the z-axis.
+    * @param radiusX             radius of the ellipsoid along the x-axis.
+    * @param radiusY             radius of the ellipsoid along the y-axis.
+    * @param radiusZ             radius of the ellipsoid along the z-axis.
     * @param latitudeResolution  the resolution along the vertical axis, i.e. z-axis.
     * @param longitudeResolution the resolution around the vertical axis, i.e. the number of vertices
     *                            per latitude.
     * @return the generic triangle mesh.
     */
-   public static MeshDataHolder HemiEllipsoid(float xRadius, float yRadius, float zRadius, int latitudeResolution, int longitudeResolution)
+   public static MeshDataHolder HemiEllipsoid(double radiusX, double radiusY, double radiusZ, int latitudeResolution, int longitudeResolution)
+   {
+      return HemiEllipsoid((float) radiusX, (float) radiusY, (float) radiusZ, latitudeResolution, longitudeResolution);
+   }
+
+   /**
+    * Creates a triangle mesh for a 3D hemi-ellipsoid, i.e. top half of an ellipsoid with the bottom
+    * closed by a flat cap.
+    *
+    * @param radiusX             radius of the ellipsoid along the x-axis.
+    * @param radiusY             radius of the ellipsoid along the y-axis.
+    * @param radiusZ             radius of the ellipsoid along the z-axis.
+    * @param latitudeResolution  the resolution along the vertical axis, i.e. z-axis.
+    * @param longitudeResolution the resolution around the vertical axis, i.e. the number of vertices
+    *                            per latitude.
+    * @return the generic triangle mesh.
+    */
+   public static MeshDataHolder HemiEllipsoid(float radiusX, float radiusY, float radiusZ, int latitudeResolution, int longitudeResolution)
    {
       if (longitudeResolution % 2 == 1)
          longitudeResolution += 1;
@@ -813,9 +930,9 @@ public class MeshDataGenerator
             float normalX = cosLongitude * cosLatitude;
             float normalY = sinLongitude * cosLatitude;
             float normalZ = sinLatitude;
-            float vertexX = xRadius * normalX;
-            float vertexY = yRadius * normalY;
-            float vertexZ = zRadius * normalZ;
+            float vertexX = radiusX * normalX;
+            float vertexY = radiusY * normalY;
+            float vertexZ = radiusZ * normalZ;
             points[currentIndex] = new Point3D32(vertexX, vertexY, vertexZ);
             normals[currentIndex] = new Vector3D32(normalX, normalY, normalZ);
 
@@ -825,8 +942,8 @@ public class MeshDataGenerator
 
          // Bottom side
          int currentIndex = nPointsLongitude + longitudeIndex;
-         float vertexX = (float) (xRadius * Math.cos(longitudeAngle));
-         float vertexY = (float) (yRadius * Math.sin(longitudeAngle));
+         float vertexX = (float) (radiusX * Math.cos(longitudeAngle));
+         float vertexY = (float) (radiusY * Math.sin(longitudeAngle));
          float vertexZ = 0.0f;
          points[currentIndex] = new Point3D32(vertexX, vertexY, vertexZ);
          normals[currentIndex] = new Vector3D32(0.0f, 0.0f, -1.0f);
@@ -842,7 +959,7 @@ public class MeshDataGenerator
 
          // North pole
          int northPoleIndex = nPointsLatitude * nPointsLongitude + longitudeIndex;
-         points[northPoleIndex] = new Point3D32(0.0f, 0.0f, zRadius);
+         points[northPoleIndex] = new Point3D32(0.0f, 0.0f, radiusZ);
          normals[northPoleIndex] = new Vector3D32(0.0f, 0.0f, 1.0f);
          textPoints[northPoleIndex] = new Point2D32(textureX, 1.0f / 256.0f);
       }
@@ -890,6 +1007,14 @@ public class MeshDataGenerator
       }
 
       return new MeshDataHolder(points, textPoints, triangleIndices, normals);
+   }
+
+   public static MeshDataHolder Cylinder(Cylinder3DDescription description)
+   {
+      MeshDataHolder meshDataHolder = Cylinder(description.getRadius(), description.getHeight(), description.getResolution(), description.isCentered());
+      if (meshDataHolder != null)
+         meshDataHolder.setName(description.getName());
+      return meshDataHolder;
    }
 
    /**
@@ -1008,6 +1133,14 @@ public class MeshDataGenerator
       return new MeshDataHolder(points, texturePoints, triangleIndices, normals);
    }
 
+   public static MeshDataHolder Cone(Cone3DDescription description)
+   {
+      MeshDataHolder meshDataHolder = Cone(description.getHeight(), description.getRadius(), description.getResolution());
+      if (meshDataHolder != null)
+         meshDataHolder.setName(description.getName());
+      return meshDataHolder;
+   }
+
    /**
     * Creates a triangle mesh for a 3D cone.
     * <p>
@@ -1098,24 +1231,17 @@ public class MeshDataGenerator
       return new MeshDataHolder(vertices, texturePoints, triangleIndices, normals);
    }
 
-   /**
-    * Creates a triangle mesh for a 3D truncated cone which base and top are ellipses.
-    * <p>
-    * The cone's axis is aligned with the z-axis and is positioned such that the center of its bottom
-    * face is at the origin.
-    * </p>
-    * 
-    * @param height      the cone's height.
-    * @param xBaseRadius radius around the x-axis of the base ellipse.
-    * @param yBaseRadius radius around the y-axis of the base ellipse.
-    * @param xTopRadius  radius around the x-axis of the top ellipse.
-    * @param yTopRadius  radius around the x-axis of the top ellipse.
-    * @param resolution  the resolution for the cylindrical part of the cone.
-    * @return the generic triangle mesh.
-    */
-   public static MeshDataHolder GenTruncatedCone(double height, double xBaseRadius, double yBaseRadius, double xTopRadius, double yTopRadius, int resolution)
+   public static MeshDataHolder TruncatedCone(TruncatedCone3DDescription description)
    {
-      return GenTruncatedCone((float) height, (float) xBaseRadius, (float) yBaseRadius, (float) xTopRadius, (float) yTopRadius, resolution);
+      MeshDataHolder meshDataHolder = TruncatedCone(description.getHeight(),
+                                                    description.getBaseRadiusX(),
+                                                    description.getBaseRadiusY(),
+                                                    description.getTopRadiusX(),
+                                                    description.getTopRadiusY(),
+                                                    description.getResolution());
+      if (meshDataHolder != null)
+         meshDataHolder.setName(description.getName());
+      return meshDataHolder;
    }
 
    /**
@@ -1126,14 +1252,34 @@ public class MeshDataGenerator
     * </p>
     * 
     * @param height      the cone's height.
-    * @param xBaseRadius radius around the x-axis of the base ellipse.
-    * @param yBaseRadius radius around the y-axis of the base ellipse.
-    * @param xTopRadius  radius around the x-axis of the top ellipse.
-    * @param yTopRadius  radius around the x-axis of the top ellipse.
+    * @param baseRadiusX radius around the x-axis of the base ellipse.
+    * @param baseRadiusY radius around the y-axis of the base ellipse.
+    * @param topRadiusX  radius around the x-axis of the top ellipse.
+    * @param topRadiusY  radius around the x-axis of the top ellipse.
     * @param resolution  the resolution for the cylindrical part of the cone.
     * @return the generic triangle mesh.
     */
-   public static MeshDataHolder GenTruncatedCone(float height, float xBaseRadius, float yBaseRadius, float xTopRadius, float yTopRadius, int resolution)
+   public static MeshDataHolder TruncatedCone(double height, double baseRadiusX, double baseRadiusY, double topRadiusX, double topRadiusY, int resolution)
+   {
+      return TruncatedCone((float) height, (float) baseRadiusX, (float) baseRadiusY, (float) topRadiusX, (float) topRadiusY, resolution);
+   }
+
+   /**
+    * Creates a triangle mesh for a 3D truncated cone which base and top are ellipses.
+    * <p>
+    * The cone's axis is aligned with the z-axis and is positioned such that the center of its bottom
+    * face is at the origin.
+    * </p>
+    * 
+    * @param height      the cone's height.
+    * @param baseRadiusX radius around the x-axis of the base ellipse.
+    * @param baseRadiusY radius around the y-axis of the base ellipse.
+    * @param topRadiusX  radius around the x-axis of the top ellipse.
+    * @param topRadiusY  radius around the x-axis of the top ellipse.
+    * @param resolution  the resolution for the cylindrical part of the cone.
+    * @return the generic triangle mesh.
+    */
+   public static MeshDataHolder TruncatedCone(float height, float baseRadiusX, float baseRadiusY, float topRadiusX, float topRadiusY, int resolution)
    {
       Point3D32 points[] = new Point3D32[4 * resolution + 2];
       Vector3D32[] normals = new Vector3D32[4 * resolution + 2];
@@ -1145,10 +1291,10 @@ public class MeshDataGenerator
          float cosAngle = (float) Math.cos(angle);
          float sinAngle = (float) Math.sin(angle);
 
-         float baseX = xBaseRadius * cosAngle;
-         float baseY = yBaseRadius * sinAngle;
-         float topX = xTopRadius * cosAngle;
-         float topY = yTopRadius * sinAngle;
+         float baseX = baseRadiusX * cosAngle;
+         float baseY = baseRadiusY * sinAngle;
+         float topX = topRadiusX * cosAngle;
+         float topY = topRadiusY * sinAngle;
 
          // Bottom face vertices
          points[i] = new Point3D32(baseX, baseY, 0.0f);
@@ -1214,6 +1360,14 @@ public class MeshDataGenerator
       return new MeshDataHolder(points, textPoints, triangleIndices, normals);
    }
 
+   public static MeshDataHolder Torus(Torus3DDescription description)
+   {
+      MeshDataHolder meshDataHolder = Torus(description.getMajorRadius(), description.getMinorRadius(), description.getResolution());
+      if (meshDataHolder != null)
+         meshDataHolder.setName(description.getName());
+      return meshDataHolder;
+   }
+
    /**
     * Creates a triangle mesh for a 3D torus.
     * <p>
@@ -1244,6 +1398,18 @@ public class MeshDataGenerator
    public static MeshDataHolder Torus(float majorRadius, float minorRadius, int resolution)
    {
       return ArcTorus(0.0f, (float) (2.0 * Math.PI), majorRadius, minorRadius, resolution);
+   }
+
+   public static MeshDataHolder ArcTorus(ArcTorus3DDescription description)
+   {
+      MeshDataHolder meshDataHolder = ArcTorus(description.getStartAngle(),
+                                               description.getEndAngle(),
+                                               description.getMajorRadius(),
+                                               description.getMinorRadius(),
+                                               description.getResolution());
+      if (meshDataHolder != null)
+         meshDataHolder.setName(description.getName());
+      return meshDataHolder;
    }
 
    /**
@@ -1438,65 +1604,73 @@ public class MeshDataGenerator
       return new MeshDataHolder(points, texturePoints, triangleIndices, normals);
    }
 
-   /**
-    * Creates a triangle mesh for a 3D box of size (lx, ly, lz).
-    *
-    * @param lx       box size along the x-axis.
-    * @param ly       box size along the y-axis.
-    * @param lz       box size along the z-axis.
-    * @param centered when {@code true} the generated mesh is centered at the origin, when
-    *                 {@code false} the bottom face of the box is centered at the origin.
-    * @return the generic triangle mesh.
-    */
-   public static MeshDataHolder Box(double lx, double ly, double lz, boolean centered)
+   public static MeshDataHolder Box(Box3DDescription description)
    {
-      return Box((float) lx, (float) ly, (float) lz, centered);
+      MeshDataHolder meshDataHolder = Box(description.getSizeX(), description.getSizeY(), description.getSizeZ(), description.isCentered());
+      if (meshDataHolder != null)
+         meshDataHolder.setName(description.getName());
+      return meshDataHolder;
    }
 
    /**
-    * Creates a triangle mesh for a 3D box of size (lx, ly, lz).
+    * Creates a triangle mesh for a 3D box of size ({@code sizeX}, {@code sizeY}, {@code sizeZ}).
     *
-    * @param lx       box size along the x-axis.
-    * @param ly       box size along the y-axis.
-    * @param lz       box size along the z-axis.
+    * @param sizeX    box size along the x-axis.
+    * @param sizeY    box size along the y-axis.
+    * @param sizeZ    box size along the z-axis.
     * @param centered when {@code true} the generated mesh is centered at the origin, when
     *                 {@code false} the bottom face of the box is centered at the origin.
     * @return the generic triangle mesh.
     */
-   public static MeshDataHolder Box(float lx, float ly, float lz, boolean centered)
+   public static MeshDataHolder Box(double sizeX, double sizeY, double sizeZ, boolean centered)
+   {
+      return Box((float) sizeX, (float) sizeY, (float) sizeZ, centered);
+   }
+
+   /**
+    * Creates a triangle mesh for a 3D box of size ({@code sizeX}, {@code sizeY}, {@code sizeZ}).
+    *
+    * @param sizeX    box size along the x-axis.
+    * @param sizeY    box size along the y-axis.
+    * @param sizeZ    box size along the z-axis.
+    * @param centered when {@code true} the generated mesh is centered at the origin, when
+    *                 {@code false} the bottom face of the box is centered at the origin.
+    * @return the generic triangle mesh.
+    */
+   public static MeshDataHolder Box(float sizeX, float sizeY, float sizeZ, boolean centered)
    {
       Point3D32 points[] = new Point3D32[24];
       Vector3D32[] normals = new Vector3D32[24];
       Point2D32 textPoints[] = new Point2D32[24];
 
-      float zBottom = centered ? -lz / 2f : 0;
-      float zTop = centered ? lz / 2f : lz;
+      float zBottom = centered ? -sizeZ / 2f : 0;
+      float zTop = centered ? sizeZ / 2f : sizeZ;
 
       // Bottom vertices for bottom face
-      points[0] = new Point3D32(-lx / 2.0f, -ly / 2.0f, zBottom);
+      points[0] = new Point3D32(-sizeX / 2.0f, -sizeY / 2.0f, zBottom);
       normals[0] = new Vector3D32(0.0f, 0.0f, -1.0f);
       textPoints[0] = new Point2D32(0.5f, 0.5f);
-      points[1] = new Point3D32(lx / 2.0f, -ly / 2.0f, zBottom);
+      points[1] = new Point3D32(sizeX / 2.0f, -sizeY / 2.0f, zBottom);
       normals[1] = new Vector3D32(0.0f, 0.0f, -1.0f);
       textPoints[1] = new Point2D32(0.25f, 0.5f);
-      points[2] = new Point3D32(lx / 2.0f, ly / 2.0f, zBottom);
+      points[2] = new Point3D32(sizeX / 2.0f, sizeY / 2.0f, zBottom);
       normals[2] = new Vector3D32(0.0f, 0.0f, -1.0f);
       textPoints[2] = new Point2D32(0.25f, 0.25f);
-      points[3] = new Point3D32(-lx / 2.0f, ly / 2.0f, zBottom);
+      points[3] = new Point3D32(-sizeX / 2.0f, sizeY / 2.0f, zBottom);
       normals[3] = new Vector3D32(0.0f, 0.0f, -1.0f);
       textPoints[3] = new Point2D32(0.5f, 0.25f);
 
       // Top vertices for top face
-      points[4] = new Point3D32(-lx / 2.0f, -ly / 2.0f, zTop);
+      points[4] = new Point3D32(-sizeX / 2.0f, -sizeY / 2.0f, zTop);
       normals[4] = new Vector3D32(0.0f, 0.0f, 1.0f);
       textPoints[4] = new Point2D32(0.75f, 0.5f);
-      points[5] = new Point3D32(lx / 2.0f, -ly / 2.0f, zTop);
+      points[5] = new Point3D32(sizeX / 2.0f, -sizeY / 2.0f, zTop);
       normals[5] = new Vector3D32(0.0f, 0.0f, 1.0f);
       textPoints[5] = new Point2D32(1.0f, 0.5f);
-      points[6] = new Point3D32(lx / 2.0f, ly / 2.0f, zTop);
+      points[6] = new Point3D32(sizeX / 2.0f, sizeY / 2.0f, zTop);
       normals[6] = new Vector3D32(0.0f, 0.0f, 1.0f);
       textPoints[6] = new Point2D32(1.0f, 0.25f);
-      points[7] = new Point3D32(-lx / 2.0f, ly / 2.0f, zTop);
+      points[7] = new Point3D32(-sizeX / 2.0f, sizeY / 2.0f, zTop);
       normals[7] = new Vector3D32(0.0f, 0.0f, 1.0f);
       textPoints[7] = new Point2D32(0.75f, 0.25f);
 
@@ -1622,64 +1796,64 @@ public class MeshDataGenerator
    /**
     * Creates a triangle mesh for a flat horizontal rectangle.
     * 
-    * @param xSize the rectangle size along the x-axis.
-    * @param ySize the rectangle size along the y-axis.
+    * @param sizeX the rectangle size along the x-axis.
+    * @param sizeY the rectangle size along the y-axis.
     * @param z     the height of the rectangle.
     * @return the generic triangle mesh.
     */
-   public static MeshDataHolder FlatRectangle(double xSize, double ySize, double z)
+   public static MeshDataHolder FlatRectangle(double sizeX, double sizeY, double z)
    {
-      return FlatRectangle((float) xSize, (float) ySize, (float) z);
+      return FlatRectangle((float) sizeX, (float) sizeY, (float) z);
    }
 
    /**
     * Creates a triangle mesh for a flat horizontal rectangle.
     * 
-    * @param xSize the rectangle size along the x-axis.
-    * @param ySize the rectangle size along the y-axis.
+    * @param sizeX the rectangle size along the x-axis.
+    * @param sizeY the rectangle size along the y-axis.
     * @param z     the height of the rectangle.
     * @return the generic triangle mesh.
     */
-   public static MeshDataHolder FlatRectangle(float xSize, float ySize, float z)
+   public static MeshDataHolder FlatRectangle(float sizeX, float sizeY, float z)
    {
-      return FlatRectangle(-0.5f * xSize, -0.5f * ySize, 0.5f * xSize, 0.5f * ySize, z);
+      return FlatRectangle(-0.5f * sizeX, -0.5f * sizeY, 0.5f * sizeX, 0.5f * sizeY, z);
    }
 
    /**
     * Creates a triangle mesh for a flat horizontal rectangle.
     * 
-    * @param xMin the rectangle's lower-bound along the x-axis.
-    * @param xMax the rectangle's upper-bound along the x-axis.
-    * @param yMin the rectangle's lower-bound along the y-axis.
-    * @param yMax the rectangle's upper-bound along the x-axis.
+    * @param minX the rectangle's lower-bound along the x-axis.
+    * @param maxX the rectangle's upper-bound along the x-axis.
+    * @param minY the rectangle's lower-bound along the y-axis.
+    * @param maxY the rectangle's upper-bound along the x-axis.
     * @param z    the height of the rectangle.
     * @return the generic triangle mesh.
     */
-   public static MeshDataHolder FlatRectangle(double xMin, double yMin, double xMax, double yMax, double z)
+   public static MeshDataHolder FlatRectangle(double minX, double minY, double maxX, double maxY, double z)
    {
-      return FlatRectangle((float) xMin, (float) yMin, (float) xMax, (float) yMax, (float) z);
+      return FlatRectangle((float) minX, (float) minY, (float) maxX, (float) maxY, (float) z);
    }
 
    /**
     * Creates a triangle mesh for a flat horizontal rectangle.
     * 
-    * @param xMin the rectangle's lower-bound along the x-axis.
-    * @param xMax the rectangle's upper-bound along the x-axis.
-    * @param yMin the rectangle's lower-bound along the y-axis.
-    * @param yMax the rectangle's upper-bound along the x-axis.
+    * @param minX the rectangle's lower-bound along the x-axis.
+    * @param maxX the rectangle's upper-bound along the x-axis.
+    * @param minY the rectangle's lower-bound along the y-axis.
+    * @param maxY the rectangle's upper-bound along the x-axis.
     * @param z    the height of the rectangle.
     * @return the generic triangle mesh.
     */
-   public static MeshDataHolder FlatRectangle(float xMin, float yMin, float xMax, float yMax, float z)
+   public static MeshDataHolder FlatRectangle(float minX, float minY, float maxX, float maxY, float z)
    {
       Point3D32[] points = new Point3D32[4];
       Vector3D32[] normals = new Vector3D32[4];
       Point2D32[] textPoints = new Point2D32[4];
 
-      points[0] = new Point3D32(xMin, yMin, z);
-      points[1] = new Point3D32(xMax, yMin, z);
-      points[2] = new Point3D32(xMax, yMax, z);
-      points[3] = new Point3D32(xMin, yMax, z);
+      points[0] = new Point3D32(minX, minY, z);
+      points[1] = new Point3D32(maxX, minY, z);
+      points[2] = new Point3D32(maxX, maxY, z);
+      points[3] = new Point3D32(minX, maxY, z);
 
       textPoints[0] = new Point2D32(1.0f, 1.0f);
       textPoints[1] = new Point2D32(1.0f, 0.0f);
@@ -1704,20 +1878,12 @@ public class MeshDataGenerator
       return new MeshDataHolder(points, textPoints, triangleIndices, normals);
    }
 
-   /**
-    * Creates a triangle mesh for a 3D wedge.
-    * <p>
-    * The wedge is positioned such that its bottom face is centered at the origin.
-    * </p>
-    * 
-    * @param lx wedge size along the x-axis.
-    * @param ly wedge size along the y-axis.
-    * @param lz wedge size along the z-axis.
-    * @return the generic triangle mesh.
-    */
-   public static MeshDataHolder Wedge(double lx, double ly, double lz)
+   public static MeshDataHolder Wedge(Wedge3DDescription description)
    {
-      return Wedge((float) lx, (float) ly, (float) lz);
+      MeshDataHolder meshDataHolder = Wedge(description.getSizeX(), description.getSizeY(), description.getSizeZ());
+      if (meshDataHolder != null)
+         meshDataHolder.setName(description.getName());
+      return meshDataHolder;
    }
 
    /**
@@ -1726,12 +1892,28 @@ public class MeshDataGenerator
     * The wedge is positioned such that its bottom face is centered at the origin.
     * </p>
     * 
-    * @param lx wedge size along the x-axis.
-    * @param ly wedge size along the y-axis.
-    * @param lz wedge size along the z-axis.
+    * @param sizeX wedge size along the x-axis.
+    * @param sizeY wedge size along the y-axis.
+    * @param sizeZ wedge size along the z-axis.
     * @return the generic triangle mesh.
     */
-   public static MeshDataHolder Wedge(float lx, float ly, float lz)
+   public static MeshDataHolder Wedge(double sizeX, double sizeY, double sizeZ)
+   {
+      return Wedge((float) sizeX, (float) sizeY, (float) sizeZ);
+   }
+
+   /**
+    * Creates a triangle mesh for a 3D wedge.
+    * <p>
+    * The wedge is positioned such that its bottom face is centered at the origin.
+    * </p>
+    * 
+    * @param sizeX wedge size along the x-axis.
+    * @param sizeY wedge size along the y-axis.
+    * @param sizeZ wedge size along the z-axis.
+    * @return the generic triangle mesh.
+    */
+   public static MeshDataHolder Wedge(float sizeX, float sizeY, float sizeZ)
    {
       Point3D32[] points = new Point3D32[18];
       Vector3D32[] normals = new Vector3D32[18];
@@ -1743,24 +1925,24 @@ public class MeshDataGenerator
       float tex3 = 1.0f;
 
       // Bottom face vertices
-      points[0] = new Point3D32(-lx / 2.0f, -ly / 2.0f, 0.0f);
+      points[0] = new Point3D32(-sizeX / 2.0f, -sizeY / 2.0f, 0.0f);
       normals[0] = new Vector3D32(0.0f, 0.0f, -1.0f);
       textPoints[0] = new Point2D32(tex2, tex2);
-      points[1] = new Point3D32(lx / 2.0f, -ly / 2.0f, 0.0f);
+      points[1] = new Point3D32(sizeX / 2.0f, -sizeY / 2.0f, 0.0f);
       normals[1] = new Vector3D32(0.0f, 0.0f, -1.0f);
       textPoints[1] = new Point2D32(tex1, tex2);
-      points[2] = new Point3D32(lx / 2.0f, ly / 2.0f, 0.0f);
+      points[2] = new Point3D32(sizeX / 2.0f, sizeY / 2.0f, 0.0f);
       normals[2] = new Vector3D32(0.0f, 0.0f, -1.0f);
       textPoints[2] = new Point2D32(tex1, tex1);
-      points[3] = new Point3D32(-lx / 2.0f, ly / 2.0f, 0.0f);
+      points[3] = new Point3D32(-sizeX / 2.0f, sizeY / 2.0f, 0.0f);
       normals[3] = new Vector3D32(0.0f, 0.0f, -1.0f);
       textPoints[3] = new Point2D32(tex2, tex1);
 
       // Back face vertices
-      points[4] = new Point3D32(lx / 2.0f, -ly / 2.0f, lz);
+      points[4] = new Point3D32(sizeX / 2.0f, -sizeY / 2.0f, sizeZ);
       normals[4] = new Vector3D32(1.0f, 0.0f, 0.0f);
       textPoints[4] = new Point2D32(tex0, tex2);
-      points[5] = new Point3D32(lx / 2.0f, ly / 2.0f, lz);
+      points[5] = new Point3D32(sizeX / 2.0f, sizeY / 2.0f, sizeZ);
       normals[5] = new Vector3D32(1.0f, 0.0f, 0.0f);
       textPoints[5] = new Point2D32(tex0, tex1);
       points[6] = new Point3D32(points[2]);
@@ -1771,7 +1953,7 @@ public class MeshDataGenerator
       textPoints[7] = new Point2D32(tex1, tex2);
 
       // Top face vertices
-      float wedgeAngle = (float) Math.atan2(lz, lx);
+      float wedgeAngle = (float) Math.atan2(sizeZ, sizeX);
       points[8] = new Point3D32(points[0]);
       normals[8] = new Vector3D32(-(float) Math.sin(wedgeAngle), 0.0f, (float) Math.cos(wedgeAngle));
       textPoints[8] = new Point2D32(tex2, tex2);
@@ -1852,184 +2034,195 @@ public class MeshDataGenerator
       return new MeshDataHolder(points, textPoints, triangleIndices, normals);
    }
 
-   /**
-    * Creates a triangle mesh for a 3D cube which bottom and top faces are extended with a pyramid.
-    * 
-    * @param lx cube size along the x-axis.
-    * @param ly cube size along the y-axis.
-    * @param lz cube size along the z-axis.
-    * @param lh the height for each pyramid.
-    * @return the generic triangle mesh.
-    */
-   public static MeshDataHolder PyramidCube(double lx, double ly, double lz, double lh)
+   public static MeshDataHolder PyramidBox(PyramidBox3DDescription description)
    {
-      return PyramidCube((float) lx, (float) ly, (float) lz, (float) lh);
+      MeshDataHolder meshDataHolder = PyramidBox(description.getBoxSizeX(),
+                                                 description.getBoxSizeY(),
+                                                 description.getBoxSizeZ(),
+                                                 description.getPyramidHeight());
+      if (meshDataHolder != null)
+         meshDataHolder.setName(description.getName());
+      return meshDataHolder;
    }
 
    /**
-    * Creates a triangle mesh for a 3D cube which bottom and top faces are extended with a pyramid.
+    * Creates a triangle mesh for a 3D box which bottom and top faces are extended with a pyramid.
     * 
-    * @param lx cube size along the x-axis.
-    * @param ly cube size along the y-axis.
-    * @param lz cube size along the z-axis.
-    * @param lh the height for each pyramid.
+    * @param boxSizeX      box size along the x-axis.
+    * @param boxSizeY      box size along the y-axis.
+    * @param boxSizeZ      box size along the z-axis.
+    * @param pyramidHeight the height for each pyramid.
     * @return the generic triangle mesh.
     */
-   public static MeshDataHolder PyramidCube(float lx, float ly, float lz, float lh)
+   public static MeshDataHolder PyramidBox(double boxSizeX, double boxSizeY, double boxSizeZ, double pyramidHeight)
+   {
+      return PyramidBox((float) boxSizeX, (float) boxSizeY, (float) boxSizeZ, (float) pyramidHeight);
+   }
+
+   /**
+    * Creates a triangle mesh for a 3D box which bottom and top faces are extended with a pyramid.
+    * 
+    * @param boxSizeX      box size along the x-axis.
+    * @param boxSizeY      box size along the y-axis.
+    * @param boxSizeZ      box size along the z-axis.
+    * @param pyramidHeight the height for each pyramid.
+    * @return the generic triangle mesh.
+    */
+   public static MeshDataHolder PyramidBox(float boxSizeX, float boxSizeY, float boxSizeZ, float pyramidHeight)
    {
       Point3D32 points[] = new Point3D32[40];
       Vector3D32[] normals = new Vector3D32[40];
       Point2D32 textPoints[] = new Point2D32[40];
-      float totalHeight = 2.0f * lh + lz;
+      float totalHeight = 2.0f * pyramidHeight + boxSizeZ;
 
       // Box front face
-      points[0] = new Point3D32(-lx / 2.0f, -ly / 2.0f, -0.5f * lz);
+      points[0] = new Point3D32(-boxSizeX / 2.0f, -boxSizeY / 2.0f, -0.5f * boxSizeZ);
       normals[0] = new Vector3D32(-1.0f, 0.0f, 0.0f);
-      textPoints[0] = new Point2D32(0.75f, 1.0f - lh / totalHeight);
-      points[1] = new Point3D32(-lx / 2.0f, -ly / 2.0f, 0.5f * lz);
+      textPoints[0] = new Point2D32(0.75f, 1.0f - pyramidHeight / totalHeight);
+      points[1] = new Point3D32(-boxSizeX / 2.0f, -boxSizeY / 2.0f, 0.5f * boxSizeZ);
       normals[1] = new Vector3D32(-1.0f, 0.0f, 0.0f);
-      textPoints[1] = new Point2D32(0.75f, lh / totalHeight);
-      points[2] = new Point3D32(-lx / 2.0f, ly / 2.0f, 0.5f * lz);
+      textPoints[1] = new Point2D32(0.75f, pyramidHeight / totalHeight);
+      points[2] = new Point3D32(-boxSizeX / 2.0f, boxSizeY / 2.0f, 0.5f * boxSizeZ);
       normals[2] = new Vector3D32(-1.0f, 0.0f, 0.0f);
-      textPoints[2] = new Point2D32(0.5f, lh / totalHeight);
-      points[3] = new Point3D32(-lx / 2.0f, ly / 2.0f, -0.5f * lz);
+      textPoints[2] = new Point2D32(0.5f, pyramidHeight / totalHeight);
+      points[3] = new Point3D32(-boxSizeX / 2.0f, boxSizeY / 2.0f, -0.5f * boxSizeZ);
       normals[3] = new Vector3D32(-1.0f, 0.0f, 0.0f);
-      textPoints[3] = new Point2D32(0.5f, 1.0f - lh / totalHeight);
+      textPoints[3] = new Point2D32(0.5f, 1.0f - pyramidHeight / totalHeight);
 
       // Box back face
-      points[4] = new Point3D32(lx / 2.0f, -ly / 2.0f, -0.5f * lz);
+      points[4] = new Point3D32(boxSizeX / 2.0f, -boxSizeY / 2.0f, -0.5f * boxSizeZ);
       normals[4] = new Vector3D32(1.0f, 0.0f, 0.0f);
-      textPoints[4] = new Point2D32(0.0f, 1.0f - lh / totalHeight);
-      points[5] = new Point3D32(lx / 2.0f, -ly / 2.0f, 0.5f * lz);
+      textPoints[4] = new Point2D32(0.0f, 1.0f - pyramidHeight / totalHeight);
+      points[5] = new Point3D32(boxSizeX / 2.0f, -boxSizeY / 2.0f, 0.5f * boxSizeZ);
       normals[5] = new Vector3D32(1.0f, 0.0f, 0.0f);
-      textPoints[5] = new Point2D32(0.0f, lh / totalHeight);
-      points[6] = new Point3D32(lx / 2.0f, ly / 2.0f, 0.5f * lz);
+      textPoints[5] = new Point2D32(0.0f, pyramidHeight / totalHeight);
+      points[6] = new Point3D32(boxSizeX / 2.0f, boxSizeY / 2.0f, 0.5f * boxSizeZ);
       normals[6] = new Vector3D32(1.0f, 0.0f, 0.0f);
-      textPoints[6] = new Point2D32(0.25f, lh / totalHeight);
-      points[7] = new Point3D32(lx / 2.0f, ly / 2.0f, -0.5f * lz);
+      textPoints[6] = new Point2D32(0.25f, pyramidHeight / totalHeight);
+      points[7] = new Point3D32(boxSizeX / 2.0f, boxSizeY / 2.0f, -0.5f * boxSizeZ);
       normals[7] = new Vector3D32(1.0f, 0.0f, 0.0f);
-      textPoints[7] = new Point2D32(0.25f, 1.0f - lh / totalHeight);
+      textPoints[7] = new Point2D32(0.25f, 1.0f - pyramidHeight / totalHeight);
 
       // Box left face
-      points[8] = new Point3D32(-lx / 2.0f, ly / 2.0f, -0.5f * lz);
+      points[8] = new Point3D32(-boxSizeX / 2.0f, boxSizeY / 2.0f, -0.5f * boxSizeZ);
       normals[8] = new Vector3D32(0.0f, 1.0f, 0.0f);
-      textPoints[8] = new Point2D32(0.5f, 1.0f - lh / totalHeight);
-      points[9] = new Point3D32(-lx / 2.0f, ly / 2.0f, 0.5f * lz);
+      textPoints[8] = new Point2D32(0.5f, 1.0f - pyramidHeight / totalHeight);
+      points[9] = new Point3D32(-boxSizeX / 2.0f, boxSizeY / 2.0f, 0.5f * boxSizeZ);
       normals[9] = new Vector3D32(0.0f, 1.0f, 0.0f);
-      textPoints[9] = new Point2D32(0.5f, lh / totalHeight);
-      points[10] = new Point3D32(lx / 2.0f, ly / 2.0f, 0.5f * lz);
+      textPoints[9] = new Point2D32(0.5f, pyramidHeight / totalHeight);
+      points[10] = new Point3D32(boxSizeX / 2.0f, boxSizeY / 2.0f, 0.5f * boxSizeZ);
       normals[10] = new Vector3D32(0.0f, 1.0f, 0.0f);
-      textPoints[10] = new Point2D32(0.25f, lh / totalHeight);
-      points[11] = new Point3D32(lx / 2.0f, ly / 2.0f, -0.5f * lz);
+      textPoints[10] = new Point2D32(0.25f, pyramidHeight / totalHeight);
+      points[11] = new Point3D32(boxSizeX / 2.0f, boxSizeY / 2.0f, -0.5f * boxSizeZ);
       normals[11] = new Vector3D32(0.0f, 1.0f, 0.0f);
-      textPoints[11] = new Point2D32(0.25f, 1.0f - lh / totalHeight);
+      textPoints[11] = new Point2D32(0.25f, 1.0f - pyramidHeight / totalHeight);
 
       // Box right face
-      points[12] = new Point3D32(-lx / 2.0f, -ly / 2.0f, -0.5f * lz);
+      points[12] = new Point3D32(-boxSizeX / 2.0f, -boxSizeY / 2.0f, -0.5f * boxSizeZ);
       normals[12] = new Vector3D32(0.0f, -1.0f, 0.0f);
-      textPoints[12] = new Point2D32(0.75f, 1.0f - lh / totalHeight);
-      points[13] = new Point3D32(-lx / 2.0f, -ly / 2.0f, 0.5f * lz);
+      textPoints[12] = new Point2D32(0.75f, 1.0f - pyramidHeight / totalHeight);
+      points[13] = new Point3D32(-boxSizeX / 2.0f, -boxSizeY / 2.0f, 0.5f * boxSizeZ);
       normals[13] = new Vector3D32(0.0f, -1.0f, 0.0f);
-      textPoints[13] = new Point2D32(0.75f, lh / totalHeight);
-      points[14] = new Point3D32(lx / 2.0f, -ly / 2.0f, 0.5f * lz);
+      textPoints[13] = new Point2D32(0.75f, pyramidHeight / totalHeight);
+      points[14] = new Point3D32(boxSizeX / 2.0f, -boxSizeY / 2.0f, 0.5f * boxSizeZ);
       normals[14] = new Vector3D32(0.0f, -1.0f, 0.0f);
-      textPoints[14] = new Point2D32(1.0f, lh / totalHeight);
-      points[15] = new Point3D32(lx / 2.0f, -ly / 2.0f, -0.5f * lz);
+      textPoints[14] = new Point2D32(1.0f, pyramidHeight / totalHeight);
+      points[15] = new Point3D32(boxSizeX / 2.0f, -boxSizeY / 2.0f, -0.5f * boxSizeZ);
       normals[15] = new Vector3D32(0.0f, -1.0f, 0.0f);
-      textPoints[15] = new Point2D32(1.0f, 1.0f - lh / totalHeight);
+      textPoints[15] = new Point2D32(1.0f, 1.0f - pyramidHeight / totalHeight);
 
-      float frontBackAngle = (float) Math.atan2(lx / 2.0, lh);
-      float leftRightAngle = (float) Math.atan2(ly / 2.0, lh);
+      float frontBackAngle = (float) Math.atan2(boxSizeX / 2.0, pyramidHeight);
+      float leftRightAngle = (float) Math.atan2(boxSizeY / 2.0, pyramidHeight);
 
       // Top pyramid
       // Front face
-      points[16] = new Point3D32(0.0f, 0.0f, 0.5f * lz + lh);
+      points[16] = new Point3D32(0.0f, 0.0f, 0.5f * boxSizeZ + pyramidHeight);
       normals[16] = new Vector3D32(-(float) Math.cos(frontBackAngle), 0.0f, (float) Math.sin(frontBackAngle));
       textPoints[16] = new Point2D32(0.625f, 0.0f);
-      points[17] = new Point3D32(-lx / 2.0f, -ly / 2.0f, 0.5f * lz);
+      points[17] = new Point3D32(-boxSizeX / 2.0f, -boxSizeY / 2.0f, 0.5f * boxSizeZ);
       normals[17] = new Vector3D32(-(float) Math.cos(frontBackAngle), 0.0f, (float) Math.sin(frontBackAngle));
-      textPoints[17] = new Point2D32(0.75f, lh / totalHeight);
-      points[18] = new Point3D32(-lx / 2.0f, ly / 2.0f, 0.5f * lz);
+      textPoints[17] = new Point2D32(0.75f, pyramidHeight / totalHeight);
+      points[18] = new Point3D32(-boxSizeX / 2.0f, boxSizeY / 2.0f, 0.5f * boxSizeZ);
       normals[18] = new Vector3D32(-(float) Math.cos(frontBackAngle), 0.0f, (float) Math.sin(frontBackAngle));
-      textPoints[18] = new Point2D32(0.5f, lh / totalHeight);
+      textPoints[18] = new Point2D32(0.5f, pyramidHeight / totalHeight);
 
       // Back face
-      points[19] = new Point3D32(0.0f, 0.0f, 0.5f * lz + lh);
+      points[19] = new Point3D32(0.0f, 0.0f, 0.5f * boxSizeZ + pyramidHeight);
       normals[19] = new Vector3D32((float) Math.cos(frontBackAngle), 0.0f, (float) Math.sin(frontBackAngle));
       textPoints[19] = new Point2D32(0.125f, 0.0f);
-      points[20] = new Point3D32(lx / 2.0f, -ly / 2.0f, 0.5f * lz);
+      points[20] = new Point3D32(boxSizeX / 2.0f, -boxSizeY / 2.0f, 0.5f * boxSizeZ);
       normals[20] = new Vector3D32((float) Math.cos(frontBackAngle), 0.0f, (float) Math.sin(frontBackAngle));
-      textPoints[20] = new Point2D32(0.0f, lh / totalHeight);
-      points[21] = new Point3D32(lx / 2.0f, ly / 2.0f, 0.5f * lz);
+      textPoints[20] = new Point2D32(0.0f, pyramidHeight / totalHeight);
+      points[21] = new Point3D32(boxSizeX / 2.0f, boxSizeY / 2.0f, 0.5f * boxSizeZ);
       normals[21] = new Vector3D32((float) Math.cos(frontBackAngle), 0.0f, (float) Math.sin(frontBackAngle));
-      textPoints[21] = new Point2D32(0.25f, lh / totalHeight);
+      textPoints[21] = new Point2D32(0.25f, pyramidHeight / totalHeight);
 
       // Left face
-      points[22] = new Point3D32(0.0f, 0.0f, 0.5f * lz + lh);
+      points[22] = new Point3D32(0.0f, 0.0f, 0.5f * boxSizeZ + pyramidHeight);
       normals[22] = new Vector3D32(0.0f, (float) Math.cos(leftRightAngle), (float) Math.sin(leftRightAngle));
       textPoints[22] = new Point2D32(0.375f, 0.0f);
-      points[23] = new Point3D32(-lx / 2.0f, ly / 2.0f, 0.5f * lz);
+      points[23] = new Point3D32(-boxSizeX / 2.0f, boxSizeY / 2.0f, 0.5f * boxSizeZ);
       normals[23] = new Vector3D32(0.0f, (float) Math.cos(leftRightAngle), (float) Math.sin(leftRightAngle));
-      textPoints[23] = new Point2D32(0.5f, lh / totalHeight);
-      points[24] = new Point3D32(lx / 2.0f, ly / 2.0f, 0.5f * lz);
+      textPoints[23] = new Point2D32(0.5f, pyramidHeight / totalHeight);
+      points[24] = new Point3D32(boxSizeX / 2.0f, boxSizeY / 2.0f, 0.5f * boxSizeZ);
       normals[24] = new Vector3D32(0.0f, (float) Math.cos(leftRightAngle), (float) Math.sin(leftRightAngle));
-      textPoints[24] = new Point2D32(0.25f, lh / totalHeight);
+      textPoints[24] = new Point2D32(0.25f, pyramidHeight / totalHeight);
 
       // Right face
-      points[25] = new Point3D32(0.0f, 0.0f, 0.5f * lz + lh);
+      points[25] = new Point3D32(0.0f, 0.0f, 0.5f * boxSizeZ + pyramidHeight);
       normals[25] = new Vector3D32(0.0f, -(float) Math.cos(leftRightAngle), (float) Math.sin(leftRightAngle));
       textPoints[25] = new Point2D32(0.875f, 0.0f);
-      points[26] = new Point3D32(-lx / 2.0f, -ly / 2.0f, 0.5f * lz);
+      points[26] = new Point3D32(-boxSizeX / 2.0f, -boxSizeY / 2.0f, 0.5f * boxSizeZ);
       normals[26] = new Vector3D32(0.0f, -(float) Math.cos(leftRightAngle), (float) Math.sin(leftRightAngle));
-      textPoints[26] = new Point2D32(0.75f, lh / totalHeight);
-      points[27] = new Point3D32(lx / 2.0f, -ly / 2.0f, 0.5f * lz);
+      textPoints[26] = new Point2D32(0.75f, pyramidHeight / totalHeight);
+      points[27] = new Point3D32(boxSizeX / 2.0f, -boxSizeY / 2.0f, 0.5f * boxSizeZ);
       normals[27] = new Vector3D32(0.0f, -(float) Math.cos(leftRightAngle), (float) Math.sin(leftRightAngle));
-      textPoints[27] = new Point2D32(1.0f, lh / totalHeight);
+      textPoints[27] = new Point2D32(1.0f, pyramidHeight / totalHeight);
 
       // Bottom pyramid
       // Front face
-      points[28] = new Point3D32(0.0f, 0.0f, -lh - 0.5f * lz);
+      points[28] = new Point3D32(0.0f, 0.0f, -pyramidHeight - 0.5f * boxSizeZ);
       normals[28] = new Vector3D32(-(float) Math.cos(frontBackAngle), 0.0f, -(float) Math.sin(frontBackAngle));
       textPoints[28] = new Point2D32(0.625f, 1.0f);
-      points[29] = new Point3D32(-lx / 2.0f, -ly / 2.0f, -0.5f * lz);
+      points[29] = new Point3D32(-boxSizeX / 2.0f, -boxSizeY / 2.0f, -0.5f * boxSizeZ);
       normals[29] = new Vector3D32(-(float) Math.cos(frontBackAngle), 0.0f, -(float) Math.sin(frontBackAngle));
-      textPoints[29] = new Point2D32(0.75f, 1.0f - lh / totalHeight);
-      points[30] = new Point3D32(-lx / 2.0f, ly / 2.0f, -0.5f * lz);
+      textPoints[29] = new Point2D32(0.75f, 1.0f - pyramidHeight / totalHeight);
+      points[30] = new Point3D32(-boxSizeX / 2.0f, boxSizeY / 2.0f, -0.5f * boxSizeZ);
       normals[30] = new Vector3D32(-(float) Math.cos(frontBackAngle), 0.0f, -(float) Math.sin(frontBackAngle));
-      textPoints[30] = new Point2D32(0.5f, 1.0f - lh / totalHeight);
+      textPoints[30] = new Point2D32(0.5f, 1.0f - pyramidHeight / totalHeight);
 
       // Back face
-      points[31] = new Point3D32(0.0f, 0.0f, -lh - 0.5f * lz);
+      points[31] = new Point3D32(0.0f, 0.0f, -pyramidHeight - 0.5f * boxSizeZ);
       normals[31] = new Vector3D32((float) Math.cos(frontBackAngle), 0.0f, -(float) Math.sin(frontBackAngle));
       textPoints[31] = new Point2D32(0.125f, 1.0f);
-      points[32] = new Point3D32(lx / 2.0f, -ly / 2.0f, -0.5f * lz);
+      points[32] = new Point3D32(boxSizeX / 2.0f, -boxSizeY / 2.0f, -0.5f * boxSizeZ);
       normals[32] = new Vector3D32((float) Math.cos(frontBackAngle), 0.0f, -(float) Math.sin(frontBackAngle));
-      textPoints[32] = new Point2D32(0.0f, 1.0f - lh / totalHeight);
-      points[33] = new Point3D32(lx / 2.0f, ly / 2.0f, -0.5f * lz);
+      textPoints[32] = new Point2D32(0.0f, 1.0f - pyramidHeight / totalHeight);
+      points[33] = new Point3D32(boxSizeX / 2.0f, boxSizeY / 2.0f, -0.5f * boxSizeZ);
       normals[33] = new Vector3D32((float) Math.cos(frontBackAngle), 0.0f, -(float) Math.sin(frontBackAngle));
-      textPoints[33] = new Point2D32(0.25f, 1.0f - lh / totalHeight);
+      textPoints[33] = new Point2D32(0.25f, 1.0f - pyramidHeight / totalHeight);
 
       // Left face
-      points[34] = new Point3D32(0.0f, 0.0f, -lh - 0.5f * lz);
+      points[34] = new Point3D32(0.0f, 0.0f, -pyramidHeight - 0.5f * boxSizeZ);
       normals[34] = new Vector3D32(0.0f, (float) Math.cos(leftRightAngle), -(float) Math.sin(leftRightAngle));
       textPoints[34] = new Point2D32(0.375f, 1.0f);
-      points[35] = new Point3D32(-lx / 2.0f, ly / 2.0f, -0.5f * lz);
+      points[35] = new Point3D32(-boxSizeX / 2.0f, boxSizeY / 2.0f, -0.5f * boxSizeZ);
       normals[35] = new Vector3D32(0.0f, (float) Math.cos(leftRightAngle), -(float) Math.sin(leftRightAngle));
-      textPoints[35] = new Point2D32(0.5f, 1.0f - lh / totalHeight);
-      points[36] = new Point3D32(lx / 2.0f, ly / 2.0f, -0.5f * lz);
+      textPoints[35] = new Point2D32(0.5f, 1.0f - pyramidHeight / totalHeight);
+      points[36] = new Point3D32(boxSizeX / 2.0f, boxSizeY / 2.0f, -0.5f * boxSizeZ);
       normals[36] = new Vector3D32(0.0f, (float) Math.cos(leftRightAngle), -(float) Math.sin(leftRightAngle));
-      textPoints[36] = new Point2D32(0.25f, 1.0f - lh / totalHeight);
+      textPoints[36] = new Point2D32(0.25f, 1.0f - pyramidHeight / totalHeight);
 
       // Right face
-      points[37] = new Point3D32(0.0f, 0.0f, -lh - 0.5f * lz);
+      points[37] = new Point3D32(0.0f, 0.0f, -pyramidHeight - 0.5f * boxSizeZ);
       normals[37] = new Vector3D32(0.0f, -(float) Math.cos(leftRightAngle), -(float) Math.sin(leftRightAngle));
       textPoints[37] = new Point2D32(0.875f, 1.0f);
-      points[38] = new Point3D32(-lx / 2.0f, -ly / 2.0f, -0.5f * lz);
+      points[38] = new Point3D32(-boxSizeX / 2.0f, -boxSizeY / 2.0f, -0.5f * boxSizeZ);
       normals[38] = new Vector3D32(0.0f, -(float) Math.cos(leftRightAngle), -(float) Math.sin(leftRightAngle));
-      textPoints[38] = new Point2D32(0.75f, 1.0f - lh / totalHeight);
-      points[39] = new Point3D32(lx / 2.0f, -ly / 2.0f, -0.5f * lz);
+      textPoints[38] = new Point2D32(0.75f, 1.0f - pyramidHeight / totalHeight);
+      points[39] = new Point3D32(boxSizeX / 2.0f, -boxSizeY / 2.0f, -0.5f * boxSizeZ);
       normals[39] = new Vector3D32(0.0f, -(float) Math.cos(leftRightAngle), -(float) Math.sin(leftRightAngle));
-      textPoints[39] = new Point2D32(1.0f, 1.0f - lh / totalHeight);
+      textPoints[39] = new Point2D32(1.0f, 1.0f - pyramidHeight / totalHeight);
 
       int numberOfTriangles = 2 * 4 + 2 * 4;
       int[] polygonIndices = new int[3 * numberOfTriangles];
@@ -2242,25 +2435,17 @@ public class MeshDataGenerator
       return line;
    }
 
-   /**
-    * Creates a triangle mesh for a 3D capsule with its ends being half ellipsoids.
-    * <p>
-    * The capsule's axis is aligned with the z-axis and it is centered at the origin.
-    * </p>
-    *
-    * @param height              the capsule's height or length. Distance separating the center of the
-    *                            two half ellipsoids.
-    * @param xRadius             radius of along the x-axis.
-    * @param yRadius             radius of along the y-axis.
-    * @param zRadius             radius of along the z-axis.
-    * @param latitudeResolution  the resolution along the vertical axis, i.e. z-axis.
-    * @param longitudeResolution the resolution around the vertical axis, i.e. the number of vertices
-    *                            per latitude.
-    * @return the generic triangle mesh.
-    */
-   public static MeshDataHolder Capsule(double height, double xRadius, double yRadius, double zRadius, int latitudeResolution, int longitudeResolution)
+   public static MeshDataHolder Capsule(Capsule3DDescription description)
    {
-      return Capsule((float) height, (float) xRadius, (float) yRadius, (float) zRadius, latitudeResolution, longitudeResolution);
+      MeshDataHolder meshDataHolder = Capsule(description.getHeight(),
+                                              description.getRadiusX(),
+                                              description.getRadiusY(),
+                                              description.getRadiusZ(),
+                                              description.getResolution(),
+                                              description.getResolution());
+      if (meshDataHolder != null)
+         meshDataHolder.setName(description.getName());
+      return meshDataHolder;
    }
 
    /**
@@ -2271,15 +2456,36 @@ public class MeshDataGenerator
     *
     * @param height              the capsule's height or length. Distance separating the center of the
     *                            two half ellipsoids.
-    * @param xRadius             radius of along the x-axis.
-    * @param yRadius             radius of along the y-axis.
-    * @param zRadius             radius of along the z-axis.
+    * @param radiusX             radius of along the x-axis.
+    * @param radiusY             radius of along the y-axis.
+    * @param radiusZ             radius of along the z-axis.
     * @param latitudeResolution  the resolution along the vertical axis, i.e. z-axis.
     * @param longitudeResolution the resolution around the vertical axis, i.e. the number of vertices
     *                            per latitude.
     * @return the generic triangle mesh.
     */
-   public static MeshDataHolder Capsule(float height, float xRadius, float yRadius, float zRadius, int latitudeResolution, int longitudeResolution)
+   public static MeshDataHolder Capsule(double height, double radiusX, double radiusY, double radiusZ, int latitudeResolution, int longitudeResolution)
+   {
+      return Capsule((float) height, (float) radiusX, (float) radiusY, (float) radiusZ, latitudeResolution, longitudeResolution);
+   }
+
+   /**
+    * Creates a triangle mesh for a 3D capsule with its ends being half ellipsoids.
+    * <p>
+    * The capsule's axis is aligned with the z-axis and it is centered at the origin.
+    * </p>
+    *
+    * @param height              the capsule's height or length. Distance separating the center of the
+    *                            two half ellipsoids.
+    * @param radiusX             radius of along the x-axis.
+    * @param radiusY             radius of along the y-axis.
+    * @param radiusZ             radius of along the z-axis.
+    * @param latitudeResolution  the resolution along the vertical axis, i.e. z-axis.
+    * @param longitudeResolution the resolution around the vertical axis, i.e. the number of vertices
+    *                            per latitude.
+    * @return the generic triangle mesh.
+    */
+   public static MeshDataHolder Capsule(float height, float radiusX, float radiusY, float radiusZ, int latitudeResolution, int longitudeResolution)
    {
       if (latitudeResolution % 2 != 0)
          latitudeResolution++;
@@ -2292,7 +2498,7 @@ public class MeshDataGenerator
       Vector3D32[] normals = new Vector3D32[numberOfVertices];
       Point2D32 textPoints[] = new Point2D32[numberOfVertices];
 
-      float texRatio = zRadius / (2.0f * zRadius + height);
+      float texRatio = radiusZ / (2.0f * radiusZ + height);
 
       float halfHeight = 0.5f * height;
 
@@ -2315,9 +2521,9 @@ public class MeshDataGenerator
             float normalX = cosLongitude * cosLatitude;
             float normalY = sinLongitude * cosLatitude;
             float normalZ = sinLatitude;
-            float vertexX = xRadius * normalX;
-            float vertexY = yRadius * normalY;
-            float vertexZ = zRadius * normalZ - halfHeight;
+            float vertexX = radiusX * normalX;
+            float vertexY = radiusY * normalY;
+            float vertexZ = radiusZ * normalZ - halfHeight;
             points[currentIndex] = new Point3D32(vertexX, vertexY, vertexZ);
             normals[currentIndex] = new Vector3D32(normalX, normalY, normalZ);
 
@@ -2339,9 +2545,9 @@ public class MeshDataGenerator
             float normalX = cosLongitude * cosLatitude;
             float normalY = sinLongitude * cosLatitude;
             float normalZ = sinLatitude;
-            float vertexX = xRadius * normalX;
-            float vertexY = yRadius * normalY;
-            float vertexZ = zRadius * normalZ + halfHeight;
+            float vertexX = radiusX * normalX;
+            float vertexY = radiusY * normalY;
+            float vertexZ = radiusZ * normalZ + halfHeight;
             points[currentIndex] = new Point3D32(vertexX, vertexY, vertexZ);
             normals[currentIndex] = new Vector3D32(normalX, normalY, normalZ);
 
@@ -2352,13 +2558,13 @@ public class MeshDataGenerator
          textureX += 0.5f / (longitudeResolution - 1.0f);
          // South pole
          int southPoleIndex = longitudeIndex;
-         points[southPoleIndex] = new Point3D32(0.0f, 0.0f, -zRadius - halfHeight);
+         points[southPoleIndex] = new Point3D32(0.0f, 0.0f, -radiusZ - halfHeight);
          normals[southPoleIndex] = new Vector3D32(0.0f, 0.0f, -1.0f);
          textPoints[southPoleIndex] = new Point2D32(textureX, 1.0f - 1.0f / 256.0f);
 
          // North pole
          int northPoleIndex = (latitudeResolution - 1) * longitudeResolution + longitudeIndex;
-         points[northPoleIndex] = new Point3D32(0.0f, 0.0f, zRadius + halfHeight);
+         points[northPoleIndex] = new Point3D32(0.0f, 0.0f, radiusZ + halfHeight);
          normals[northPoleIndex] = new Vector3D32(0.0f, 0.0f, 1.0f);
          textPoints[northPoleIndex] = new Point2D32(textureX, 1.0f / 256.0f);
       }
@@ -2406,6 +2612,14 @@ public class MeshDataGenerator
       }
 
       return new MeshDataHolder(points, textPoints, triangleIndices, normals);
+   }
+
+   public static MeshDataHolder Tetrahedron(Tetrahedron3DDescription description)
+   {
+      MeshDataHolder meshDataHolder = Tetrahedron(description.getEdgeLength());
+      if (meshDataHolder != null)
+         meshDataHolder.setName(description.getName());
+      return meshDataHolder;
    }
 
    /**
