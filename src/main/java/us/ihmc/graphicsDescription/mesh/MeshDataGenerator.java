@@ -8,6 +8,10 @@ import us.ihmc.euclid.geometry.interfaces.ConvexPolygon2DReadOnly;
 import us.ihmc.euclid.geometry.interfaces.LineSegment3DReadOnly;
 import us.ihmc.euclid.geometry.tools.EuclidGeometryTools;
 import us.ihmc.euclid.matrix.RotationMatrix;
+import us.ihmc.euclid.shape.convexPolytope.interfaces.ConvexPolytope3DReadOnly;
+import us.ihmc.euclid.shape.convexPolytope.interfaces.Face3DReadOnly;
+import us.ihmc.euclid.shape.convexPolytope.interfaces.Vertex3DReadOnly;
+import us.ihmc.euclid.tools.EuclidCoreTools;
 import us.ihmc.euclid.transform.interfaces.RigidBodyTransformReadOnly;
 import us.ihmc.euclid.tuple2D.Point2D32;
 import us.ihmc.euclid.tuple2D.interfaces.Point2DReadOnly;
@@ -19,6 +23,7 @@ import us.ihmc.graphicsDescription.geometry.ArcTorus3DDescription;
 import us.ihmc.graphicsDescription.geometry.Box3DDescription;
 import us.ihmc.graphicsDescription.geometry.Capsule3DDescription;
 import us.ihmc.graphicsDescription.geometry.Cone3DDescription;
+import us.ihmc.graphicsDescription.geometry.ConvexPolytope3DDescription;
 import us.ihmc.graphicsDescription.geometry.Cylinder3DDescription;
 import us.ihmc.graphicsDescription.geometry.Ellipsoid3DDescription;
 import us.ihmc.graphicsDescription.geometry.ExtrudedPolygon2DDescription;
@@ -68,6 +73,14 @@ public class MeshDataGenerator
       // Prevent an object being generated.
    }
 
+   /**
+    * Tests the implementation of the given {@code description} and attempts to create the appropriate
+    * triangle mesh.
+    * 
+    * @param description the geometry to create the mesh for.
+    * @return the generic triangle mesh or {@code null} if the given {@code description} is not
+    *         supported.
+    */
    public static MeshDataHolder Mesh(GeometryDescription description)
    {
       if (description == null)
@@ -80,6 +93,8 @@ public class MeshDataGenerator
          return Capsule((Capsule3DDescription) description);
       if (description instanceof Cone3DDescription)
          return Cone((Cone3DDescription) description);
+      if (description instanceof ConvexPolytope3DDescription)
+         return ConvexPolytope((ConvexPolytope3DDescription) description);
       if (description instanceof Cylinder3DDescription)
          return Cylinder((Cylinder3DDescription) description);
       if (description instanceof Ellipsoid3DDescription)
@@ -108,6 +123,16 @@ public class MeshDataGenerator
       return null;
    }
 
+   /**
+    * Creates a triangle mesh for a 3D sphere.
+    * <p>
+    * The sphere is centered at the origin and is a UV sphere, see
+    * <a href="https://en.wikipedia.org/wiki/UV_mapping">UV mapping</a>.
+    * </p>
+    *
+    * @param description the description holding the sphere's properties.
+    * @return the generic triangle mesh.
+    */
    public static MeshDataHolder Sphere(Sphere3DDescription description)
    {
       MeshDataHolder meshDataHolder = Sphere(description.getRadius(), description.getResolution(), description.getResolution());
@@ -154,6 +179,16 @@ public class MeshDataGenerator
       return Ellipsoid(radius, radius, radius, latitudeResolution, longitudeResolution);
    }
 
+   /**
+    * Creates a triangle mesh for a 3D ellipsoid.
+    * <p>
+    * The ellipsoid is centered at the origin and the algorithm is similar to a UV sphere, see
+    * <a href="https://en.wikipedia.org/wiki/UV_mapping">UV mapping</a>.
+    * </p>
+    *
+    * @param description the description holding the ellipsoid's properties.
+    * @return the generic triangle mesh.
+    */
    public static MeshDataHolder Ellipsoid(Ellipsoid3DDescription description)
    {
       MeshDataHolder meshDataHolder = Ellipsoid(description.getRadiusX(),
@@ -299,6 +334,12 @@ public class MeshDataGenerator
       return new MeshDataHolder(points, textPoints, triangleIndices, normals);
    }
 
+   /**
+    * Create a triangle mesh for the given polygon.
+    *
+    * @param description the description holding the polygon's properties.
+    * @return the generic triangle mesh.
+    */
    public static MeshDataHolder Polygon(Polygon2DDescription description)
    {
       MeshDataHolder meshDataHolder = Polygon(null, description.getPolygonVertices(), description.isCounterClockwiseOrdered());
@@ -462,6 +503,12 @@ public class MeshDataGenerator
       return new MeshDataHolder(vertices, texturePoints, triangleIndices, normals);
    }
 
+   /**
+    * Create a triangle mesh for the given polygon.
+    *
+    * @param description the description holding the polygon's properties.
+    * @return the generic triangle mesh.
+    */
    public static MeshDataHolder Polygon(Polygon3DDescription description)
    {
       MeshDataHolder meshDataHolder = Polygon(description.getPolygonVertices(), description.isCounterClockwiseOrdered());
@@ -622,6 +669,12 @@ public class MeshDataGenerator
       return new MeshDataHolder(vertices, texturePoints, triangleIndices, normals);
    }
 
+   /**
+    * Create a triangle mesh for the given polygon 2D and extrude it along the z-axis.
+    *
+    * @param description the description holding the polygon's properties.
+    * @return the generic triangle mesh or {@code null} if {@code convexPolygon} is {@code null}.
+    */
    public static MeshDataHolder ExtrudedPolygon(ExtrudedPolygon2DDescription description)
    {
       MeshDataHolder meshDataHolder = ExtrudedPolygon(description.getPolygonVertices(),
@@ -634,7 +687,7 @@ public class MeshDataGenerator
    }
 
    /**
-    * Create a triangle mesh for the given polygon 2d and extrude it along the z-axis.
+    * Create a triangle mesh for the given polygon 2D and extrude it along the z-axis.
     *
     * @param convexPolygon   the polygon to create a mesh from.
     * @param extrusionHeight thickness of the extrusion. If {@code extrusionHeight < 0}, the polygon is
@@ -649,7 +702,7 @@ public class MeshDataGenerator
    }
 
    /**
-    * Create a triangle mesh for the given polygon 2d and extrude it along the z-axis.
+    * Create a triangle mesh for the given polygon 2D and extrude it along the z-axis.
     * <p>
     * <b> It is assumed that the polygon is convex and counter-clockwise ordered. </b>
     * </p>
@@ -666,7 +719,7 @@ public class MeshDataGenerator
    }
 
    /**
-    * Create a triangle mesh for the given polygon 2d and extrude it along the z-axis.
+    * Create a triangle mesh for the given polygon 2D and extrude it along the z-axis.
     * <p>
     * <b> It is assumed that the polygon is convex and counter-clockwise ordered. </b>
     * </p>
@@ -860,6 +913,13 @@ public class MeshDataGenerator
       return new MeshDataHolder(vertices, texturePoints, triangleIndices, normals);
    }
 
+   /**
+    * Creates a triangle mesh for a 3D hemi-ellipsoid, i.e. top half of an ellipsoid with the bottom
+    * closed by a flat cap.
+    *
+    * @param description the description holding the hemi-ellipsoid's properties.
+    * @return the generic triangle mesh.
+    */
    public static MeshDataHolder HemiEllipsoid(HemiEllipsoid3DDescription description)
    {
       MeshDataHolder meshDataHolder = HemiEllipsoid(description.getRadiusX(),
@@ -1009,6 +1069,16 @@ public class MeshDataGenerator
       return new MeshDataHolder(points, textPoints, triangleIndices, normals);
    }
 
+   /**
+    * Creates a triangle mesh for a 3D cylinder.
+    * <p>
+    * The cylinder's axis is aligned with the z-axis. When {@code centered} is true, the cylinder is
+    * centered at the origin, when false its bottom face is centered at the origin.
+    * </p>
+    *
+    * @param description the description holding the cylinder's properties.
+    * @return the generic triangle mesh.
+    */
    public static MeshDataHolder Cylinder(Cylinder3DDescription description)
    {
       MeshDataHolder meshDataHolder = Cylinder(description.getRadius(), description.getHeight(), description.getResolution(), description.isCentered());
@@ -1133,6 +1203,16 @@ public class MeshDataGenerator
       return new MeshDataHolder(points, texturePoints, triangleIndices, normals);
    }
 
+   /**
+    * Creates a triangle mesh for a 3D cone.
+    * <p>
+    * The cone's axis is aligned with the z-axis and is positioned such that the center of its bottom
+    * face is at the origin.
+    * </p>
+    * 
+    * @param description the description holding the cone's properties.
+    * @return the generic triangle mesh.
+    */
    public static MeshDataHolder Cone(Cone3DDescription description)
    {
       MeshDataHolder meshDataHolder = Cone(description.getHeight(), description.getRadius(), description.getResolution());
@@ -1231,6 +1311,16 @@ public class MeshDataGenerator
       return new MeshDataHolder(vertices, texturePoints, triangleIndices, normals);
    }
 
+   /**
+    * Creates a triangle mesh for a 3D truncated cone which base and top are ellipses.
+    * <p>
+    * The cone's axis is aligned with the z-axis and is positioned such that the center of its bottom
+    * face is at the origin.
+    * </p>
+    * 
+    * @param description the description holding the cone's properties.
+    * @return the generic triangle mesh.
+    */
    public static MeshDataHolder TruncatedCone(TruncatedCone3DDescription description)
    {
       MeshDataHolder meshDataHolder = TruncatedCone(description.getHeight(),
@@ -1360,6 +1450,15 @@ public class MeshDataGenerator
       return new MeshDataHolder(points, textPoints, triangleIndices, normals);
    }
 
+   /**
+    * Creates a triangle mesh for a 3D torus.
+    * <p>
+    * The torus' axis is aligned with the z-axis and its centroid at the origin.
+    * </p>
+    * 
+    * @param description the description holding the torus's properties.
+    * @return the generic triangle mesh.
+    */
    public static MeshDataHolder Torus(Torus3DDescription description)
    {
       MeshDataHolder meshDataHolder = Torus(description.getMajorRadius(), description.getMinorRadius(), description.getResolution());
@@ -1400,6 +1499,15 @@ public class MeshDataGenerator
       return ArcTorus(0.0f, (float) (2.0 * Math.PI), majorRadius, minorRadius, resolution);
    }
 
+   /**
+    * Creates a triangle mesh for an open partial 3D torus.
+    * <p>
+    * The torus' axis is aligned with the z-axis and its centroid at the origin.
+    * </p>
+    * 
+    * @param description the description holding the torus's properties.
+    * @return the generic triangle mesh.
+    */
    public static MeshDataHolder ArcTorus(ArcTorus3DDescription description)
    {
       MeshDataHolder meshDataHolder = ArcTorus(description.getStartAngle(),
@@ -1604,6 +1712,12 @@ public class MeshDataGenerator
       return new MeshDataHolder(points, texturePoints, triangleIndices, normals);
    }
 
+   /**
+    * Creates a triangle mesh for a 3D box of size ({@code sizeX}, {@code sizeY}, {@code sizeZ}).
+    *
+    * @param description the description holding the box's properties.
+    * @return the generic triangle mesh.
+    */
    public static MeshDataHolder Box(Box3DDescription description)
    {
       MeshDataHolder meshDataHolder = Box(description.getSizeX(), description.getSizeY(), description.getSizeZ(), description.isCentered());
@@ -1878,6 +1992,15 @@ public class MeshDataGenerator
       return new MeshDataHolder(points, textPoints, triangleIndices, normals);
    }
 
+   /**
+    * Creates a triangle mesh for a 3D wedge.
+    * <p>
+    * The wedge is positioned such that its bottom face is centered at the origin.
+    * </p>
+    * 
+    * @param description the description holding the wedge's properties.
+    * @return the generic triangle mesh.
+    */
    public static MeshDataHolder Wedge(Wedge3DDescription description)
    {
       MeshDataHolder meshDataHolder = Wedge(description.getSizeX(), description.getSizeY(), description.getSizeZ());
@@ -2034,6 +2157,12 @@ public class MeshDataGenerator
       return new MeshDataHolder(points, textPoints, triangleIndices, normals);
    }
 
+   /**
+    * Creates a triangle mesh for a 3D box which bottom and top faces are extended with a pyramid.
+    * 
+    * @param description the description holding the box's properties.
+    * @return the generic triangle mesh.
+    */
    public static MeshDataHolder PyramidBox(PyramidBox3DDescription description)
    {
       MeshDataHolder meshDataHolder = PyramidBox(description.getBoxSizeX(),
@@ -2435,6 +2564,15 @@ public class MeshDataGenerator
       return line;
    }
 
+   /**
+    * Creates a triangle mesh for a 3D capsule with its ends being half ellipsoids.
+    * <p>
+    * The capsule's axis is aligned with the z-axis and it is centered at the origin.
+    * </p>
+    *
+    * @param description the description holding the capsule's properties.
+    * @return the generic triangle mesh.
+    */
    public static MeshDataHolder Capsule(Capsule3DDescription description)
    {
       MeshDataHolder meshDataHolder = Capsule(description.getHeight(),
@@ -2614,6 +2752,15 @@ public class MeshDataGenerator
       return new MeshDataHolder(points, textPoints, triangleIndices, normals);
    }
 
+   /**
+    * Creates a triangle mesh for a 3D regular tetrahedron.
+    * <p>
+    * Its base is centered at the origin.
+    * </p>
+    * 
+    * @param description the description holding the tetrahedron's properties.
+    * @return the generic triangle mesh.
+    */
    public static MeshDataHolder Tetrahedron(Tetrahedron3DDescription description)
    {
       MeshDataHolder meshDataHolder = Tetrahedron(description.getEdgeLength());
@@ -2751,6 +2898,91 @@ public class MeshDataGenerator
       triangleIndices[index++] = 9;
       triangleIndices[index++] = 11;
       triangleIndices[index++] = 10;
+
+      return new MeshDataHolder(vertices, texturePoints, triangleIndices, normals);
+   }
+
+   /**
+    * Creates a triangle mesh for a 3D convex polytope.
+    * <p>
+    * The texture mapping is computed from the spherical coordinates of the vertices and may not be
+    * appropriate depending on the polytope.
+    * </p>
+    * 
+    * @param description the description holding the polytope's properties.
+    * @return the generic triangle mesh.
+    */
+   public static MeshDataHolder ConvexPolytope(ConvexPolytope3DDescription description)
+   {
+      return ConvexPolytope(description.getConvexPolytope());
+   }
+
+   /**
+    * Creates a triangle mesh for a 3D convex polytope.
+    * <p>
+    * The texture mapping is computed from the spherical coordinates of the vertices and may not be
+    * appropriate depending on the polytope.
+    * </p>
+    * 
+    * @param convexPolytope the polytope to create the triangle mesh for. Not modified.
+    * @return the generic triangle mesh.
+    */
+   public static MeshDataHolder ConvexPolytope(ConvexPolytope3DReadOnly convexPolytope)
+   {
+      if (convexPolytope == null)
+         return null;
+
+      int numberOfVertices = convexPolytope.getFaces().stream().mapToInt(Face3DReadOnly::getNumberOfEdges).sum();
+      Point3D32[] vertices = new Point3D32[numberOfVertices];
+      Vector3D32[] normals = new Vector3D32[numberOfVertices];
+      Point2D32[] texturePoints = new Point2D32[numberOfVertices];
+
+      int numberOfTriangles = numberOfVertices - 2 * convexPolytope.getNumberOfFaces();
+      int[] triangleIndices = new int[3 * numberOfTriangles];
+
+      int vertexOffset = 0;
+      int triangleOffset = 0;
+      Vector3D direction = new Vector3D();
+
+      for (int faceIndex = 0; faceIndex < convexPolytope.getNumberOfFaces(); faceIndex++)
+      {
+         Face3DReadOnly face = convexPolytope.getFace(faceIndex);
+
+         double minLongitude = Double.POSITIVE_INFINITY;
+         double[] longitudes = new double[face.getNumberOfEdges()];
+
+         for (int vertexIndex = 0; vertexIndex < face.getNumberOfEdges(); vertexIndex++)
+         {
+            Vertex3DReadOnly vertex = face.getVertex(vertexIndex);
+            vertices[vertexOffset + vertexIndex] = new Point3D32(vertex);
+            normals[vertexOffset + vertexIndex] = new Vector3D32(face.getNormal());
+
+            direction.sub(vertex, convexPolytope.getCentroid());
+            direction.normalize();
+
+            double longitude = Math.atan2(direction.getY(), direction.getX());
+            longitudes[vertexIndex] = longitude;
+            minLongitude = Math.min(longitude, minLongitude);
+            float textureY = 0.5f * (1.0f - direction.getZ32());
+            texturePoints[vertexOffset + vertexIndex] = new Point2D32(0.0f, textureY);
+         }
+
+         for (int vertexIndex = 0; vertexIndex < face.getNumberOfEdges(); vertexIndex++)
+         {
+            double longitude = minLongitude + EuclidCoreTools.angleDifferenceMinusPiToPi(longitudes[vertexIndex], minLongitude);
+            float textureX = (float) (0.5 * (longitude / Math.PI + 1.0));
+            texturePoints[vertexOffset + vertexIndex].setX(textureX);
+         }
+
+         for (int i = 2; i < face.getNumberOfEdges(); i++)
+         {
+            triangleIndices[triangleOffset++] = vertexOffset;
+            triangleIndices[triangleOffset++] = vertexOffset + i;
+            triangleIndices[triangleOffset++] = vertexOffset + i - 1;
+         }
+
+         vertexOffset += face.getNumberOfEdges();
+      }
 
       return new MeshDataHolder(vertices, texturePoints, triangleIndices, normals);
    }
