@@ -1097,7 +1097,7 @@ public class MeshDataGenerator
     * @param radius     the cylinder's radius.
     * @param height     the cylinder's height or length.
     * @param resolution the resolution for the cylindrical part.
-    * @param centered   {@code true} to center the cylinder are the origin, {@code false} to center its
+    * @param centered   {@code true} to center the cylinder at the origin, {@code false} to center its
     *                   bottom face at the origin.
     * @return the generic triangle mesh.
     */
@@ -1116,7 +1116,7 @@ public class MeshDataGenerator
     * @param radius     the cylinder's radius.
     * @param height     the cylinder's height or length.
     * @param resolution the resolution for the cylindrical part.
-    * @param centered   {@code true} to center the cylinder are the origin, {@code false} to center its
+    * @param centered   {@code true} to center the cylinder at the origin, {@code false} to center its
     *                   bottom face at the origin.
     * @return the generic triangle mesh.
     */
@@ -1328,7 +1328,8 @@ public class MeshDataGenerator
                                                     description.getBaseRadiusY(),
                                                     description.getTopRadiusX(),
                                                     description.getTopRadiusY(),
-                                                    description.getResolution());
+                                                    description.getResolution(),
+                                                    description.isCentered());
       if (meshDataHolder != null)
          meshDataHolder.setName(description.getName());
       return meshDataHolder;
@@ -1347,11 +1348,14 @@ public class MeshDataGenerator
     * @param topRadiusX  radius around the x-axis of the top ellipse.
     * @param topRadiusY  radius around the x-axis of the top ellipse.
     * @param resolution  the resolution for the cylindrical part of the cone.
+    * @param centered    {@code true} to center the truncated cone at the origin, {@code false} to
+    *                    center its bottom face at the origin.
     * @return the generic triangle mesh.
     */
-   public static MeshDataHolder TruncatedCone(double height, double baseRadiusX, double baseRadiusY, double topRadiusX, double topRadiusY, int resolution)
+   public static MeshDataHolder TruncatedCone(double height, double baseRadiusX, double baseRadiusY, double topRadiusX, double topRadiusY, int resolution,
+                                              boolean centered)
    {
-      return TruncatedCone((float) height, (float) baseRadiusX, (float) baseRadiusY, (float) topRadiusX, (float) topRadiusY, resolution);
+      return TruncatedCone((float) height, (float) baseRadiusX, (float) baseRadiusY, (float) topRadiusX, (float) topRadiusY, resolution, centered);
    }
 
    /**
@@ -1367,13 +1371,19 @@ public class MeshDataGenerator
     * @param topRadiusX  radius around the x-axis of the top ellipse.
     * @param topRadiusY  radius around the x-axis of the top ellipse.
     * @param resolution  the resolution for the cylindrical part of the cone.
+    * @param centered    {@code true} to center the truncated cone at the origin, {@code false} to
+    *                    center its bottom face at the origin.
     * @return the generic triangle mesh.
     */
-   public static MeshDataHolder TruncatedCone(float height, float baseRadiusX, float baseRadiusY, float topRadiusX, float topRadiusY, int resolution)
+   public static MeshDataHolder TruncatedCone(float height, float baseRadiusX, float baseRadiusY, float topRadiusX, float topRadiusY, int resolution,
+                                              boolean centered)
    {
       Point3D32 points[] = new Point3D32[4 * resolution + 2];
       Vector3D32[] normals = new Vector3D32[4 * resolution + 2];
       Point2D32[] textPoints = new Point2D32[4 * resolution + 2];
+
+      float topZ = centered ? 0.5f * height : height;
+      float bottomZ = centered ? -0.5f * height : 0.0f;
 
       for (int i = 0; i < resolution; i++)
       {
@@ -1387,12 +1397,12 @@ public class MeshDataGenerator
          float topY = topRadiusY * sinAngle;
 
          // Bottom face vertices
-         points[i] = new Point3D32(baseX, baseY, 0.0f);
+         points[i] = new Point3D32(baseX, baseY, bottomZ);
          normals[i] = new Vector3D32(0.0f, 0.0f, -1.0f);
          textPoints[i] = new Point2D32(0.25f * (1f + sinAngle) + 0.5f, 0.25f * (1f - cosAngle));
 
          // Top face vertices
-         points[i + resolution] = new Point3D32(topX, topY, height);
+         points[i + resolution] = new Point3D32(topX, topY, topZ);
          normals[i + resolution] = new Vector3D32(0.0f, 0.0f, 1.0f);
          textPoints[i + resolution] = new Point2D32(0.25f * (1f - sinAngle), 0.25f * (1f - cosAngle));
 
@@ -1402,12 +1412,12 @@ public class MeshDataGenerator
          float openingAngle = (float) Math.atan((currentBaseRadius - currentTopRadius) / height);
          float baseAngle = (float) Math.atan2(baseY, baseX);
          float topAngle = (float) Math.atan2(topY, topX);
-         points[i + 2 * resolution] = new Point3D32(baseX, baseY, 0.0f);
+         points[i + 2 * resolution] = new Point3D32(baseX, baseY, bottomZ);
          normals[i + 2 * resolution] = new Vector3D32((float) (Math.cos(baseAngle) * Math.cos(openingAngle)),
                                                       (float) (Math.sin(baseAngle) * Math.cos(openingAngle)),
                                                       (float) Math.sin(openingAngle));
          textPoints[i + 2 * resolution] = new Point2D32(i / (resolution - 1.0f), 1.0f);
-         points[i + 3 * resolution] = new Point3D32(topX, topY, height);
+         points[i + 3 * resolution] = new Point3D32(topX, topY, topZ);
          normals[i + 3 * resolution] = new Vector3D32((float) (Math.cos(topAngle) * Math.cos(openingAngle)),
                                                       (float) (Math.sin(topAngle) * Math.cos(openingAngle)),
                                                       (float) Math.sin(openingAngle));
@@ -1415,11 +1425,11 @@ public class MeshDataGenerator
       }
 
       // Bottom center
-      points[4 * resolution] = new Point3D32(0.0f, 0.0f, 0.0f);
+      points[4 * resolution] = new Point3D32(0.0f, 0.0f, bottomZ);
       normals[4 * resolution] = new Vector3D32(0.0f, 0.0f, -1.0f);
       textPoints[4 * resolution] = new Point2D32(0.75f, 0.25f);
       // Top center
-      points[4 * resolution + 1] = new Point3D32(0.0f, 0.0f, height);
+      points[4 * resolution + 1] = new Point3D32(0.0f, 0.0f, topZ);
       normals[4 * resolution + 1] = new Vector3D32(0.0f, 0.0f, 1.0f);
       textPoints[4 * resolution + 1] = new Point2D32(0.25f, 0.25f);
 
@@ -1561,6 +1571,12 @@ public class MeshDataGenerator
     */
    public static MeshDataHolder ArcTorus(float startAngle, float endAngle, float majorRadius, float minorRadius, int resolution)
    {
+      startAngle = (float) EuclidCoreTools.shiftAngleInRange(startAngle, 0.0);
+      endAngle = (float) EuclidCoreTools.shiftAngleInRange(endAngle, 0.0);
+
+      if (EuclidCoreTools.epsilonEquals(endAngle, 0.0, 1.0e-6))
+         endAngle = TwoPi;
+
       float torusSpanAngle = endAngle - startAngle;
       boolean isClosed = MathTools.epsilonEquals(torusSpanAngle, TwoPi, 1.0e-3);
 
@@ -2594,9 +2610,9 @@ public class MeshDataGenerator
     *
     * @param height              the capsule's height or length. Distance separating the center of the
     *                            two half ellipsoids.
-    * @param radiusX             radius of along the x-axis.
-    * @param radiusY             radius of along the y-axis.
-    * @param radiusZ             radius of along the z-axis.
+    * @param radiusX             radius of the capsule along the x-axis.
+    * @param radiusY             radius of the capsule along the y-axis.
+    * @param radiusZ             radius of the capsule along the z-axis.
     * @param latitudeResolution  the resolution along the vertical axis, i.e. z-axis.
     * @param longitudeResolution the resolution around the vertical axis, i.e. the number of vertices
     *                            per latitude.
@@ -2615,9 +2631,9 @@ public class MeshDataGenerator
     *
     * @param height              the capsule's height or length. Distance separating the center of the
     *                            two half ellipsoids.
-    * @param radiusX             radius of along the x-axis.
-    * @param radiusY             radius of along the y-axis.
-    * @param radiusZ             radius of along the z-axis.
+    * @param radiusX             radius of the capsule along the x-axis.
+    * @param radiusY             radius of the capsule along the y-axis.
+    * @param radiusZ             radius of the capsule along the z-axis.
     * @param latitudeResolution  the resolution along the vertical axis, i.e. z-axis.
     * @param longitudeResolution the resolution around the vertical axis, i.e. the number of vertices
     *                            per latitude.
@@ -2772,7 +2788,7 @@ public class MeshDataGenerator
    /**
     * Creates a triangle mesh for a 3D regular tetrahedron.
     * <p>
-    * Its base is centered at the origin.
+    * The tetrahedron is centered at the origin.
     * </p>
     * 
     * @param edgeLength length of the tetrahedron's edges.
@@ -2789,7 +2805,7 @@ public class MeshDataGenerator
    /**
     * Creates a triangle mesh for a 3D regular tetrahedron.
     * <p>
-    * Its base is centered at the origin.
+    * The tetrahedron is centered at the origin.
     * </p>
     * 
     * @param edgeLength length of the tetrahedron's edges.
