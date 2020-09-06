@@ -73,7 +73,13 @@ public abstract class Graphics3DInstructionExecutor
 
    }
 
-   protected abstract void doAddGeometryInstruction(GeometryGraphics3DInstruction primitiveInstruction);
+   protected void doAddGeometryInstruction(GeometryGraphics3DInstruction primitiveInstruction)
+   {
+      Graphics3DAddMeshDataInstruction meshInstruction = primitiveInstruction.toGraphics3DAddMeshDataInstruction();
+      if (meshInstruction == null)
+         throw new RuntimeException("Need to support that primitive type! primitiveInstruction = " + primitiveInstruction);
+      doAddMeshDataInstruction(meshInstruction);
+   }
 
    protected abstract void doAddMeshDataInstruction(Graphics3DAddMeshDataInstruction graphics3DAddMeshData);
 
