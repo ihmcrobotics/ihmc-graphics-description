@@ -18,13 +18,7 @@ public abstract class Graphics3DInstructionExecutor
    {
       for (Graphics3DPrimitiveInstruction instruction : instructions)
       {
-         if (instruction instanceof Graphics3DAddModelFileInstruction)
-         {
-            Graphics3DAddModelFileInstruction graphics3DAddModelFile = (Graphics3DAddModelFileInstruction) instruction;
-            doAddModelFileInstruction(graphics3DAddModelFile);
-
-         }
-         else if (instruction instanceof Graphics3DAddMeshDataInstruction)
+         if (instruction instanceof Graphics3DAddMeshDataInstruction)
          {
             Graphics3DAddMeshDataInstruction meshDataInstruction = (Graphics3DAddMeshDataInstruction) instruction;
             doAddMeshDataInstruction(meshDataInstruction);
@@ -68,9 +62,7 @@ public abstract class Graphics3DInstructionExecutor
          {
             System.err.println("Unknown graphics3DDefinition: " + instruction.getClass().getSimpleName());
          }
-
       }
-
    }
 
    protected void doAddGeometryInstruction(GeometryGraphics3DInstruction primitiveInstruction)
@@ -86,8 +78,6 @@ public abstract class Graphics3DInstructionExecutor
    protected abstract void doAddHeightMapInstruction(Graphics3DAddHeightMapInstruction graphics3DAddHeightMap);
 
    protected abstract void doAddExtrusionInstruction(Graphics3DAddExtrusionInstruction graphics3DAddText);
-
-   protected abstract void doAddModelFileInstruction(Graphics3DAddModelFileInstruction graphics3DAddModelFile);
 
    protected abstract void doIdentityInstruction();
 

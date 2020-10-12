@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,6 +49,8 @@ import us.ihmc.graphicsDescription.geometry.Ellipsoid3DDescription;
 import us.ihmc.graphicsDescription.geometry.ExtrudedPolygon2DDescription;
 import us.ihmc.graphicsDescription.geometry.GeometryDescription;
 import us.ihmc.graphicsDescription.geometry.HemiEllipsoid3DDescription;
+import us.ihmc.graphicsDescription.geometry.ModelFileGeometryDescription;
+import us.ihmc.graphicsDescription.geometry.ModelFileGeometryDescription.SubMeshDescription;
 import us.ihmc.graphicsDescription.geometry.Polygon3DDescription;
 import us.ihmc.graphicsDescription.geometry.PyramidBox3DDescription;
 import us.ihmc.graphicsDescription.geometry.Sphere3DDescription;
@@ -58,7 +61,6 @@ import us.ihmc.graphicsDescription.instructions.GeometryGraphics3DInstruction;
 import us.ihmc.graphicsDescription.instructions.Graphics3DAddExtrusionInstruction;
 import us.ihmc.graphicsDescription.instructions.Graphics3DAddHeightMapInstruction;
 import us.ihmc.graphicsDescription.instructions.Graphics3DAddMeshDataInstruction;
-import us.ihmc.graphicsDescription.instructions.Graphics3DAddModelFileInstruction;
 import us.ihmc.graphicsDescription.instructions.Graphics3DInstruction;
 import us.ihmc.graphicsDescription.instructions.Graphics3DPrimitiveInstruction;
 import us.ihmc.graphicsDescription.instructions.primitives.Graphics3DIdentityInstruction;
@@ -413,30 +415,32 @@ public class Graphics3DObject
     * @param app
     * @return
     */
-   public Graphics3DAddModelFileInstruction addModelFile(String fileName, AppearanceDefinition app)
+   public GeometryGraphics3DInstruction addModelFile(String fileName, AppearanceDefinition app)
    {
-      Graphics3DAddModelFileInstruction graphics3dAddModelFileInstruction = new Graphics3DAddModelFileInstruction(fileName, app);
+      ModelFileGeometryDescription modelFileGeometryDescription = new ModelFileGeometryDescription(fileName);
+      GeometryGraphics3DInstruction graphics3dAddModelFileInstruction = new GeometryGraphics3DInstruction(modelFileGeometryDescription);
+      graphics3dAddModelFileInstruction.setAppearance(app);
       graphics3DInstructions.add(graphics3dAddModelFileInstruction);
 
       return graphics3dAddModelFileInstruction;
    }
 
-   public Graphics3DAddModelFileInstruction addModelFile(String fileName, String submesh, boolean centerSubmesh, List<String> resourceDirectories,
-                                                         ClassLoader resourceClassLoader, AppearanceDefinition app)
+   public GeometryGraphics3DInstruction addModelFile(String fileName, String submesh, boolean centerSubmesh, List<String> resourceDirectories,
+                                                     ClassLoader resourceClassLoader, AppearanceDefinition app)
    {
-      Graphics3DAddModelFileInstruction graphics3dAddModelFileInstruction = new Graphics3DAddModelFileInstruction(fileName,
-                                                                                                                  submesh,
-                                                                                                                  centerSubmesh,
-                                                                                                                  app,
-                                                                                                                  resourceDirectories,
-                                                                                                                  resourceClassLoader);
+      ModelFileGeometryDescription modelFileGeometryDescription = new ModelFileGeometryDescription(fileName);
+      modelFileGeometryDescription.setResourceDirectories(resourceDirectories);
+      modelFileGeometryDescription.setSubmeshes(Collections.singletonList(new SubMeshDescription(submesh, centerSubmesh)));
+      modelFileGeometryDescription.setResourceClassLoader(resourceClassLoader);
+      GeometryGraphics3DInstruction graphics3dAddModelFileInstruction = new GeometryGraphics3DInstruction(modelFileGeometryDescription);
+      graphics3dAddModelFileInstruction.setAppearance(app);
       graphics3DInstructions.add(graphics3dAddModelFileInstruction);
 
       return graphics3dAddModelFileInstruction;
    }
 
-   public Graphics3DAddModelFileInstruction addModelFile(String fileName, List<String> resourceDirectories, ClassLoader resourceClassLoader,
-                                                         AppearanceDefinition app)
+   public GeometryGraphics3DInstruction addModelFile(String fileName, List<String> resourceDirectories, ClassLoader resourceClassLoader,
+                                                     AppearanceDefinition app)
    {
       return addModelFile(fileName, null, false, resourceDirectories, resourceClassLoader, app);
    }
