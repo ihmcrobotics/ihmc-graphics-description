@@ -47,8 +47,11 @@ import us.ihmc.graphicsDescription.geometry.Cone3DDescription;
 import us.ihmc.graphicsDescription.geometry.Cylinder3DDescription;
 import us.ihmc.graphicsDescription.geometry.Ellipsoid3DDescription;
 import us.ihmc.graphicsDescription.geometry.ExtrudedPolygon2DDescription;
+import us.ihmc.graphicsDescription.geometry.ExtrusionDescription;
 import us.ihmc.graphicsDescription.geometry.GeometryDescription;
+import us.ihmc.graphicsDescription.geometry.HeightMapDescription;
 import us.ihmc.graphicsDescription.geometry.HemiEllipsoid3DDescription;
+import us.ihmc.graphicsDescription.geometry.MeshDescription;
 import us.ihmc.graphicsDescription.geometry.ModelFileGeometryDescription;
 import us.ihmc.graphicsDescription.geometry.ModelFileGeometryDescription.SubMeshDescription;
 import us.ihmc.graphicsDescription.geometry.Polygon3DDescription;
@@ -58,9 +61,6 @@ import us.ihmc.graphicsDescription.geometry.TruncatedCone3DDescription;
 import us.ihmc.graphicsDescription.geometry.Wedge3DDescription;
 import us.ihmc.graphicsDescription.input.SelectedListener;
 import us.ihmc.graphicsDescription.instructions.GeometryGraphics3DInstruction;
-import us.ihmc.graphicsDescription.instructions.Graphics3DAddExtrusionInstruction;
-import us.ihmc.graphicsDescription.instructions.Graphics3DAddHeightMapInstruction;
-import us.ihmc.graphicsDescription.instructions.Graphics3DAddMeshDataInstruction;
 import us.ihmc.graphicsDescription.instructions.Graphics3DInstruction;
 import us.ihmc.graphicsDescription.instructions.Graphics3DPrimitiveInstruction;
 import us.ihmc.graphicsDescription.instructions.primitives.Graphics3DIdentityInstruction;
@@ -710,23 +710,24 @@ public class Graphics3DObject
       return addGeometryDescription(new Capsule3DDescription(height, radius, RESOLUTION), capsuleAppearance);
    }
 
-   public Graphics3DAddMeshDataInstruction addMeshData(MeshDataHolder meshData, AppearanceDefinition meshAppearance)
+   public GeometryGraphics3DInstruction addMeshData(MeshDataHolder meshData, AppearanceDefinition meshAppearance)
    {
       // The subsequent classes do not accept null, just create an empty mesh in that case
-      Graphics3DAddMeshDataInstruction instruction = createMeshDataInstruction(meshData, meshAppearance);
+      GeometryGraphics3DInstruction instruction = createMeshDataInstruction(meshData, meshAppearance);
       graphics3DInstructions.add(instruction);
 
       return instruction;
    }
 
-   public static Graphics3DAddMeshDataInstruction createMeshDataInstruction(MeshDataHolder meshData, AppearanceDefinition meshAppearance)
+   public static GeometryGraphics3DInstruction createMeshDataInstruction(MeshDataHolder meshData, AppearanceDefinition meshAppearance)
    {
       if (meshData == null)
       {
          meshData = new MeshDataHolder(new Point3D32[0], new Point2D32[0], new int[0], new Vector3D32[0]);
          meshData.setName("nullMesh");
       }
-      Graphics3DAddMeshDataInstruction instruction = new Graphics3DAddMeshDataInstruction(meshData, meshAppearance);
+      GeometryGraphics3DInstruction instruction = new GeometryGraphics3DInstruction(new MeshDescription(meshData));
+      instruction.setAppearance(meshAppearance);
       return instruction;
    }
 
@@ -1134,7 +1135,7 @@ public class Graphics3DObject
       {
          ConvexPolygon2DReadOnly convexPolygon = convexPolygon2D.get(i);
          MeshDataHolder meshDataHolder = MeshDataGenerator.ExtrudedPolygon(convexPolygon, -0.0001);
-         addInstruction(new Graphics3DAddMeshDataInstruction(meshDataHolder, appearance));
+         addMeshData(meshDataHolder, appearance);
       }
 
       RigidBodyTransform transformLocal = new RigidBodyTransform(transform);
@@ -1149,7 +1150,7 @@ public class Graphics3DObject
     *
     * @param polygonPoint Array containing Point3D's to be used when generating the shape.
     */
-   public Graphics3DAddMeshDataInstruction addPolygon(Point3DReadOnly[] polygonPoint)
+   public GeometryGraphics3DInstruction addPolygon(Point3DReadOnly[] polygonPoint)
    {
       return addPolygon(polygonPoint, DEFAULT_APPEARANCE);
    }
@@ -1163,14 +1164,13 @@ public class Graphics3DObject
     * @param yoAppearance  Appearance to be used with the new polygon. See {@link AppearanceDefinition}
     *                      for implementations.
     */
-   public Graphics3DAddMeshDataInstruction addPolygon(Point3DReadOnly[] polygonPoints, AppearanceDefinition yoAppearance)
+   public GeometryGraphics3DInstruction addPolygon(Point3DReadOnly[] polygonPoints, AppearanceDefinition yoAppearance)
    {
       MeshDataHolder meshData = MeshDataGenerator.PolygonCounterClockwise(Arrays.asList(polygonPoints));
-
       return addMeshData(meshData, yoAppearance);
    }
 
-   public Graphics3DAddMeshDataInstruction addPolygon(AppearanceDefinition yoAppearance, Point3DReadOnly... polygonPoints)
+   public GeometryGraphics3DInstruction addPolygon(AppearanceDefinition yoAppearance, Point3DReadOnly... polygonPoints)
    {
       return addPolygon(polygonPoints, yoAppearance);
    }
@@ -1205,17 +1205,19 @@ public class Graphics3DObject
     * @param thickness              Thinkness of extrusion
     * @param appearance             Appearance
     */
-   public Graphics3DAddExtrusionInstruction addExtrusion(BufferedImage bufferedImageToExtrude, double thickness, AppearanceDefinition appearance)
+   public GeometryGraphics3DInstruction addExtrusion(BufferedImage bufferedImageToExtrude, double thickness, AppearanceDefinition appearance)
    {
-      Graphics3DAddExtrusionInstruction instruction = new Graphics3DAddExtrusionInstruction(bufferedImageToExtrude, thickness, appearance);
+      GeometryGraphics3DInstruction instruction = new GeometryGraphics3DInstruction(new ExtrusionDescription(bufferedImageToExtrude, thickness));
+      instruction.setAppearance(appearance);
       graphics3DInstructions.add(instruction);
 
       return instruction;
    }
 
-   public Graphics3DAddExtrusionInstruction addText(String text, double thickness, AppearanceDefinition yoAppearance)
+   public GeometryGraphics3DInstruction addText(String text, double thickness, AppearanceDefinition yoAppearance)
    {
-      Graphics3DAddExtrusionInstruction instruction = new Graphics3DAddExtrusionInstruction(text, thickness, yoAppearance);
+      GeometryGraphics3DInstruction instruction = new GeometryGraphics3DInstruction(new ExtrusionDescription(text, thickness));
+      instruction.setAppearance(yoAppearance);
       graphics3DInstructions.add(instruction);
 
       return instruction;
@@ -1251,11 +1253,11 @@ public class Graphics3DObject
       return addModelFile("models/Teapot.obj", appearance);
    }
 
-   public Graphics3DInstruction addHeightMap(HeightMap heightMap, int xPointsPerSide, int yPointsPerSide, AppearanceDefinition appearance)
+   public GeometryGraphics3DInstruction addHeightMap(HeightMap heightMap, int xPointsPerSide, int yPointsPerSide, AppearanceDefinition appearance)
    {
-      Graphics3DAddHeightMapInstruction instruction = new Graphics3DAddHeightMapInstruction(heightMap, xPointsPerSide, yPointsPerSide, appearance);
+      GeometryGraphics3DInstruction instruction = new GeometryGraphics3DInstruction(new HeightMapDescription(heightMap, xPointsPerSide, yPointsPerSide));
+      instruction.setAppearance(appearance);
       graphics3DInstructions.add(instruction);
-
       return instruction;
    }
 

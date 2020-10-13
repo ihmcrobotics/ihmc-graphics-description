@@ -29,6 +29,7 @@ import us.ihmc.graphicsDescription.geometry.Ellipsoid3DDescription;
 import us.ihmc.graphicsDescription.geometry.ExtrudedPolygon2DDescription;
 import us.ihmc.graphicsDescription.geometry.GeometryDescription;
 import us.ihmc.graphicsDescription.geometry.HemiEllipsoid3DDescription;
+import us.ihmc.graphicsDescription.geometry.MeshDescription;
 import us.ihmc.graphicsDescription.geometry.Polygon2DDescription;
 import us.ihmc.graphicsDescription.geometry.Polygon3DDescription;
 import us.ihmc.graphicsDescription.geometry.PyramidBox3DDescription;
@@ -85,42 +86,57 @@ public class MeshDataGenerator
    {
       if (description == null)
          return null;
-      if (description instanceof ArcTorus3DDescription)
-         return ArcTorus((ArcTorus3DDescription) description);
-      if (description instanceof Box3DDescription)
-         return Box((Box3DDescription) description);
-      if (description instanceof Capsule3DDescription)
-         return Capsule((Capsule3DDescription) description);
-      if (description instanceof Cone3DDescription)
-         return Cone((Cone3DDescription) description);
-      if (description instanceof ConvexPolytope3DDescription)
-         return ConvexPolytope((ConvexPolytope3DDescription) description);
-      if (description instanceof Cylinder3DDescription)
-         return Cylinder((Cylinder3DDescription) description);
-      if (description instanceof Ellipsoid3DDescription)
-         return Ellipsoid((Ellipsoid3DDescription) description);
-      if (description instanceof ExtrudedPolygon2DDescription)
-         return ExtrudedPolygon((ExtrudedPolygon2DDescription) description);
-      if (description instanceof HemiEllipsoid3DDescription)
-         return HemiEllipsoid((HemiEllipsoid3DDescription) description);
-      if (description instanceof Polygon2DDescription)
-         return Polygon((Polygon2DDescription) description);
-      if (description instanceof Polygon3DDescription)
-         return Polygon((Polygon2DDescription) description);
-      if (description instanceof PyramidBox3DDescription)
-         return PyramidBox((PyramidBox3DDescription) description);
-      if (description instanceof Sphere3DDescription)
-         return Sphere((Sphere3DDescription) description);
-      if (description instanceof Tetrahedron3DDescription)
-         return Tetrahedron((Tetrahedron3DDescription) description);
-      if (description instanceof Torus3DDescription)
-         return Torus((Torus3DDescription) description);
-      if (description instanceof TruncatedCone3DDescription)
-         return TruncatedCone((TruncatedCone3DDescription) description);
-      if (description instanceof Wedge3DDescription)
-         return Wedge((Wedge3DDescription) description);
-      LogTools.error("Unrecognized " + GeometryDescription.class.getSimpleName() + ": " + description.getClass().getSimpleName());
-      return null;
+
+      MeshDataHolder mesh = null;
+
+      if (description instanceof MeshDescription)
+         mesh = ((MeshDescription) description).getMesh();
+      else if (description instanceof ArcTorus3DDescription)
+         mesh = ArcTorus((ArcTorus3DDescription) description);
+      else if (description instanceof Box3DDescription)
+         mesh = Box((Box3DDescription) description);
+      else if (description instanceof Capsule3DDescription)
+         mesh = Capsule((Capsule3DDescription) description);
+      else if (description instanceof Cone3DDescription)
+         mesh = Cone((Cone3DDescription) description);
+      else if (description instanceof ConvexPolytope3DDescription)
+         mesh = ConvexPolytope((ConvexPolytope3DDescription) description);
+      else if (description instanceof Cylinder3DDescription)
+         mesh = Cylinder((Cylinder3DDescription) description);
+      else if (description instanceof Ellipsoid3DDescription)
+         mesh = Ellipsoid((Ellipsoid3DDescription) description);
+      else if (description instanceof ExtrudedPolygon2DDescription)
+         mesh = ExtrudedPolygon((ExtrudedPolygon2DDescription) description);
+      else if (description instanceof HemiEllipsoid3DDescription)
+         mesh = HemiEllipsoid((HemiEllipsoid3DDescription) description);
+      else if (description instanceof Polygon2DDescription)
+         mesh = Polygon((Polygon2DDescription) description);
+      else if (description instanceof Polygon3DDescription)
+         mesh = Polygon((Polygon2DDescription) description);
+      else if (description instanceof PyramidBox3DDescription)
+         mesh = PyramidBox((PyramidBox3DDescription) description);
+      else if (description instanceof Sphere3DDescription)
+         mesh = Sphere((Sphere3DDescription) description);
+      else if (description instanceof Tetrahedron3DDescription)
+         mesh = Tetrahedron((Tetrahedron3DDescription) description);
+      else if (description instanceof Torus3DDescription)
+         mesh = Torus((Torus3DDescription) description);
+      else if (description instanceof TruncatedCone3DDescription)
+         mesh = TruncatedCone((TruncatedCone3DDescription) description);
+      else if (description instanceof Wedge3DDescription)
+         mesh = Wedge((Wedge3DDescription) description);
+
+      if (mesh == null)
+      {
+         LogTools.error("Unrecognized " + GeometryDescription.class.getSimpleName() + ": " + description.getClass().getSimpleName());
+         return null;
+      }
+      else
+      {
+         if (description.getName() != null)
+            mesh.setName(description.getName());
+         return mesh;
+      }
    }
 
    /**

@@ -1,8 +1,6 @@
 package us.ihmc.graphicsDescription.instructions;
 
 import us.ihmc.graphicsDescription.geometry.GeometryDescription;
-import us.ihmc.graphicsDescription.mesh.MeshDataGenerator;
-import us.ihmc.graphicsDescription.mesh.MeshDataHolder;
 
 public class GeometryGraphics3DInstruction extends Graphics3DInstruction
 {
@@ -25,14 +23,5 @@ public class GeometryGraphics3DInstruction extends Graphics3DInstruction
    public GeometryDescription getGeometry()
    {
       return geometry;
-   }
-
-   public Graphics3DAddMeshDataInstruction toGraphics3DAddMeshDataInstruction()
-   {
-      MeshDataHolder mesh = MeshDataGenerator.Mesh(geometry);
-      if (mesh == null)
-         return null;
-      else
-         return new Graphics3DAddMeshDataInstruction(mesh, getAppearance());
    }
 }

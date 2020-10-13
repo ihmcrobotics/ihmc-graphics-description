@@ -18,12 +18,7 @@ public abstract class Graphics3DInstructionExecutor
    {
       for (Graphics3DPrimitiveInstruction instruction : instructions)
       {
-         if (instruction instanceof Graphics3DAddMeshDataInstruction)
-         {
-            Graphics3DAddMeshDataInstruction meshDataInstruction = (Graphics3DAddMeshDataInstruction) instruction;
-            doAddMeshDataInstruction(meshDataInstruction);
-         }
-         else if (instruction instanceof GeometryGraphics3DInstruction)
+         if (instruction instanceof GeometryGraphics3DInstruction)
          {
             GeometryGraphics3DInstruction primitiveInstruction = (GeometryGraphics3DInstruction) instruction;
 
@@ -48,16 +43,6 @@ public abstract class Graphics3DInstructionExecutor
             Graphics3DTranslateInstruction graphics3DTranslate = (Graphics3DTranslateInstruction) instruction;
             doTranslateInstruction(graphics3DTranslate);
          }
-         else if (instruction instanceof Graphics3DAddExtrusionInstruction)
-         {
-            Graphics3DAddExtrusionInstruction graphics3DAddExtrusion = (Graphics3DAddExtrusionInstruction) instruction;
-            doAddExtrusionInstruction(graphics3DAddExtrusion);
-         }
-         else if (instruction instanceof Graphics3DAddHeightMapInstruction)
-         {
-            Graphics3DAddHeightMapInstruction graphics3DAddHeightMap = (Graphics3DAddHeightMapInstruction) instruction;
-            doAddHeightMapInstruction(graphics3DAddHeightMap);
-         }
          else
          {
             System.err.println("Unknown graphics3DDefinition: " + instruction.getClass().getSimpleName());
@@ -65,19 +50,7 @@ public abstract class Graphics3DInstructionExecutor
       }
    }
 
-   protected void doAddGeometryInstruction(GeometryGraphics3DInstruction primitiveInstruction)
-   {
-      Graphics3DAddMeshDataInstruction meshInstruction = primitiveInstruction.toGraphics3DAddMeshDataInstruction();
-      if (meshInstruction == null)
-         throw new RuntimeException("Need to support that primitive type! primitiveInstruction = " + primitiveInstruction);
-      doAddMeshDataInstruction(meshInstruction);
-   }
-
-   protected abstract void doAddMeshDataInstruction(Graphics3DAddMeshDataInstruction graphics3DAddMeshData);
-
-   protected abstract void doAddHeightMapInstruction(Graphics3DAddHeightMapInstruction graphics3DAddHeightMap);
-
-   protected abstract void doAddExtrusionInstruction(Graphics3DAddExtrusionInstruction graphics3DAddText);
+   protected abstract void doAddGeometryInstruction(GeometryGraphics3DInstruction primitiveInstruction);
 
    protected abstract void doIdentityInstruction();
 

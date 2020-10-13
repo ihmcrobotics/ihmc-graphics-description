@@ -2,6 +2,7 @@ package us.ihmc.graphicsDescription.geometry;
 
 import us.ihmc.euclid.tools.EuclidCoreIOTools;
 import us.ihmc.euclid.tools.EuclidHashCodeTools;
+import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 
 /**
  * Description for creating a 3D box.
@@ -92,6 +93,30 @@ public class Box3DDescription implements GeometryDescription
    public void setSizeZ(double sizeZ)
    {
       this.sizeZ = sizeZ;
+   }
+
+   /**
+    * Sets the size of the box.
+    * 
+    * @param sizeX the box size along the x-axis.
+    * @param sizeY the box size along the y-axis.
+    * @param sizeZ the box size along the z-axis.
+    */
+   public void setSize(double sizeX, double sizeY, double sizeZ)
+   {
+      this.sizeX = sizeX;
+      this.sizeY = sizeY;
+      this.sizeZ = sizeZ;
+   }
+
+   /**
+    * Sets the size of the box.
+    * 
+    * @param size the size of the box. Not modified.
+    */
+   public void setSize(Tuple3DReadOnly size)
+   {
+      setSize(size.getX(), size.getY(), size.getZ());
    }
 
    /**
