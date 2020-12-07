@@ -288,7 +288,7 @@ public class YoGraphicPosition extends YoGraphic implements RemoteYoGraphic
             globalScale = globalScaleProvider.getValue();
          }
 
-         transform3D.setScale(scale * globalScale);
+         transform3D.appendScale(scale * globalScale);
          transform3D.setTranslation(translationVector);
       }
    }

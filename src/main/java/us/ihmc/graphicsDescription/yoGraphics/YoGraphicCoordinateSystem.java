@@ -285,11 +285,11 @@ public class YoGraphicCoordinateSystem extends YoGraphic implements RemoteYoGrap
          globalScale = globalScaleProvider.getValue();
       }
 
-      transform3D.setScale(scale * globalScale);
       if (isUsingYawPitchRoll())
-         transform3D.setRotation(yawPitchRoll);
+         transform3D.setLinearTransform(yawPitchRoll);
       else
-         transform3D.setRotation(quaternion);
+         transform3D.setLinearTransform(quaternion);
+      transform3D.appendScale(scale * globalScale);
       transform3D.setTranslation(position);
    }
 
