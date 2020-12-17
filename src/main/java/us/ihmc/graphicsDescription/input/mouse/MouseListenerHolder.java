@@ -18,4 +18,12 @@ public class MouseListenerHolder
          mouseListener.mouseDragged(mouseButton, dx, dy);
       }
    }
+
+   public void scrolled(double amount)
+   {
+      for (MouseListener mouseListener : mouseListeners)
+      {
+         mouseListener.scrolled(amount);
+      }
+   }
 }
