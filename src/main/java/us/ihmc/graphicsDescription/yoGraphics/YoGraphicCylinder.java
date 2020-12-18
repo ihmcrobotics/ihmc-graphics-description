@@ -107,9 +107,9 @@ public class YoGraphicCylinder extends YoGraphic implements RemoteYoGraphic
 
       translationVector.set(base);
 
-      transform3D.setScale(lineThickness, lineThickness, length);
       transform3D.setTranslation(translationVector);
-      transform3D.setRotation(rotMatrix);
+      transform3D.setLinearTransform(rotMatrix);
+      transform3D.appendScale(lineThickness, lineThickness, length);
 
    }
 

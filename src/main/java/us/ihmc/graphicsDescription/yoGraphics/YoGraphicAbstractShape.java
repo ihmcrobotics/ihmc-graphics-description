@@ -194,14 +194,14 @@ public abstract class YoGraphicAbstractShape extends YoGraphic
       if (isUsingYawPitchRoll())
       {
          yoFrameYawPitchRoll.getEuler(rotationEulerVector);
-         transform3D.setRotationEuler(rotationEulerVector);
+         transform3D.getLinearTransform().setEuler(rotationEulerVector);
       }
       else
       {
-         transform3D.setRotation(yoFrameQuaternion);
+         transform3D.setLinearTransform(yoFrameQuaternion);
       }
       transform3D.setTranslation(yoFramePoint);
-      transform3D.setScale(scale);
+      transform3D.appendScale(scale);
    }
 
    @Override

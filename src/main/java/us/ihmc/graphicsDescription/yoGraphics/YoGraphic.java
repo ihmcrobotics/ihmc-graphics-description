@@ -90,8 +90,7 @@ public abstract class YoGraphic
       }
       else
       {
-         transform.setIdentity();
-         transform.setScale(0.0);
+         transform.setToZero();
       }
 
       return transform;
