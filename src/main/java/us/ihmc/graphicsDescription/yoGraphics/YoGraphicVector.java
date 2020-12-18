@@ -176,9 +176,9 @@ public class YoGraphicVector extends YoGraphic implements RemoteYoGraphic, Graph
          xyScaleFactor = maxRadiusScaleFactor;
       }
 
-      transform3D.setScale(xyScaleFactor, xyScaleFactor, length * scaleFactor * globalScale);
       transform3D.setTranslation(translationVector);
-      transform3D.setRotation(rotMatrix);
+      transform3D.setLinearTransform(rotMatrix);
+      transform3D.appendScale(xyScaleFactor, xyScaleFactor, length * scaleFactor * globalScale);
    }
 
    public void set(YoDouble baseX, YoDouble baseY, YoDouble baseZ, YoDouble x, YoDouble y, YoDouble z)

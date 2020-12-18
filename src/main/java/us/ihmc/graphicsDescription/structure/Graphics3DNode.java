@@ -87,9 +87,7 @@ public class Graphics3DNode
 
    public void translate(double x, double y, double z)
    {
-      Vector3D translation = new Vector3D(x, y, z);
-      transform.transform(translation);
-      transform.addTranslation(translation);
+      transform.appendTranslation(x, y, z);
    }
 
    public void translateTo(double x, double y, double z)
@@ -123,7 +121,7 @@ public class Graphics3DNode
 
    public Vector3D getTranslation()
    {
-      return new Vector3D(getTransform().getTranslationVector());
+      return new Vector3D(getTransform().getTranslation());
    }
 
    public void addChild(Graphics3DNode child)
