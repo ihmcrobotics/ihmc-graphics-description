@@ -22,7 +22,7 @@ mainDependencies {
    api("us.ihmc:euclid-frame:0.16.0")
    api("us.ihmc:euclid-shape:0.16.0")
    api("us.ihmc:ihmc-commons:0.30.4")
-   api("us.ihmc:ihmc-yovariables:0.9.7")
+   api("us.ihmc:ihmc-yovariables:0.9.8")
 }
 
 testDependencies {
