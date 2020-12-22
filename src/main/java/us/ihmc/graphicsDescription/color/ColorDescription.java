@@ -265,6 +265,17 @@ public class ColorDescription
    }
 
    /**
+    * Returns whether this color is completely opaque, i.e. {@code alpha = 1}, or transparent, i.e.
+    * {@code alpha < 1}.
+    * 
+    * @return {@code true} if this color is opaque, {@code false} otherwise.
+    */
+   public boolean isOpaque()
+   {
+      return alpha == 1.0;
+   }
+
+   /**
     * Returns the value for the alpha component.
     * 
     * @return the value for the alpha component in range [0.0-1.0], 0.0 being fully transparent and 1.0
@@ -3399,5 +3410,15 @@ public class ColorDescription
    public static final ColorDescription YellowGreen()
    {
       return rgb(0x9ACD32);
+   }
+
+   /**
+    * Creates and returns a new color that is completely transparent.
+    * 
+    * @return the transparent color.
+    */
+   public static final ColorDescription Transparent()
+   {
+      return new ColorDescription(0.0, 0.0, 0.0, 0.0);
    }
 }
