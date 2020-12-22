@@ -12,7 +12,6 @@ import us.ihmc.euclid.Axis3D;
 import us.ihmc.euclid.axisAngle.AxisAngle;
 import us.ihmc.euclid.geometry.interfaces.ConvexPolygon2DReadOnly;
 import us.ihmc.euclid.geometry.tools.EuclidGeometryTools;
-import us.ihmc.euclid.matrix.RotationMatrix;
 import us.ihmc.euclid.matrix.interfaces.Matrix3DReadOnly;
 import us.ihmc.euclid.orientation.interfaces.Orientation3DReadOnly;
 import us.ihmc.euclid.shape.primitives.interfaces.Box3DReadOnly;
@@ -24,6 +23,7 @@ import us.ihmc.euclid.shape.primitives.interfaces.Ramp3DReadOnly;
 import us.ihmc.euclid.shape.primitives.interfaces.Shape3DReadOnly;
 import us.ihmc.euclid.shape.primitives.interfaces.Sphere3DReadOnly;
 import us.ihmc.euclid.shape.primitives.interfaces.Torus3DReadOnly;
+import us.ihmc.euclid.transform.AffineTransform;
 import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.euclid.transform.interfaces.RigidBodyTransformReadOnly;
 import us.ihmc.euclid.tuple2D.Point2D;
@@ -36,8 +36,8 @@ import us.ihmc.euclid.tuple3D.Vector3D32;
 import us.ihmc.euclid.tuple3D.interfaces.Point3DReadOnly;
 import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
-import us.ihmc.euclid.tuple4D.interfaces.QuaternionReadOnly;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
+import us.ihmc.graphicsDescription.appearance.MaterialDescription;
 import us.ihmc.graphicsDescription.appearance.YoAppearance;
 import us.ihmc.graphicsDescription.exceptions.ShapeNotSupportedException;
 import us.ihmc.graphicsDescription.geometry.ArcTorus3DDescription;
@@ -59,18 +59,9 @@ import us.ihmc.graphicsDescription.geometry.PyramidBox3DDescription;
 import us.ihmc.graphicsDescription.geometry.Sphere3DDescription;
 import us.ihmc.graphicsDescription.geometry.TruncatedCone3DDescription;
 import us.ihmc.graphicsDescription.geometry.Wedge3DDescription;
-import us.ihmc.graphicsDescription.input.SelectedListener;
-import us.ihmc.graphicsDescription.instructions.GeometryGraphics3DInstruction;
-import us.ihmc.graphicsDescription.instructions.Graphics3DInstruction;
-import us.ihmc.graphicsDescription.instructions.Graphics3DPrimitiveInstruction;
-import us.ihmc.graphicsDescription.instructions.primitives.Graphics3DIdentityInstruction;
-import us.ihmc.graphicsDescription.instructions.primitives.Graphics3DRotateInstruction;
-import us.ihmc.graphicsDescription.instructions.primitives.Graphics3DScaleInstruction;
-import us.ihmc.graphicsDescription.instructions.primitives.Graphics3DTranslateInstruction;
 import us.ihmc.graphicsDescription.mesh.MeshDataGenerator;
 import us.ihmc.graphicsDescription.mesh.MeshDataHolder;
-import us.ihmc.graphicsDescription.structure.Graphics3DNode;
-import us.ihmc.tools.inputDevices.keyboard.ModifierKeyInterface;
+import us.ihmc.log.LogTools;
 
 public class Graphics3DObject
 {
@@ -78,110 +69,69 @@ public class Graphics3DObject
 
    private static final int RESOLUTION = 25;
 
-   private List<Graphics3DPrimitiveInstruction> graphics3DInstructions;
-   private List<SelectedListener> selectedListeners;
+   private final AffineTransform currentTransform = new AffineTransform();
+   private List<VisualDescription> visualDescriptions;
 
    private boolean changeable = false;
-
-   public Graphics3DObject(Shape3DReadOnly shape, AppearanceDefinition appearance)
-   {
-      this(shape, appearance, null);
-   }
-
-   public Graphics3DObject(Shape3DReadOnly shape)
-   {
-      this(shape, null, null);
-   }
-
-   public Graphics3DObject(List<Graphics3DPrimitiveInstruction> graphics3DInstructions)
-   {
-      this(null, null, graphics3DInstructions);
-   }
-
-   private Graphics3DObject(Shape3DReadOnly shape, AppearanceDefinition appearance, List<Graphics3DPrimitiveInstruction> graphics3DInstructions)
-   {
-      if (graphics3DInstructions != null)
-      {
-         this.graphics3DInstructions = graphics3DInstructions;
-      }
-      else
-      {
-         this.graphics3DInstructions = new ArrayList<>();
-      }
-
-      if (shape != null)
-      {
-         if (appearance == null)
-         {
-            add(shape);
-         }
-         else
-         {
-            add(shape, appearance);
-         }
-      }
-   }
 
    /**
     * Default no-arg constructor. This creates a new empty Graphics3DObject component.
     */
    public Graphics3DObject()
    {
-      this(null, null, null);
+      this((List<VisualDescription>) null);
    }
 
-   public List<Graphics3DPrimitiveInstruction> getGraphics3DInstructions()
+   public Graphics3DObject(List<VisualDescription> visualDescriptions)
    {
-      return graphics3DInstructions;
+      if (visualDescriptions != null)
+         this.visualDescriptions = visualDescriptions;
+      else
+         this.visualDescriptions = new ArrayList<>();
    }
 
-   public Graphics3DObject(Graphics3DObject graphics3DObject)
+   public Graphics3DObject(Graphics3DObject other)
    {
       this();
-      combine(graphics3DObject);
+      combine(other);
+   }
+
+   public List<VisualDescription> getGraphics3DInstructions()
+   {
+      return visualDescriptions;
    }
 
    /**
     * Merge this with the specified Graphics3DObject.
     *
-    * @param graphics3DObject Graphics3DObject to combine with.
+    * @param other Graphics3DObject to combine with.
     */
-   public void combine(Graphics3DObject graphics3DObject)
+   public void combine(Graphics3DObject other)
    {
       identity();
-      graphics3DInstructions.addAll(graphics3DObject.getGraphics3DInstructions());
+      visualDescriptions.addAll(other.getGraphics3DInstructions());
    }
 
-   public void combine(Graphics3DObject Graphics3DObject, Vector3DReadOnly offset)
+   public void combine(Graphics3DObject other, Vector3DReadOnly offset)
    {
-      identity();
-      this.translate(offset);
+      List<VisualDescription> otherVisuals = other.getGraphics3DInstructions();
 
-      List<Graphics3DPrimitiveInstruction> graphics3dInstructionsToAdd = Graphics3DObject.getGraphics3DInstructions();
-
-      for (Graphics3DPrimitiveInstruction graphics3dInstructionToAdd : graphics3dInstructionsToAdd)
+      for (VisualDescription otherVisual : otherVisuals)
       {
-         graphics3DInstructions.add(graphics3dInstructionToAdd);
-
-         // Somewhat hackish. Need to translate the offset after each identity instruction. Otherwise not.
-         // But this won't do the correct thing for instructions that might do identity in them.
-         // We really need a hiarchical, programmatic, tree like way for doing the instructions...
-         if (graphics3dInstructionToAdd instanceof Graphics3DIdentityInstruction)
-         {
-            this.translate(offset);
-         }
+         VisualDescription visual = new VisualDescription(otherVisual.getGeometry(), otherVisual.getMaterial());
+         AffineTransform pose = new AffineTransform(otherVisual.getPose());
+         pose.prependTranslation(offset);
+         visual.setPose(pose);
+         visualDescriptions.add(otherVisual);
       }
+
+      currentTransform.set(other.currentTransform);
+      currentTransform.prependTranslation(offset);
    }
 
-   public void addInstruction(Graphics3DPrimitiveInstruction instruction)
+   public void appendTransform(RigidBodyTransformReadOnly transform)
    {
-      graphics3DInstructions.add(instruction);
-   }
-
-   public void transform(RigidBodyTransformReadOnly transform)
-   {
-      translate(transform.getTranslation());
-      rotate(transform.getRotation());
+      currentTransform.multiply(transform);
    }
 
    /**
@@ -190,13 +140,13 @@ public class Graphics3DObject
     * based on those that preceded it. Each new has its coordinates reset to the parent joint's origin.
     * {@link #identity Identity} resets back to the joint origin.
     *
-    * @param tx distance translated in the x direction
-    * @param ty distance translated in the y direction
-    * @param tz distance translated in the z direction
+    * @param x distance translated in the x direction
+    * @param y distance translated in the y direction
+    * @param z distance translated in the z direction
     */
-   public void translate(double tx, double ty, double tz)
+   public void appendTranslation(double x, double y, double z)
    {
-      graphics3DInstructions.add(new Graphics3DTranslateInstruction(tx, ty, tz));
+      currentTransform.appendTranslation(x, y, z);
    }
 
    /**
@@ -207,33 +157,9 @@ public class Graphics3DObject
     *
     * @param translation Tuple3d representing the translation.
     */
-   public void translate(Tuple3DReadOnly translation)
+   public void appendTranslation(Tuple3DReadOnly translation)
    {
-      graphics3DInstructions.add(new Graphics3DTranslateInstruction(translation));
-   }
-
-   /**
-    * Rotates the coordinate system counter clockwise around the specified axis by the given angle in
-    * radians. This does not rotate existing graphics, instead it rotates a "cursor" when another
-    * object is added it will be centered on the origin of the current system as described by the
-    * translations and rotations applied since its creation at the joint origin.
-    *
-    * @param rotationAngle the angle to rotate around the specified axis in radians.
-    * @param rotationAxis  Axis around which to rotate. Either Link.X, Link.Y or Link.Z
-    */
-
-   public void rotate(double rotationAngle, Axis3D rotationAxis)
-   {
-      RotationMatrix rot = new RotationMatrix();
-
-      if (rotationAxis == Axis3D.X)
-         rot.setToRollOrientation(rotationAngle);
-      else if (rotationAxis == Axis3D.Y)
-         rot.setToPitchOrientation(rotationAngle);
-      else if (rotationAxis == Axis3D.Z)
-         rot.setToYawOrientation(rotationAngle);
-
-      rotate(rot);
+      currentTransform.appendTranslation(translation);
    }
 
    /**
@@ -245,9 +171,9 @@ public class Graphics3DObject
     * @param rotationAngle the angle to rotate around the specified axis in radians.
     * @param rotationAxis  Vector3d describing the axis of rotation.
     */
-   public void rotate(double rotationAngle, Vector3DReadOnly rotationAxis)
+   public void appendRotation(double rotationAngle, Vector3DReadOnly rotationAxis)
    {
-      rotate(new AxisAngle(rotationAxis, rotationAngle));
+      appendRotation(new AxisAngle(rotationAxis, rotationAngle));
    }
 
    /**
@@ -258,9 +184,9 @@ public class Graphics3DObject
     *
     * @param orientation Matrix3d describing the rotation to be applied.
     */
-   public void rotate(Orientation3DReadOnly orientation)
+   public void appendRotation(Orientation3DReadOnly orientation)
    {
-      graphics3DInstructions.add(new Graphics3DRotateInstruction(new RotationMatrix(orientation)));
+      currentTransform.appendOrientation(orientation);
    }
 
    /**
@@ -272,9 +198,9 @@ public class Graphics3DObject
     *                    future objects size by 50% whereas 2 would double it.
     * @return
     */
-   public Graphics3DScaleInstruction scale(double scaleFactor)
+   public void appendScale(double scaleFactor)
    {
-      return scale(new Vector3D(scaleFactor, scaleFactor, scaleFactor));
+      currentTransform.appendScale(scaleFactor);
    }
 
    /**
@@ -286,12 +212,42 @@ public class Graphics3DObject
     * @param scaleFactors Vector3d describing the scaling factors in each dimension.
     * @return
     */
-   public Graphics3DScaleInstruction scale(Vector3DReadOnly scaleFactors)
+   public void appendScale(Vector3DReadOnly scaleFactors)
    {
-      Graphics3DScaleInstruction graphics3DScale = new Graphics3DScaleInstruction(scaleFactors);
-      graphics3DInstructions.add(graphics3DScale);
+      currentTransform.appendScale(scaleFactors);
+   }
 
-      return graphics3DScale;
+   public void prependTransform(RigidBodyTransformReadOnly transform)
+   {
+      for (int i = 0; i < visualDescriptions.size(); i++)
+         visualDescriptions.get(i).getPose().preMultiply(transform);
+      currentTransform.preMultiply(transform);
+   }
+
+   public void prependTranslation(double x, double y, double z)
+   {
+      for (int i = 0; i < visualDescriptions.size(); i++)
+      {
+         visualDescriptions.get(i).getPose().prependTranslation(x, y, z);
+      }
+      currentTransform.prependTranslation(x, y, z);
+   }
+
+   public void prependTranslation(Tuple3DReadOnly translation)
+   {
+      prependTranslation(translation.getX(), translation.getY(), translation.getZ());
+   }
+
+   public void prependRotation(double rotationAngle, Vector3DReadOnly rotationAxis)
+   {
+      prependRotation(new AxisAngle(rotationAxis, rotationAngle));
+   }
+
+   public void prependRotation(Orientation3DReadOnly orientation)
+   {
+      for (int i = 0; i < visualDescriptions.size(); i++)
+         visualDescriptions.get(i).getPose().prependOrientation(orientation);
+      currentTransform.prependOrientation(orientation);
    }
 
    /**
@@ -302,9 +258,9 @@ public class Graphics3DObject
     *                    reduce future objects size by 50% whereas 2 would double it.
     * @return
     */
-   public void preScale(double scaleFactor)
+   public void prependScale(double scaleFactor)
    {
-      preScale(new Vector3D(scaleFactor, scaleFactor, scaleFactor));
+      prependScale(new Vector3D(scaleFactor, scaleFactor, scaleFactor));
    }
 
    /**
@@ -315,23 +271,11 @@ public class Graphics3DObject
     * @param scaleFactors Vector3d describing the scaling factors in each dimension
     * @return
     */
-   public void preScale(Vector3D scaleFactors)
+   public void prependScale(Vector3DReadOnly scaleFactors)
    {
-
-      List<Graphics3DPrimitiveInstruction> newInstructions = new ArrayList<>();
-      newInstructions.add(new Graphics3DScaleInstruction(scaleFactors));
-
-      for (int i = 0; i < graphics3DInstructions.size(); i++)
-      {
-         Graphics3DPrimitiveInstruction instruction = graphics3DInstructions.get(i);
-         newInstructions.add(instruction);
-         if (instruction instanceof Graphics3DIdentityInstruction)
-         {
-            newInstructions.add(new Graphics3DScaleInstruction(scaleFactors));
-         }
-      }
-
-      graphics3DInstructions = newInstructions;
+      for (int i = 0; i < visualDescriptions.size(); i++)
+         visualDescriptions.get(i).getPose().prependScale(scaleFactors);
+      currentTransform.prependScale(scaleFactors);
    }
 
    /**
@@ -340,7 +284,20 @@ public class Graphics3DObject
     */
    public void identity()
    {
-      graphics3DInstructions.add(new Graphics3DIdentityInstruction());
+      currentTransform.setIdentity();
+   }
+
+   public VisualDescription addVisualDescription(VisualDescription instruction)
+   {
+      visualDescriptions.add(instruction);
+      return instruction;
+   }
+
+   public VisualDescription addGeometryDescription(GeometryDescription geometryDescription, AppearanceDefinition appearance)
+   {
+      return addVisualDescription(new VisualDescription(new AffineTransform(currentTransform),
+                                                        geometryDescription,
+                                                        new MaterialDescription(appearance.toColorDescription())));
    }
 
    /**
@@ -351,9 +308,9 @@ public class Graphics3DObject
     *
     * @param fileURL URL pointing to the desired 3ds file.
     */
-   public void addModelFile(URL fileURL)
+   public VisualDescription addModelFile(URL fileURL)
    {
-      addModelFile(fileURL, null);
+      return addModelFile(fileURL, null);
    }
 
    /**
@@ -365,27 +322,23 @@ public class Graphics3DObject
     * @param fileURL                URL pointing to the desired 3ds file.
     * @param yoAppearanceDefinition Appearance to use with the 3ds model once imported.
     */
-   public void addModelFile(URL fileURL, AppearanceDefinition yoAppearanceDefinition)
+   public VisualDescription addModelFile(URL fileURL, AppearanceDefinition yoAppearanceDefinition)
    {
       if (fileURL == null)
       {
-         System.err.println("fileURL == null in addModelFile");
-
-         return;
+         LogTools.error("fileURL == null in addModelFile");
+         return null;
       }
 
       String fileName = fileURL.getFile();
 
-      // System.out.println("File name: " + fileName + " " + fileName.length());
-
       if (fileName == null || fileName.equals(""))
       {
-         System.out.println("Null File Name in add3DSFile");
-
-         return;
+         LogTools.error("Null File Name in add3DSFile");
+         return null;
       }
 
-      addModelFile(fileName, yoAppearanceDefinition);
+      return addModelFile(fileName, yoAppearanceDefinition);
    }
 
    /**
@@ -396,9 +349,9 @@ public class Graphics3DObject
     * @param fileName File path of the desired 3ds file.
     * @return void
     */
-   public void addModelFile(String fileName)
+   public VisualDescription addModelFile(String fileName)
    {
-      addModelFile(fileName, null);
+      return addModelFile(fileName, null);
    }
 
    /**
@@ -412,35 +365,25 @@ public class Graphics3DObject
 
    /**
     * @param fileName
-    * @param app
+    * @param appearance
     * @return
     */
-   public GeometryGraphics3DInstruction addModelFile(String fileName, AppearanceDefinition app)
+   public VisualDescription addModelFile(String fileName, AppearanceDefinition appearance)
    {
-      ModelFileGeometryDescription modelFileGeometryDescription = new ModelFileGeometryDescription(fileName);
-      GeometryGraphics3DInstruction graphics3dAddModelFileInstruction = new GeometryGraphics3DInstruction(modelFileGeometryDescription);
-      graphics3dAddModelFileInstruction.setAppearance(app);
-      graphics3DInstructions.add(graphics3dAddModelFileInstruction);
-
-      return graphics3dAddModelFileInstruction;
+      return addGeometryDescription(new ModelFileGeometryDescription(fileName), appearance);
    }
 
-   public GeometryGraphics3DInstruction addModelFile(String fileName, String submesh, boolean centerSubmesh, List<String> resourceDirectories,
-                                                     ClassLoader resourceClassLoader, AppearanceDefinition app)
+   public VisualDescription addModelFile(String fileName, String submesh, boolean centerSubmesh, List<String> resourceDirectories,
+                                         ClassLoader resourceClassLoader, AppearanceDefinition appearance)
    {
       ModelFileGeometryDescription modelFileGeometryDescription = new ModelFileGeometryDescription(fileName);
       modelFileGeometryDescription.setResourceDirectories(resourceDirectories);
       modelFileGeometryDescription.setSubmeshes(Collections.singletonList(new SubMeshDescription(submesh, centerSubmesh)));
       modelFileGeometryDescription.setResourceClassLoader(resourceClassLoader);
-      GeometryGraphics3DInstruction graphics3dAddModelFileInstruction = new GeometryGraphics3DInstruction(modelFileGeometryDescription);
-      graphics3dAddModelFileInstruction.setAppearance(app);
-      graphics3DInstructions.add(graphics3dAddModelFileInstruction);
-
-      return graphics3dAddModelFileInstruction;
+      return addGeometryDescription(modelFileGeometryDescription, appearance);
    }
 
-   public GeometryGraphics3DInstruction addModelFile(String fileName, List<String> resourceDirectories, ClassLoader resourceClassLoader,
-                                                     AppearanceDefinition app)
+   public VisualDescription addModelFile(String fileName, List<String> resourceDirectories, ClassLoader resourceClassLoader, AppearanceDefinition app)
    {
       return addModelFile(fileName, null, false, resourceDirectories, resourceClassLoader, app);
    }
@@ -467,12 +410,12 @@ public class Graphics3DObject
    public void addCoordinateSystem(double length, AppearanceDefinition xAxisAppearance, AppearanceDefinition yAxisAppearance,
                                    AppearanceDefinition zAxisAppearance, AppearanceDefinition arrowAppearance)
    {
-      rotate(Math.PI / 2.0, Axis3D.Y);
+      appendRotation(Math.PI / 2.0, Axis3D.Y);
       addArrow(length, YoAppearance.Red(), arrowAppearance);
-      rotate(-Math.PI / 2.0, Axis3D.Y);
-      rotate(-Math.PI / 2.0, Axis3D.X);
+      appendRotation(-Math.PI / 2.0, Axis3D.Y);
+      appendRotation(-Math.PI / 2.0, Axis3D.X);
       addArrow(length, YoAppearance.White(), arrowAppearance);
-      rotate(Math.PI / 2.0, Axis3D.X);
+      appendRotation(Math.PI / 2.0, Axis3D.X);
       addArrow(length, YoAppearance.Blue(), arrowAppearance);
    }
 
@@ -486,14 +429,14 @@ public class Graphics3DObject
       if (shape instanceof Box3DReadOnly)
       {
          Box3DReadOnly box = (Box3DReadOnly) shape;
-         transform(box.getPose());
+         appendTransform(box.getPose());
          addCube(box.getSizeX(), box.getSizeY(), box.getSizeZ(), true, shapeAppearance);
       }
       else if (shape instanceof Capsule3DReadOnly)
       {
          Capsule3DReadOnly capsule = (Capsule3DReadOnly) shape;
-         translate(capsule.getPosition());
-         rotate(EuclidGeometryTools.axisAngleFromZUpToVector3D(capsule.getAxis()));
+         appendTranslation(capsule.getPosition());
+         appendRotation(EuclidGeometryTools.axisAngleFromZUpToVector3D(capsule.getAxis()));
          addCapsule(capsule.getRadius(),
                     capsule.getLength() + 2.0 * capsule.getRadius(), // the 2nd term is removed internally.
                     shapeAppearance);
@@ -501,41 +444,41 @@ public class Graphics3DObject
       else if (shape instanceof Cylinder3DReadOnly)
       {
          Cylinder3DReadOnly cylinder = (Cylinder3DReadOnly) shape;
-         translate(cylinder.getPosition());
-         rotate(EuclidGeometryTools.axisAngleFromZUpToVector3D(cylinder.getAxis()));
-         translate(0.0, 0.0, -cylinder.getHalfLength());
+         appendTranslation(cylinder.getPosition());
+         appendRotation(EuclidGeometryTools.axisAngleFromZUpToVector3D(cylinder.getAxis()));
+         appendTranslation(0.0, 0.0, -cylinder.getHalfLength());
          addCylinder(cylinder.getLength(), cylinder.getRadius(), shapeAppearance);
       }
       else if (shape instanceof Ellipsoid3DReadOnly)
       {
          Ellipsoid3DReadOnly ellipsoid = (Ellipsoid3DReadOnly) shape;
-         transform(ellipsoid.getPose());
+         appendTransform(ellipsoid.getPose());
          addEllipsoid(ellipsoid.getRadiusX(), ellipsoid.getRadiusY(), ellipsoid.getRadiusZ(), shapeAppearance);
       }
       else if (shape instanceof PointShape3DReadOnly)
       {
          PointShape3DReadOnly pointShape = (PointShape3DReadOnly) shape;
-         translate(pointShape);
+         appendTranslation(pointShape);
          addSphere(0.005, shapeAppearance); // Arbitrary radius
       }
       else if (shape instanceof Ramp3DReadOnly)
       {
          Ramp3DReadOnly ramp = (Ramp3DReadOnly) shape;
-         transform(ramp.getPose());
-         translate(-0.5 * ramp.getSizeX(), 0.0, 0.0);
+         appendTransform(ramp.getPose());
+         appendTranslation(-0.5 * ramp.getSizeX(), 0.0, 0.0);
          addWedge(ramp.getSizeX(), ramp.getSizeY(), ramp.getSizeZ(), shapeAppearance);
       }
       else if (shape instanceof Sphere3DReadOnly)
       {
          Sphere3DReadOnly sphere = (Sphere3DReadOnly) shape;
-         translate(sphere.getPosition());
+         appendTranslation(sphere.getPosition());
          addSphere(sphere.getRadius(), shapeAppearance);
       }
       else if (shape instanceof Torus3DReadOnly)
       {
          Torus3DReadOnly torus = (Torus3DReadOnly) shape;
-         translate(torus.getPosition());
-         rotate(EuclidGeometryTools.axisAngleFromZUpToVector3D(torus.getAxis()));
+         appendTranslation(torus.getPosition());
+         appendRotation(EuclidGeometryTools.axisAngleFromZUpToVector3D(torus.getAxis()));
          addArcTorus(0.0, 2.0 * Math.PI, torus.getRadius(), torus.getTubeRadius(), shapeAppearance);
       }
       else
@@ -553,9 +496,9 @@ public class Graphics3DObject
       double coneRadius = 2.0 * radius;
 
       addCylinder(cylinderHeight, radius, baseAppearance);
-      translate(0.0, 0.0, cylinderHeight);
+      appendTranslation(0.0, 0.0, cylinderHeight);
       addCone(coneHeight, coneRadius, headAppearance);
-      translate(0.0, 0.0, -cylinderHeight);
+      appendTranslation(0.0, 0.0, -cylinderHeight);
    }
 
    /**
@@ -575,7 +518,7 @@ public class Graphics3DObject
     * @param widthY  width of the cube in the y direction.
     * @param heightZ height of the cube in the z direction.
     */
-   public GeometryGraphics3DInstruction addCube(double lengthX, double widthY, double heightZ)
+   public VisualDescription addCube(double lengthX, double widthY, double heightZ)
    {
       return addCube(lengthX, widthY, heightZ, DEFAULT_APPEARANCE);
    }
@@ -600,12 +543,12 @@ public class Graphics3DObject
     *                       implementations.
     * @return
     */
-   public GeometryGraphics3DInstruction addCube(double lengthX, double widthY, double heightZ, AppearanceDefinition cubeAppearance)
+   public VisualDescription addCube(double lengthX, double widthY, double heightZ, AppearanceDefinition cubeAppearance)
    {
       return addCube(lengthX, widthY, heightZ, false, cubeAppearance);
    }
 
-   public GeometryGraphics3DInstruction addCube(double lengthX, double widthY, double heightZ, boolean centeredInTheCenter, AppearanceDefinition cubeApp)
+   public VisualDescription addCube(double lengthX, double widthY, double heightZ, boolean centeredInTheCenter, AppearanceDefinition cubeApp)
    {
       return addGeometryDescription(new Box3DDescription(lengthX, widthY, heightZ, centeredInTheCenter), cubeApp);
    }
@@ -628,7 +571,7 @@ public class Graphics3DObject
     * @param widthY  width of the wedge in the y direction.
     * @param heightZ height of the wedge in the z direction.
     */
-   public GeometryGraphics3DInstruction addWedge(double lengthX, double widthY, double heightZ)
+   public VisualDescription addWedge(double lengthX, double widthY, double heightZ)
    {
       return addWedge(lengthX, widthY, heightZ, DEFAULT_APPEARANCE);
    }
@@ -653,7 +596,7 @@ public class Graphics3DObject
     * @param wedgeAppearance Appearance of the wedge. See {@link YoAppearance YoAppearance} for
     *                        implementations.
     */
-   public GeometryGraphics3DInstruction addWedge(double lengthX, double widthY, double heightZ, AppearanceDefinition wedgeAppearance)
+   public VisualDescription addWedge(double lengthX, double widthY, double heightZ, AppearanceDefinition wedgeAppearance)
    {
       return addGeometryDescription(new Wedge3DDescription(lengthX, widthY, heightZ), wedgeAppearance);
    }
@@ -673,7 +616,7 @@ public class Graphics3DObject
     *
     * @param radius radius of the new sphere in meters.
     */
-   public GeometryGraphics3DInstruction addSphere(double radius)
+   public VisualDescription addSphere(double radius)
    {
       return addSphere(radius, DEFAULT_APPEARANCE);
    }
@@ -695,40 +638,35 @@ public class Graphics3DObject
     * @param sphereAppearance Appearance to be used with the new sphere. See {@link YoAppearance
     *                         YoAppearance} for implementations.
     */
-   public GeometryGraphics3DInstruction addSphere(double radius, AppearanceDefinition sphereAppearance)
+   public VisualDescription addSphere(double radius, AppearanceDefinition sphereAppearance)
    {
       return addGeometryDescription(new Sphere3DDescription(radius, RESOLUTION), sphereAppearance);
    }
 
-   public GeometryGraphics3DInstruction addCapsule(double radius, double height)
+   public VisualDescription addCapsule(double radius, double height)
    {
       return addCapsule(radius, height, DEFAULT_APPEARANCE);
    }
 
-   public GeometryGraphics3DInstruction addCapsule(double radius, double height, AppearanceDefinition capsuleAppearance)
+   public VisualDescription addCapsule(double radius, double height, AppearanceDefinition capsuleAppearance)
    {
       return addGeometryDescription(new Capsule3DDescription(height, radius, RESOLUTION), capsuleAppearance);
    }
 
-   public GeometryGraphics3DInstruction addMeshData(MeshDataHolder meshData, AppearanceDefinition meshAppearance)
+   public VisualDescription addMeshData(MeshDataHolder meshData, AppearanceDefinition appearance)
    {
       // The subsequent classes do not accept null, just create an empty mesh in that case
-      GeometryGraphics3DInstruction instruction = createMeshDataInstruction(meshData, meshAppearance);
-      graphics3DInstructions.add(instruction);
-
-      return instruction;
+      return addGeometryDescription(createMeshDescription(meshData, appearance), appearance);
    }
 
-   public static GeometryGraphics3DInstruction createMeshDataInstruction(MeshDataHolder meshData, AppearanceDefinition meshAppearance)
+   public static MeshDescription createMeshDescription(MeshDataHolder meshData, AppearanceDefinition meshAppearance)
    {
       if (meshData == null)
       {
          meshData = new MeshDataHolder(new Point3D32[0], new Point2D32[0], new int[0], new Vector3D32[0]);
          meshData.setName("nullMesh");
       }
-      GeometryGraphics3DInstruction instruction = new GeometryGraphics3DInstruction(new MeshDescription(meshData));
-      instruction.setAppearance(meshAppearance);
-      return instruction;
+      return new MeshDescription(meshData);
    }
 
    /**
@@ -748,7 +686,7 @@ public class Graphics3DObject
     * @param yRadius y direction radius in meters
     * @param zRadius z direction radius in meters
     */
-   public GeometryGraphics3DInstruction addEllipsoid(double xRadius, double yRadius, double zRadius)
+   public VisualDescription addEllipsoid(double xRadius, double yRadius, double zRadius)
    {
       return addEllipsoid(xRadius, yRadius, zRadius, DEFAULT_APPEARANCE);
    }
@@ -772,7 +710,7 @@ public class Graphics3DObject
     * @param ellipsoidAppearance Appearance to be used with the new ellipsoid. See {@link YoAppearance
     *                            YoAppearance} for implementations.
     */
-   public GeometryGraphics3DInstruction addEllipsoid(double xRadius, double yRadius, double zRadius, AppearanceDefinition ellipsoidAppearance)
+   public VisualDescription addEllipsoid(double xRadius, double yRadius, double zRadius, AppearanceDefinition ellipsoidAppearance)
    {
       return addGeometryDescription(new Ellipsoid3DDescription(xRadius, yRadius, zRadius, RESOLUTION), ellipsoidAppearance);
    }
@@ -793,7 +731,7 @@ public class Graphics3DObject
     * @param height cylinder height in meters.
     * @param radius cylinder radius in meters.
     */
-   public GeometryGraphics3DInstruction addCylinder(double height, double radius)
+   public VisualDescription addCylinder(double height, double radius)
    {
       return addCylinder(height, radius, DEFAULT_APPEARANCE);
    }
@@ -816,7 +754,7 @@ public class Graphics3DObject
     * @param cylApp Appearance to be used with the new cylinder. See {@link YoAppearance YoAppearance}
     *               for implementations.
     */
-   public GeometryGraphics3DInstruction addCylinder(double height, double radius, AppearanceDefinition cylApp)
+   public VisualDescription addCylinder(double height, double radius, AppearanceDefinition cylApp)
    {
       return addGeometryDescription(new Cylinder3DDescription(height, radius, false, RESOLUTION), cylApp);
    }
@@ -837,7 +775,7 @@ public class Graphics3DObject
     * @param height cone height in meters.
     * @param radius cone radius in meters.
     */
-   public GeometryGraphics3DInstruction addCone(double height, double radius)
+   public VisualDescription addCone(double height, double radius)
    {
       return addCone(height, radius, DEFAULT_APPEARANCE);
    }
@@ -860,7 +798,7 @@ public class Graphics3DObject
     * @param coneApp Appearance to be used with the new cone. See {@link YoAppearance YoAppearance} for
     *                implementations.
     */
-   public GeometryGraphics3DInstruction addCone(double height, double radius, AppearanceDefinition coneApp)
+   public VisualDescription addCone(double height, double radius, AppearanceDefinition coneApp)
    {
       return addGeometryDescription(new Cone3DDescription(height, radius, RESOLUTION), coneApp);
    }
@@ -885,7 +823,7 @@ public class Graphics3DObject
     * @param tx     x direction width of the top in meters
     * @param ty     y direction width of the top in meters
     */
-   public GeometryGraphics3DInstruction addGenTruncatedCone(double height, double bx, double by, double tx, double ty)
+   public VisualDescription addGenTruncatedCone(double height, double bx, double by, double tx, double ty)
    {
       return addGenTruncatedCone(height, bx, by, tx, ty, DEFAULT_APPEARANCE);
    }
@@ -912,7 +850,7 @@ public class Graphics3DObject
     * @param coneApp Appearance to be used with the new truncated cone. See {@link YoAppearance
     *                YoAppearance} for implementations.
     */
-   public GeometryGraphics3DInstruction addGenTruncatedCone(double height, double bx, double by, double tx, double ty, AppearanceDefinition coneApp)
+   public VisualDescription addGenTruncatedCone(double height, double bx, double by, double tx, double ty, AppearanceDefinition coneApp)
    {
       return addGeometryDescription(new TruncatedCone3DDescription(height, tx, ty, bx, by, RESOLUTION), coneApp);
    }
@@ -935,7 +873,7 @@ public class Graphics3DObject
     * @param yRad radius of the ellipsoid in the y direction.
     * @param zRad radius of the ellipsoid in the z direction.
     */
-   public GeometryGraphics3DInstruction addHemiEllipsoid(double xRad, double yRad, double zRad)
+   public VisualDescription addHemiEllipsoid(double xRad, double yRad, double zRad)
    {
       return addHemiEllipsoid(xRad, yRad, zRad, DEFAULT_APPEARANCE);
    }
@@ -960,7 +898,7 @@ public class Graphics3DObject
     * @param hEApp Appearance to be used with the new hemi ellipsoid. See {@link YoAppearance
     *              YoAppearance} for implementations.
     */
-   public GeometryGraphics3DInstruction addHemiEllipsoid(double xRad, double yRad, double zRad, AppearanceDefinition hEApp)
+   public VisualDescription addHemiEllipsoid(double xRad, double yRad, double zRad, AppearanceDefinition hEApp)
    {
       return addGeometryDescription(new HemiEllipsoid3DDescription(xRad, yRad, zRad, RESOLUTION), hEApp);
    }
@@ -987,7 +925,7 @@ public class Graphics3DObject
     * @param majorRadius Distance from the origin to the center of the torus
     * @param minorRadius Distance from the center of the torus to the walls on either side.
     */
-   public GeometryGraphics3DInstruction addArcTorus(double startAngle, double endAngle, double majorRadius, double minorRadius)
+   public VisualDescription addArcTorus(double startAngle, double endAngle, double majorRadius, double minorRadius)
    {
       return addArcTorus(startAngle, endAngle, majorRadius, minorRadius, DEFAULT_APPEARANCE);
    }
@@ -1018,8 +956,7 @@ public class Graphics3DObject
     * @param arcTorusApp Appearance to be used with the new arctorus. See {@link YoAppearance
     *                    YoAppearance} for implementations.
     */
-   public GeometryGraphics3DInstruction addArcTorus(double startAngle, double endAngle, double majorRadius, double minorRadius,
-                                                    AppearanceDefinition arcTorusApp)
+   public VisualDescription addArcTorus(double startAngle, double endAngle, double majorRadius, double minorRadius, AppearanceDefinition arcTorusApp)
    {
       return addGeometryDescription(new ArcTorus3DDescription(startAngle, endAngle, majorRadius, minorRadius, RESOLUTION), arcTorusApp);
    }
@@ -1043,7 +980,7 @@ public class Graphics3DObject
     * @param lz Height of the cube in meters. (z direction)
     * @param lh Height of the pyramids in meters.
     */
-   public GeometryGraphics3DInstruction addPyramidCube(double lx, double ly, double lz, double lh)
+   public VisualDescription addPyramidCube(double lx, double ly, double lz, double lh)
    {
       return addPyramidCube(lx, ly, lz, lh, DEFAULT_APPEARANCE);
    }
@@ -1070,12 +1007,12 @@ public class Graphics3DObject
     * @param cubeApp Appearance to be used with the new pyramid cube. See {@link YoAppearance
     *                YoAppearance} for implementations.
     */
-   public GeometryGraphics3DInstruction addPyramidCube(double lx, double ly, double lz, double lh, AppearanceDefinition cubeApp)
+   public VisualDescription addPyramidCube(double lx, double ly, double lz, double lh, AppearanceDefinition cubeApp)
    {
       return addGeometryDescription(new PyramidBox3DDescription(lx, ly, lz, lh), cubeApp);
    }
 
-   public GeometryGraphics3DInstruction addPolygon(List<? extends Point3DReadOnly> polygonPoints)
+   public VisualDescription addPolygon(List<? extends Point3DReadOnly> polygonPoints)
    {
       return addPolygon(polygonPoints, DEFAULT_APPEARANCE);
    }
@@ -1089,7 +1026,7 @@ public class Graphics3DObject
     * @param yoAppearance  Appearance to be used with the new polygon. See {@link YoAppearance
     *                      YoAppearance} for implementations.
     */
-   public GeometryGraphics3DInstruction addPolygon(List<? extends Point3DReadOnly> polygonPoints, AppearanceDefinition yoAppearance)
+   public VisualDescription addPolygon(List<? extends Point3DReadOnly> polygonPoints, AppearanceDefinition yoAppearance)
    {
       return addGeometryDescription(new Polygon3DDescription(polygonPoints.stream().map(Point3D::new).collect(Collectors.toList()), true), yoAppearance);
    }
@@ -1103,7 +1040,7 @@ public class Graphics3DObject
     * @param yoAppearance    Appearance to be used with the new polygon. See {@link YoAppearance
     *                        YoAppearance} for implementations.
     */
-   public GeometryGraphics3DInstruction addPolygon(ConvexPolygon2DReadOnly convexPolygon2d, AppearanceDefinition yoAppearance)
+   public VisualDescription addPolygon(ConvexPolygon2DReadOnly convexPolygon2d, AppearanceDefinition yoAppearance)
    {
       List<Point3D> polygonPoints = new ArrayList<>();
       int numPoints = convexPolygon2d.getNumberOfVertices();
@@ -1117,7 +1054,7 @@ public class Graphics3DObject
       return addPolygon(polygonPoints, yoAppearance);
    }
 
-   public GeometryGraphics3DInstruction addPolygon(ConvexPolygon2DReadOnly convexPolygon2d)
+   public VisualDescription addPolygon(ConvexPolygon2DReadOnly convexPolygon2d)
    {
       return addPolygon(convexPolygon2d, DEFAULT_APPEARANCE);
    }
@@ -1129,7 +1066,7 @@ public class Graphics3DObject
 
    public void addPolygons(RigidBodyTransformReadOnly transform, List<? extends ConvexPolygon2DReadOnly> convexPolygon2D, AppearanceDefinition appearance)
    {
-      transform(transform);
+      appendTransform(transform);
 
       for (int i = 0; i < convexPolygon2D.size(); i++)
       {
@@ -1140,7 +1077,7 @@ public class Graphics3DObject
 
       RigidBodyTransform transformLocal = new RigidBodyTransform(transform);
       transformLocal.invert();
-      transform(transformLocal);
+      appendTransform(transformLocal);
    }
 
    /**
@@ -1150,7 +1087,7 @@ public class Graphics3DObject
     *
     * @param polygonPoint Array containing Point3D's to be used when generating the shape.
     */
-   public GeometryGraphics3DInstruction addPolygon(Point3DReadOnly[] polygonPoint)
+   public VisualDescription addPolygon(Point3DReadOnly[] polygonPoint)
    {
       return addPolygon(polygonPoint, DEFAULT_APPEARANCE);
    }
@@ -1164,34 +1101,34 @@ public class Graphics3DObject
     * @param yoAppearance  Appearance to be used with the new polygon. See {@link AppearanceDefinition}
     *                      for implementations.
     */
-   public GeometryGraphics3DInstruction addPolygon(Point3DReadOnly[] polygonPoints, AppearanceDefinition yoAppearance)
+   public VisualDescription addPolygon(Point3DReadOnly[] polygonPoints, AppearanceDefinition yoAppearance)
    {
       MeshDataHolder meshData = MeshDataGenerator.PolygonCounterClockwise(Arrays.asList(polygonPoints));
       return addMeshData(meshData, yoAppearance);
    }
 
-   public GeometryGraphics3DInstruction addPolygon(AppearanceDefinition yoAppearance, Point3DReadOnly... polygonPoints)
+   public VisualDescription addPolygon(AppearanceDefinition yoAppearance, Point3DReadOnly... polygonPoints)
    {
       return addPolygon(polygonPoints, yoAppearance);
    }
 
-   public GeometryGraphics3DInstruction addExtrudedPolygon(ConvexPolygon2DReadOnly convexPolygon2d, double height)
+   public VisualDescription addExtrudedPolygon(ConvexPolygon2DReadOnly convexPolygon2d, double height)
    {
       return addExtrudedPolygon(convexPolygon2d, height, DEFAULT_APPEARANCE);
    }
 
-   public GeometryGraphics3DInstruction addExtrudedPolygon(ConvexPolygon2DReadOnly convexPolygon2d, double height, AppearanceDefinition appearance)
+   public VisualDescription addExtrudedPolygon(ConvexPolygon2DReadOnly convexPolygon2d, double height, AppearanceDefinition appearance)
    {
       List<Point2D> vertices = convexPolygon2d.getPolygonVerticesView().stream().map(Point2D::new).collect(Collectors.toList());
       return addGeometryDescription(new ExtrudedPolygon2DDescription(vertices, true, height), appearance);
    }
 
-   public GeometryGraphics3DInstruction addExtrudedPolygon(List<? extends Point2DReadOnly> polygonPoints, double height)
+   public VisualDescription addExtrudedPolygon(List<? extends Point2DReadOnly> polygonPoints, double height)
    {
       return addExtrudedPolygon(polygonPoints, height, DEFAULT_APPEARANCE);
    }
 
-   public GeometryGraphics3DInstruction addExtrudedPolygon(List<? extends Point2DReadOnly> polygonPoints, double height, AppearanceDefinition appearance)
+   public VisualDescription addExtrudedPolygon(List<? extends Point2DReadOnly> polygonPoints, double height, AppearanceDefinition appearance)
    {
       List<Point2D> vertices = polygonPoints.stream().map(Point2D::new).collect(Collectors.toList());
       return addGeometryDescription(new ExtrudedPolygon2DDescription(vertices, true, height), appearance);
@@ -1205,30 +1142,14 @@ public class Graphics3DObject
     * @param thickness              Thinkness of extrusion
     * @param appearance             Appearance
     */
-   public GeometryGraphics3DInstruction addExtrusion(BufferedImage bufferedImageToExtrude, double thickness, AppearanceDefinition appearance)
+   public VisualDescription addExtrusion(BufferedImage bufferedImageToExtrude, double thickness, AppearanceDefinition appearance)
    {
-      GeometryGraphics3DInstruction instruction = new GeometryGraphics3DInstruction(new ExtrusionDescription(bufferedImageToExtrude, thickness));
-      instruction.setAppearance(appearance);
-      graphics3DInstructions.add(instruction);
-
-      return instruction;
+      return addGeometryDescription(new ExtrusionDescription(bufferedImageToExtrude, thickness), appearance);
    }
 
-   public GeometryGraphics3DInstruction addText(String text, double thickness, AppearanceDefinition yoAppearance)
+   public VisualDescription addText(String text, double thickness, AppearanceDefinition appearance)
    {
-      GeometryGraphics3DInstruction instruction = new GeometryGraphics3DInstruction(new ExtrusionDescription(text, thickness));
-      instruction.setAppearance(yoAppearance);
-      graphics3DInstructions.add(instruction);
-
-      return instruction;
-   }
-
-   public GeometryGraphics3DInstruction addGeometryDescription(GeometryDescription geometryDescription, AppearanceDefinition appearance)
-   {
-      GeometryGraphics3DInstruction instruction = new GeometryGraphics3DInstruction(geometryDescription);
-      instruction.setAppearance(appearance);
-      graphics3DInstructions.add(instruction);
-      return instruction;
+      return addGeometryDescription(new ExtrusionDescription(text, thickness), appearance);
    }
 
    public void createInertiaEllipsoid(Matrix3DReadOnly momentOfInertia, Vector3DReadOnly comOffset, double mass, AppearanceDefinition appearance)
@@ -1243,44 +1164,14 @@ public class Graphics3DObject
       ellipsoidRadii.setY(Math.sqrt(5.0 / 2.0 * (Izz + Ixx - Iyy) / mass));
       ellipsoidRadii.setZ(Math.sqrt(5.0 / 2.0 * (Ixx + Iyy - Izz) / mass));
 
-      this.translate(comOffset);
+      this.appendTranslation(comOffset);
       this.addEllipsoid(ellipsoidRadii.getX(), ellipsoidRadii.getY(), ellipsoidRadii.getZ(), appearance);
       identity();
    }
 
-   public Graphics3DInstruction addTeaPot(AppearanceDefinition appearance)
+   public VisualDescription addHeightMap(HeightMap heightMap, int xPointsPerSide, int yPointsPerSide, AppearanceDefinition appearance)
    {
-      return addModelFile("models/Teapot.obj", appearance);
-   }
-
-   public GeometryGraphics3DInstruction addHeightMap(HeightMap heightMap, int xPointsPerSide, int yPointsPerSide, AppearanceDefinition appearance)
-   {
-      GeometryGraphics3DInstruction instruction = new GeometryGraphics3DInstruction(new HeightMapDescription(heightMap, xPointsPerSide, yPointsPerSide));
-      instruction.setAppearance(appearance);
-      graphics3DInstructions.add(instruction);
-      return instruction;
-   }
-
-   public void notifySelectedListeners(Graphics3DNode graphics3dNode, ModifierKeyInterface modifierKeyHolder, Point3DReadOnly location,
-                                       Point3DReadOnly cameraPosition, QuaternionReadOnly cameraRotation)
-   {
-      if (selectedListeners != null)
-      {
-         for (SelectedListener selectedListener : selectedListeners)
-         {
-            selectedListener.selected(graphics3dNode, modifierKeyHolder, location, cameraPosition, cameraRotation);
-         }
-      }
-   }
-
-   public void registerSelectedListener(SelectedListener selectedListener)
-   {
-      if (selectedListeners == null)
-      {
-         selectedListeners = new ArrayList<>();
-      }
-
-      selectedListeners.add(selectedListener);
+      return addGeometryDescription(new HeightMapDescription(heightMap, xPointsPerSide, yPointsPerSide), appearance);
    }
 
    public boolean isChangeable()

@@ -2,6 +2,7 @@ package us.ihmc.graphicsDescription.appearance;
 
 import java.awt.Color;
 
+import us.ihmc.graphicsDescription.color.ColorDescription;
 import us.ihmc.graphicsDescription.color.MutableColor;
 
 public interface AppearanceDefinition
@@ -13,4 +14,6 @@ public interface AppearanceDefinition
    public MutableColor getColor();
 
    public Color getAwtColor();
+
+   public ColorDescription toColorDescription();
 }

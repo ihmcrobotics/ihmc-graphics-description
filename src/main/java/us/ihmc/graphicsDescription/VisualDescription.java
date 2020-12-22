@@ -1,16 +1,18 @@
 package us.ihmc.graphicsDescription;
 
-import us.ihmc.euclid.transform.RigidBodyTransform;
+import us.ihmc.euclid.interfaces.Transformable;
+import us.ihmc.euclid.transform.AffineTransform;
+import us.ihmc.euclid.transform.interfaces.Transform;
 import us.ihmc.graphicsDescription.appearance.MaterialDescription;
 import us.ihmc.graphicsDescription.geometry.GeometryDescription;
 
 /**
  * Description for creating a 3D graphic object with a pose, geometry, and material.
  */
-public class VisualDescription
+public class VisualDescription implements Transformable
 {
    private String name;
-   private RigidBodyTransform pose;
+   private AffineTransform pose;
    private GeometryDescription geometry;
    private MaterialDescription material;
 
@@ -41,7 +43,7 @@ public class VisualDescription
     * @param geometry the geometry of the visual.
     * @param material the material of the visual.
     */
-   public VisualDescription(RigidBodyTransform pose, GeometryDescription geometry, MaterialDescription material)
+   public VisualDescription(AffineTransform pose, GeometryDescription geometry, MaterialDescription material)
    {
       this.pose = pose;
       this.geometry = geometry;
@@ -64,7 +66,7 @@ public class VisualDescription
     * 
     * @param pose the pose for this visual.
     */
-   public void setPose(RigidBodyTransform pose)
+   public void setPose(AffineTransform pose)
    {
       this.pose = pose;
    }
@@ -104,7 +106,7 @@ public class VisualDescription
     * 
     * @return the pose of this visual.
     */
-   public RigidBodyTransform getPose()
+   public AffineTransform getPose()
    {
       return pose;
    }
@@ -127,5 +129,17 @@ public class VisualDescription
    public MaterialDescription getMaterial()
    {
       return material;
+   }
+
+   @Override
+   public void applyTransform(Transform transform)
+   {
+      transform.transform(pose);
+   }
+
+   @Override
+   public void applyInverseTransform(Transform transform)
+   {
+      transform.inverseTransform(pose);
    }
 }
