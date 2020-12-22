@@ -30,21 +30,21 @@ public class MeshDescription implements GeometryDescription
    public void setName(String name)
    {
       this.name = name;
+      notifyListeners(true, false);
    }
 
    public void setMesh(MeshDataHolder mesh)
    {
+      this.mesh = mesh;
+      notifyListeners(false, true);
+   }
 
-      if (listeners != null && !listeners.isEmpty())
-      {
-         MeshDescription oldValue = new MeshDescription(this);
-         this.mesh = mesh;
-         listeners.forEach(listener -> listener.onChange(oldValue, this));
-      }
-      else
-      {
-         this.mesh = mesh;
-      }
+   private void notifyListeners(boolean wasNameChanged, boolean wasMeshDataChanged)
+   {
+      if (listeners == null || listeners.isEmpty())
+         return;
+      Change change = new ChangeImpl(wasNameChanged, wasMeshDataChanged, this);
+      listeners.forEach(listener -> listener.onChange(change));
    }
 
    public void addListener(MeshChangedListener listener)
@@ -79,6 +79,44 @@ public class MeshDescription implements GeometryDescription
 
    public static interface MeshChangedListener
    {
-      void onChange(MeshDescription oldValue, MeshDescription newValue);
+      void onChange(Change change);
+   }
+
+   public static interface Change
+   {
+      boolean wasNameChanged();
+
+      boolean wasMeshDataChanged();
+
+      MeshDescription getMeshDescription();
+   }
+
+   private static class ChangeImpl implements Change
+   {
+      private final boolean wasNameChanged;
+      private final boolean wasMeshDataChanged;
+      private final MeshDescription meshDescription;
+
+      private ChangeImpl(boolean wasNameChanged, boolean wasMeshDataChanged, MeshDescription meshDescription)
+      {
+         this.wasNameChanged = wasNameChanged;
+         this.wasMeshDataChanged = wasMeshDataChanged;
+         this.meshDescription = meshDescription;
+      }
+
+      public boolean wasNameChanged()
+      {
+         return wasNameChanged;
+      }
+
+      public boolean wasMeshDataChanged()
+      {
+         return wasMeshDataChanged;
+      }
+
+      public MeshDescription getMeshDescription()
+      {
+         return meshDescription;
+      }
    }
 }
