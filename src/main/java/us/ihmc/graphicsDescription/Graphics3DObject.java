@@ -96,7 +96,7 @@ public class Graphics3DObject
       combine(other);
    }
 
-   public List<VisualDescription> getGraphics3DInstructions()
+   public List<VisualDescription> getVisualDescriptions()
    {
       return visualDescriptions;
    }
@@ -109,12 +109,12 @@ public class Graphics3DObject
    public void combine(Graphics3DObject other)
    {
       identity();
-      visualDescriptions.addAll(other.getGraphics3DInstructions());
+      visualDescriptions.addAll(other.getVisualDescriptions());
    }
 
    public void combine(Graphics3DObject other, Vector3DReadOnly offset)
    {
-      List<VisualDescription> otherVisuals = other.getGraphics3DInstructions();
+      List<VisualDescription> otherVisuals = other.getVisualDescriptions();
 
       for (VisualDescription otherVisual : otherVisuals)
       {
@@ -127,6 +127,15 @@ public class Graphics3DObject
 
       currentTransform.set(other.currentTransform);
       currentTransform.prependTranslation(offset);
+   }
+
+   /**
+    * Resets the coordinate system to the joint origin. This clears all rotations, translations, and
+    * scale factors.
+    */
+   public void identity()
+   {
+      currentTransform.setIdentity();
    }
 
    public void appendTransform(RigidBodyTransformReadOnly transform)
@@ -276,15 +285,6 @@ public class Graphics3DObject
       for (int i = 0; i < visualDescriptions.size(); i++)
          visualDescriptions.get(i).getPose().prependScale(scaleFactors);
       currentTransform.prependScale(scaleFactors);
-   }
-
-   /**
-    * Resets the coordinate system to the joint origin. This clears all rotations, translations, and
-    * scale factors.
-    */
-   public void identity()
-   {
-      currentTransform.setIdentity();
    }
 
    public VisualDescription addVisualDescription(VisualDescription instruction)
