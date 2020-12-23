@@ -127,7 +127,7 @@ public class YoGraphicPolygon extends YoGraphicAbstractShape implements RemoteYo
       graphics3dObject.setChangeable(true);
 
       meshDescription = new MeshDescription(MeshDataGenerator.ExtrudedPolygon(yoFrameConvexPolygon2d, height));
-      materialDescription = new MaterialDescription(appearance.toColorDescription());
+      materialDescription = new MaterialDescription(appearance.getColor());
       graphics3dObject.addVisualDescription(new VisualDescription(meshDescription, materialDescription));
    }
 
@@ -170,7 +170,7 @@ public class YoGraphicPolygon extends YoGraphicAbstractShape implements RemoteYo
       graphics3dObject.setChangeable(true);
 
       meshDescription = new MeshDescription(MeshDataGenerator.ExtrudedPolygon(yoFrameConvexPolygon2d, height));
-      materialDescription = new MaterialDescription(appearance.toColorDescription());
+      materialDescription = new MaterialDescription(appearance.getColor());
       graphics3dObject.addVisualDescription(new VisualDescription(meshDescription, materialDescription));
    }
 
@@ -200,7 +200,7 @@ public class YoGraphicPolygon extends YoGraphicAbstractShape implements RemoteYo
 
    public void updateAppearance(AppearanceDefinition appearance)
    {
-      materialDescription.setDiffuseColor(appearance.toColorDescription());
+      materialDescription.setDiffuseColor(appearance.getColor());
    }
 
    public void updateConvexPolygon2d(FrameConvexPolygon2DReadOnly frameConvexPolygon2d)

@@ -112,11 +112,10 @@ public class RemoteYoGraphicFactory
 
       YoFrameConvexPolygon2D convexPolygon2d = new YoFrameConvexPolygon2D(yoFramePoints, yoNumVertices, referenceFrame);
 
-      return new YoArtifactPolygon(name, convexPolygon2d, appearance.getColor().get(), consts[0] > 0);
+      return new YoArtifactPolygon(name, convexPolygon2d, appearance.getAwtColor(), consts[0] > 0);
    }
 
-   private static YoArtifactLineSegment2d yoArtifactLineSegment2DFromMessage(String name, YoVariable[] vars, double[] consts,
-                                                                             AppearanceDefinition appearance)
+   private static YoArtifactLineSegment2d yoArtifactLineSegment2DFromMessage(String name, YoVariable[] vars, double[] consts, AppearanceDefinition appearance)
    {
       YoFrameLineSegment2D segment = new YoFrameLineSegment2D((YoDouble) vars[0],
                                                               (YoDouble) vars[1],
@@ -124,12 +123,12 @@ public class RemoteYoGraphicFactory
                                                               (YoDouble) vars[3],
                                                               ReferenceFrame.getWorldFrame());
 
-      return new YoArtifactLineSegment2d(name, segment, appearance.getColor().get());
+      return new YoArtifactLineSegment2d(name, segment, appearance.getAwtColor());
    }
 
    private static YoArtifactOval yoArtifactOvalFromMessage(String name, YoVariable[] vars, double[] consts, AppearanceDefinition appearance)
    {
-      return new YoArtifactOval(name, (YoDouble) vars[0], (YoDouble) vars[1], (YoDouble) vars[2], appearance.getColor().get());
+      return new YoArtifactOval(name, (YoDouble) vars[0], (YoDouble) vars[1], (YoDouble) vars[2], appearance.getAwtColor());
    }
 
    private static YoArtifactPosition yoArtifactPositionFromMessage(String name, YoVariable[] vars, double[] consts, AppearanceDefinition appearance)
@@ -138,7 +137,7 @@ public class RemoteYoGraphicFactory
                                     (YoDouble) vars[0],
                                     (YoDouble) vars[1],
                                     YoGraphicPosition.GraphicType.values()[(int) consts[1]],
-                                    appearance.getColor().get(),
+                                    appearance.getAwtColor(),
                                     consts[0]);
    }
 
@@ -166,8 +165,7 @@ public class RemoteYoGraphicFactory
       return YoGraphicCoordinateSystem.createAsRemoteYoGraphic(name, vars, consts);
    }
 
-   private static YoGraphicReferenceFrame yoGraphicReferenceFrameFromMessage(String name, YoVariable[] vars, double[] consts,
-                                                                             AppearanceDefinition appearance)
+   private static YoGraphicReferenceFrame yoGraphicReferenceFrameFromMessage(String name, YoVariable[] vars, double[] consts, AppearanceDefinition appearance)
    {
       return YoGraphicReferenceFrame.createAsRemoteYoGraphic(name, vars, consts);
    }

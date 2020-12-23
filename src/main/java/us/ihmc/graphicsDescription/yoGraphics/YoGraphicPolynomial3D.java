@@ -698,14 +698,14 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
       {
          case BLACK:
             for (VisualDescription visualDescription : visualDescriptions)
-               visualDescription.getMaterial().setDiffuseColor(BLACK_APPEARANCE.toColorDescription());
+               visualDescription.getMaterial().setDiffuseColor(BLACK_APPEARANCE.getColor());
             break;
          case VELOCITY_BASED:
             for (int i = 0; i < resolution - 1; i++)
             {
                double velocity = intermediateVelocities[i].length();
                int colorIndex = (int) Math.round((colorPalette.length - 1.0) * (velocity / maxVelocity));
-               visualDescriptions[i].getMaterial().setDiffuseColor(colorPalette[colorIndex].toColorDescription());
+               visualDescriptions[i].getMaterial().setDiffuseColor(colorPalette[colorIndex].getColor());
             }
             break;
          case ACCELERATION_BASED:
@@ -714,7 +714,7 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
 
                double acceleration = intermediateAccelerations[i].length();
                int colorIndex = (int) Math.round((colorPalette.length - 1.0) * (acceleration / maxAcceleration));
-               visualDescriptions[i].getMaterial().setDiffuseColor(colorPalette[colorIndex].toColorDescription());
+               visualDescriptions[i].getMaterial().setDiffuseColor(colorPalette[colorIndex].getColor());
             }
             break;
          default:

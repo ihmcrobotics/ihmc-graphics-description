@@ -6,9 +6,8 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import us.ihmc.graphicsDescription.HeightMap;
 
-public class HeightBasedTerrainBlend extends YoAppearanceTransparent
+public class HeightBasedTerrainBlend extends MaterialDescription
 {
-
    private final HeightMap heightMap;
    private final ArrayList<TextureDefinition> textures = new ArrayList<>();
    private final ArrayList<ImmutablePair<Double, Double>> blends = new ArrayList<>();

@@ -171,7 +171,7 @@ public class YoGraphicPosition extends YoGraphic implements RemoteYoGraphic
    {
       for (int i = 0; i < visualDescriptions.size(); i++)
       {
-         visualDescriptions.get(i).getMaterial().setDiffuseColor(appearance.toColorDescription());
+         visualDescriptions.get(i).getMaterial().setDiffuseColor(appearance.getColor());
       }
    }
 
@@ -190,7 +190,7 @@ public class YoGraphicPosition extends YoGraphic implements RemoteYoGraphic
       if (appearance instanceof YoAppearanceRGBColor)
       {
          YoAppearanceRGBColor yoAppearanceRGBColor = (YoAppearanceRGBColor) appearance;
-         Color color = new Color(yoAppearanceRGBColor.getRed(), yoAppearanceRGBColor.getGreen(), yoAppearanceRGBColor.getBlue());
+         Color color = new Color((float) yoAppearanceRGBColor.getRed(), (float) yoAppearanceRGBColor.getGreen(), (float) yoAppearanceRGBColor.getBlue());
          return color;
       }
       else

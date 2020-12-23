@@ -297,7 +297,7 @@ public class Graphics3DObject
    {
       return addVisualDescription(new VisualDescription(new AffineTransform(currentTransform),
                                                         geometryDescription,
-                                                        new MaterialDescription(appearance.toColorDescription())));
+                                                        new MaterialDescription(appearance.getColor())));
    }
 
    /**

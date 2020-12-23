@@ -62,7 +62,7 @@ public class YoGraphicPolygon3D extends YoGraphic implements RemoteYoGraphic, Gr
       graphics3dObject = new Graphics3DObject();
       graphics3dObject.setChangeable(true);
       meshDescription = new MeshDescription(EMPTY_MESH);
-      materialDescription = new MaterialDescription(appearance.toColorDescription());
+      materialDescription = new MaterialDescription(appearance.getColor());
       graphics3dObject.addVisualDescription(new VisualDescription(meshDescription, materialDescription));
    }
 
@@ -83,7 +83,7 @@ public class YoGraphicPolygon3D extends YoGraphic implements RemoteYoGraphic, Gr
       graphics3dObject = new Graphics3DObject();
       graphics3dObject.setChangeable(true);
       meshDescription = new MeshDescription(EMPTY_MESH);
-      materialDescription = new MaterialDescription(appearance.toColorDescription());
+      materialDescription = new MaterialDescription(appearance.getColor());
       graphics3dObject.addVisualDescription(new VisualDescription(meshDescription, materialDescription));
    }
 
@@ -105,7 +105,7 @@ public class YoGraphicPolygon3D extends YoGraphic implements RemoteYoGraphic, Gr
 
    public void setAppearance(AppearanceDefinition appearance)
    {
-      materialDescription.setDiffuseColor(appearance.toColorDescription());
+      materialDescription.setDiffuseColor(appearance.getColor());
       this.appearance = appearance;
    }
 

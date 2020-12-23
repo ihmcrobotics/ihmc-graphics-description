@@ -4,37 +4,21 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
-import us.ihmc.graphicsDescription.color.MutableColor;
+import us.ihmc.graphicsDescription.color.ColorDescription;
 
-//http://www.wdvl.com/Graphics/Colour/  has some of the color names I'm using...
+// http://www.wdvl.com/Graphics/Colour/ has some of the color names I'm using...
 // http://cloford.com/resources/colours/500col.htm
 
 public class YoAppearance
 {
-   public static AppearanceDefinition YoboticsTexture()
-   {
-      return Texture("images/yobotics.jpg");
-   }
-
    public static AppearanceDefinition Texture(String path)
    {
       return new YoAppearanceTexture(path);
-
    }
 
    public static AppearanceDefinition Texture(BufferedImage bufferedImage)
    {
       return new YoAppearanceTexture(bufferedImage);
-   }
-
-   public static AppearanceDefinition EarthTexture()
-   {
-      return Texture("images/earth.jpg");
-   }
-
-   public static AppearanceDefinition StoneTexture()
-   {
-      return Texture("images/stone.jpg");
    }
 
    public static AppearanceDefinition[] getStandardRoyGBivRainbow()
@@ -43,50 +27,6 @@ public class YoAppearance
             YoAppearance.Blue(), YoAppearance.Indigo(), YoAppearance.Purple()};
 
       return rainbow;
-   }
-
-   public static AppearanceDefinition PlaneMaterial()
-   {
-      YoAppearanceMaterial mat = new YoAppearanceMaterial();
-      mat.setSpecularColor(0.5f, 0.5f, 0.5f);
-      mat.setDiffuseColor(0.2f, 0.4f, 0.5f);
-      mat.setShininess(7.5f);
-      mat.setAmbientColor(0.17f, 0.5f, 0.7f);
-
-      return mat;
-   }
-
-   public static AppearanceDefinition AluminumMaterial()
-   {
-      YoAppearanceMaterial mat = new YoAppearanceMaterial();
-      mat.setSpecularColor(0.5f, 0.5f, 0.5f);
-      mat.setDiffuseColor(0.2f, 0.4f, 0.5f);
-      mat.setShininess(7.5f);
-      mat.setAmbientColor(0.17f, 0.5f, 0.7f);
-
-      return mat;
-   }
-
-   public static AppearanceDefinition BlackMetalMaterial()
-   {
-      YoAppearanceMaterial mat = new YoAppearanceMaterial();
-      mat.setSpecularColor(0.5f, 0.5f, 0.5f);
-      mat.setDiffuseColor(0.2f, 0.4f, 0.5f);
-      mat.setShininess(6.0f);
-      mat.setAmbientColor(0.16f, 0.18f, 0.2f);
-
-      return mat;
-   }
-
-   public static AppearanceDefinition FenceMaterial()
-   {
-      YoAppearanceMaterial mat = new YoAppearanceMaterial();
-      mat.setSpecularColor(0.4f, 0.4f, 0.4f);
-      mat.setDiffuseColor(0.95f, 0.95f, 0.95f);
-      mat.setShininess(2.0f);
-      mat.setAmbientColor(0.45f, 0.45f, 0.45f);
-
-      return mat;
    }
 
    public static AppearanceDefinition RGBColor(double red, double green, double blue, double transparency)
@@ -120,12 +60,12 @@ public class YoAppearance
 
    public static AppearanceDefinition Color(Color color)
    {
-      return Color(new MutableColor(color));
+      return Color(new ColorDescription(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()));
    }
 
-   public static AppearanceDefinition Color(MutableColor color)
+   public static AppearanceDefinition Color(ColorDescription color)
    {
-      return RGBColor(color.getX(), color.getY(), color.getZ());
+      return RGBColor(color.getRed(), color.getGreen(), color.getBlue(), 1.0 - color.getAlpha());
    }
 
    // From http://www.w3schools.com/html/html_colornames.asp
@@ -875,11 +815,6 @@ public class YoAppearance
    public static AppearanceDefinition YellowGreen()
    {
       return RGBColorFromHex(0x9ACD32);
-   }
-
-   public static AppearanceDefinition Transparent()
-   {
-      return new YoAppearanceTransparent();
    }
 
    public static void makeTransparent(AppearanceDefinition appearance, double f)

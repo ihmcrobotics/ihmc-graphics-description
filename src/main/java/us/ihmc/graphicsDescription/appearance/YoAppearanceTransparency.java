@@ -2,7 +2,7 @@ package us.ihmc.graphicsDescription.appearance;
 
 import org.apache.commons.lang3.NotImplementedException;
 
-import us.ihmc.graphicsDescription.color.MutableColor;
+import us.ihmc.graphicsDescription.color.ColorDescription;
 
 public abstract class YoAppearanceTransparency implements AppearanceDefinition
 {
@@ -21,7 +21,7 @@ public abstract class YoAppearanceTransparency implements AppearanceDefinition
    }
 
    @Override
-   public MutableColor getColor()
+   public ColorDescription getColor()
    {
       throw new NotImplementedException("getColor() is not implemented");
    }

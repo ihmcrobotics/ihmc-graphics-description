@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 
 import org.apache.commons.lang3.NotImplementedException;
 
-import us.ihmc.graphicsDescription.color.MutableColor;
+import us.ihmc.graphicsDescription.color.ColorDescription;
 
 public class YoAppearanceTexture extends YoAppearanceTransparency
 {
@@ -37,7 +37,7 @@ public class YoAppearanceTexture extends YoAppearanceTransparency
    }
 
    @Override
-   public MutableColor getColor()
+   public ColorDescription getColor()
    {
       throw new NotImplementedException("getColor() is not implemented");
    }

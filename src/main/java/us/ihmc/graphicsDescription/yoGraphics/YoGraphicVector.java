@@ -14,7 +14,7 @@ import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.GraphicsUpdatable;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.graphicsDescription.appearance.YoAppearance;
-import us.ihmc.graphicsDescription.color.MutableColor;
+import us.ihmc.graphicsDescription.color.ColorDescription;
 import us.ihmc.graphicsDescription.plotting.artifact.Artifact;
 import us.ihmc.graphicsDescription.yoGraphics.plotting.YoArtifactLineSegment2d;
 import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameLineSegment2D;
@@ -202,7 +202,6 @@ public class YoGraphicVector extends YoGraphic implements RemoteYoGraphic, Graph
    @Override
    public Artifact createArtifact()
    {
-      MutableColor color3f = appearance.getColor();
       YoDouble endPointX = new YoDouble(getName() + "ArtifactEndPointX", base.getYoX().getRegistry());
       YoDouble endPointY = new YoDouble(getName() + "ArtifactEndPointY", base.getYoY().getRegistry());
 
@@ -213,7 +212,7 @@ public class YoGraphicVector extends YoGraphic implements RemoteYoGraphic, Graph
 
       return new YoArtifactLineSegment2d(getName(),
                                          new YoFrameLineSegment2D(base.getYoX(), base.getYoY(), endPointX, endPointY, ReferenceFrame.getWorldFrame()),
-                                         color3f.get());
+                                         appearance.getAwtColor());
    }
 
    @Override

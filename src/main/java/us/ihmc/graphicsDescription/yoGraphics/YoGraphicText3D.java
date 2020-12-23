@@ -26,7 +26,7 @@ public class YoGraphicText3D extends YoGraphicAbstractShape
       graphics3dObject = new Graphics3DObject();
       graphics3dObject.setChangeable(true);
       extrusionDescription = new ExtrusionDescription(text, 20.0);
-      materialDescription = new MaterialDescription(appearance.toColorDescription());
+      materialDescription = new MaterialDescription(appearance.getColor());
       graphics3dObject.addVisualDescription(new VisualDescription(extrusionDescription, materialDescription));
    }
 
@@ -38,7 +38,7 @@ public class YoGraphicText3D extends YoGraphicAbstractShape
 
    public void setAppearance(AppearanceDefinition appearance)
    {
-      materialDescription.setDiffuseColor(appearance.toColorDescription());
+      materialDescription.setDiffuseColor(appearance.getColor());
    }
 
    public void setText(String text)

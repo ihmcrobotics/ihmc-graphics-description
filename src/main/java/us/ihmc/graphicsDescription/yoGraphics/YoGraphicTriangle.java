@@ -59,7 +59,7 @@ public class YoGraphicTriangle extends YoGraphic implements RemoteYoGraphic, Gra
       graphics3dObject.setChangeable(true);
 
       meshDescription = new MeshDescription(MeshDataGenerator.PolygonCounterClockwise(Arrays.asList(pointOne, pointTwo, pointThree)));
-      materialDescription = new MaterialDescription(appearance.toColorDescription());
+      materialDescription = new MaterialDescription(appearance.getColor());
       graphics3dObject.addVisualDescription(new VisualDescription(meshDescription, materialDescription));
 
       YoVariableChangedListener listener = new YoVariableChangedListener()
