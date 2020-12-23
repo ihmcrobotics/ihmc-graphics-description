@@ -10,8 +10,10 @@ import us.ihmc.euclid.tuple3D.Point3D;
 import us.ihmc.euclid.tuple3D.interfaces.Point3DReadOnly;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.GraphicsUpdatable;
+import us.ihmc.graphicsDescription.VisualDescription;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
-import us.ihmc.graphicsDescription.instructions.Graphics3DAddMeshDataInstruction;
+import us.ihmc.graphicsDescription.appearance.MaterialDescription;
+import us.ihmc.graphicsDescription.geometry.MeshDescription;
 import us.ihmc.graphicsDescription.mesh.MeshDataGenerator;
 import us.ihmc.graphicsDescription.mesh.MeshDataHolder;
 import us.ihmc.graphicsDescription.plotting.artifact.Artifact;
@@ -36,7 +38,8 @@ public class YoGraphicPolygon3D extends YoGraphic implements RemoteYoGraphic, Gr
    private AppearanceDefinition appearance;
 
    private final Graphics3DObject graphics3dObject;
-   private final Graphics3DAddMeshDataInstruction instruction;
+   private final MeshDescription meshDescription;
+   private final MaterialDescription materialDescription;
 
    public YoGraphicPolygon3D(String name, int maxNumberOfPolygonVertices, double height, AppearanceDefinition appearance, YoRegistry registry)
    {
@@ -58,8 +61,9 @@ public class YoGraphicPolygon3D extends YoGraphic implements RemoteYoGraphic, Gr
 
       graphics3dObject = new Graphics3DObject();
       graphics3dObject.setChangeable(true);
-      instruction = new Graphics3DAddMeshDataInstruction(EMPTY_MESH, appearance);
-      graphics3dObject.addInstruction(instruction);
+      meshDescription = new MeshDescription(EMPTY_MESH);
+      materialDescription = new MaterialDescription(appearance.toColorDescription());
+      graphics3dObject.addVisualDescription(new VisualDescription(meshDescription, materialDescription));
    }
 
    public YoGraphicPolygon3D(String name, YoInteger numberOfPoints, YoFramePoint3D[] ccwOrderedYoFramePoints, double height, AppearanceDefinition appearance)
@@ -78,8 +82,9 @@ public class YoGraphicPolygon3D extends YoGraphic implements RemoteYoGraphic, Gr
 
       graphics3dObject = new Graphics3DObject();
       graphics3dObject.setChangeable(true);
-      instruction = new Graphics3DAddMeshDataInstruction(EMPTY_MESH, appearance);
-      graphics3dObject.addInstruction(instruction);
+      meshDescription = new MeshDescription(EMPTY_MESH);
+      materialDescription = new MaterialDescription(appearance.toColorDescription());
+      graphics3dObject.addVisualDescription(new VisualDescription(meshDescription, materialDescription));
    }
 
    @Override
@@ -100,6 +105,7 @@ public class YoGraphicPolygon3D extends YoGraphic implements RemoteYoGraphic, Gr
 
    public void setAppearance(AppearanceDefinition appearance)
    {
+      materialDescription.setDiffuseColor(appearance.toColorDescription());
       this.appearance = appearance;
    }
 
@@ -148,15 +154,14 @@ public class YoGraphicPolygon3D extends YoGraphic implements RemoteYoGraphic, Gr
    {
       if (numberOfPoints.getIntegerValue() < 3)
       {
-         instruction.setMesh(EMPTY_MESH);
+         meshDescription.setMesh(EMPTY_MESH);
          return;
       }
 
       for (int i = 0; i < numberOfPoints.getIntegerValue(); i++)
          ccwOrderedPoints.get(i).set(ccwOrderedYoFramePoints[i]);
 
-      instruction.setMesh(MeshDataGenerator.PolygonCounterClockwise(ccwOrderedPoints.subList(0, numberOfPoints.getIntegerValue())));
-      instruction.setAppearance(appearance);
+      meshDescription.setMesh(MeshDataGenerator.PolygonCounterClockwise(ccwOrderedPoints.subList(0, numberOfPoints.getIntegerValue())));
    }
 
    public void setToNaN()

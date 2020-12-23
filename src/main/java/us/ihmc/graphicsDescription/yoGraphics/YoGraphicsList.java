@@ -3,8 +3,6 @@ package us.ihmc.graphicsDescription.yoGraphics;
 import java.util.ArrayList;
 import java.util.List;
 
-import us.ihmc.euclid.transform.RigidBodyTransform;
-
 public class YoGraphicsList
 {
    private String label;
@@ -30,14 +28,6 @@ public class YoGraphicsList
       }
 
       this.yoGraphics = yoGraphics;
-   }
-
-   public void setRootTransform(RigidBodyTransform rootTransform)
-   {
-      for (int i = 0; i < yoGraphics.size(); i++)
-      {
-         yoGraphics.get(i).setRootTransform(rootTransform);
-      }
    }
 
    public YoGraphicsList(String label, YoGraphic yoGraphic)

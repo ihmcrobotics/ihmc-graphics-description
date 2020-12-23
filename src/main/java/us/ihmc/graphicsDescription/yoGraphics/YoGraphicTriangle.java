@@ -10,8 +10,10 @@ import us.ihmc.euclid.transform.AffineTransform;
 import us.ihmc.euclid.tuple3D.interfaces.Point3DReadOnly;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.GraphicsUpdatable;
+import us.ihmc.graphicsDescription.VisualDescription;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
-import us.ihmc.graphicsDescription.instructions.Graphics3DAddMeshDataInstruction;
+import us.ihmc.graphicsDescription.appearance.MaterialDescription;
+import us.ihmc.graphicsDescription.geometry.MeshDescription;
 import us.ihmc.graphicsDescription.mesh.MeshDataGenerator;
 import us.ihmc.graphicsDescription.plotting.artifact.Artifact;
 import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint3D;
@@ -28,7 +30,8 @@ public class YoGraphicTriangle extends YoGraphic implements RemoteYoGraphic, Gra
    private final List<YoFramePoint3D> pointList;
 
    private final Graphics3DObject graphics3dObject;
-   private final Graphics3DAddMeshDataInstruction instruction;
+   private final MeshDescription meshDescription;
+   private final MaterialDescription materialDescription;
 
    private final AppearanceDefinition appearance;
 
@@ -55,7 +58,9 @@ public class YoGraphicTriangle extends YoGraphic implements RemoteYoGraphic, Gra
       graphics3dObject = new Graphics3DObject();
       graphics3dObject.setChangeable(true);
 
-      instruction = graphics3dObject.addPolygon(appearance, pointOne, pointTwo, pointThree);
+      meshDescription = new MeshDescription(MeshDataGenerator.PolygonCounterClockwise(Arrays.asList(pointOne, pointTwo, pointThree)));
+      materialDescription = new MaterialDescription(appearance.toColorDescription());
+      graphics3dObject.addVisualDescription(new VisualDescription(meshDescription, materialDescription));
 
       YoVariableChangedListener listener = new YoVariableChangedListener()
       {
@@ -92,11 +97,11 @@ public class YoGraphicTriangle extends YoGraphic implements RemoteYoGraphic, Gra
       {
          if (!pointOne.containsNaN() && !pointTwo.containsNaN() && !pointThree.containsNaN())
          {
-            instruction.setMesh(MeshDataGenerator.PolygonCounterClockwise(pointList));
+            meshDescription.setMesh(MeshDataGenerator.PolygonCounterClockwise(pointList));
          }
          else
          {
-            instruction.setMesh(null);
+            meshDescription.setMesh(null);
          }
       }
    }

@@ -3,7 +3,6 @@ package us.ihmc.graphicsDescription.yoGraphics;
 import java.util.ArrayList;
 import java.util.List;
 
-import us.ihmc.euclid.transform.RigidBodyTransform;
 import us.ihmc.graphicsDescription.GraphicsUpdatable;
 import us.ihmc.graphicsDescription.plotting.artifact.Artifact;
 import us.ihmc.graphicsDescription.yoGraphics.plotting.ArtifactList;
@@ -22,10 +21,6 @@ public class YoGraphicsListRegistry
    private boolean updateInSimulationThread = false;
    private boolean alreadyAddedToSimulationConstructionSet = false;
    private boolean alreadyAddedToPlotter = false;
-
-   private final RigidBodyTransform rootTransform = new RigidBodyTransform();
-   private final RigidBodyTransform simulatedRootToWorldTransform = new RigidBodyTransform();
-   private final RigidBodyTransform controllerWorldToRootTransform = new RigidBodyTransform();
 
    public YoGraphicsListRegistry()
    {
@@ -216,7 +211,6 @@ public class YoGraphicsListRegistry
       {
          synchronized (graphicsConch)
          {
-            updateRootTransform();
             for (int i = 0; i < graphicsUpdatables.size(); i++)
             {
                graphicsUpdatables.get(i).update();
@@ -370,49 +364,5 @@ public class YoGraphicsListRegistry
    public boolean areYoGraphicsRegistered()
    {
       return alreadyAddedToSimulationConstructionSet;
-   }
-
-   private void updateRootTransform()
-   {
-      rootTransform.set(simulatedRootToWorldTransform);
-      rootTransform.multiply(controllerWorldToRootTransform);
-
-      for (int i = 0; i < yoGraphicsLists.size(); i++)
-      {
-         yoGraphicsLists.get(i).setRootTransform(rootTransform);
-      }
-   }
-
-   /**
-    * Set the transform from the root joint joint of the robot to the world, as known by the
-    * simulation. If both this and the controller transform are set, all elements are adjusted for the
-    * difference.
-    *
-    * @param transformToWorld
-    */
-   public void setSimulationTransformToWorld(RigidBodyTransform transformToWorld)
-   {
-      simulatedRootToWorldTransform.set(transformToWorld);
-      if (updateInSimulationThread)
-      {
-         // This is cheap enough to do twice. This way, guarantee that data from the same tick is used.
-         updateRootTransform();
-      }
-   }
-
-   /**
-    * Set the transform from the root joint joint of the robot to the world, as known by the
-    * controller. If both this and the simulation transform are set, all elements are adjusted for the
-    * difference.
-    *
-    * @param transformToWorld
-    */
-   public void setControllerTransformToWorld(RigidBodyTransform transformToWorld)
-   {
-      controllerWorldToRootTransform.setAndInvert(transformToWorld);
-      if (updateInSimulationThread)
-      {
-         updateRootTransform();
-      }
    }
 }

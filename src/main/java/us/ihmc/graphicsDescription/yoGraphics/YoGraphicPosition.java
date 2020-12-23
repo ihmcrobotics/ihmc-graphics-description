@@ -12,9 +12,9 @@ import us.ihmc.euclid.tuple3D.Vector3D;
 import us.ihmc.euclid.tuple3D.interfaces.Tuple3DBasics;
 import us.ihmc.euclid.tuple3D.interfaces.Tuple3DReadOnly;
 import us.ihmc.graphicsDescription.Graphics3DObject;
+import us.ihmc.graphicsDescription.VisualDescription;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.graphicsDescription.appearance.YoAppearanceRGBColor;
-import us.ihmc.graphicsDescription.instructions.Graphics3DInstruction;
 import us.ihmc.graphicsDescription.yoGraphics.plotting.YoArtifactPosition;
 import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint2D;
 import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint3D;
@@ -35,7 +35,7 @@ public class YoGraphicPosition extends YoGraphic implements RemoteYoGraphic
    private final GraphicType type;
    private final AppearanceDefinition appearance;
 
-   private final ArrayList<Graphics3DInstruction> linkGraphicInstructions = new ArrayList<>();
+   private final ArrayList<VisualDescription> visualDescriptions = new ArrayList<>();
 
    public YoGraphicPosition(String namePrefix, String nameSuffix, YoRegistry registry, double scale, AppearanceDefinition appearance)
    {
@@ -169,9 +169,9 @@ public class YoGraphicPosition extends YoGraphic implements RemoteYoGraphic
 
    public void setAppearance(AppearanceDefinition appearance)
    {
-      for (int i = 0; i < linkGraphicInstructions.size(); i++)
+      for (int i = 0; i < visualDescriptions.size(); i++)
       {
-         linkGraphicInstructions.get(i).setAppearance(appearance);
+         visualDescriptions.get(i).getMaterial().setDiffuseColor(appearance.toColorDescription());
       }
    }
 
@@ -212,28 +212,28 @@ public class YoGraphicPosition extends YoGraphic implements RemoteYoGraphic
          case BALL_WITH_ROTATED_CROSS:
          {
             double radius = 1.0;
-            linkGraphicInstructions.add(linkGraphics.addSphere(radius, appearance));
+            visualDescriptions.add(linkGraphics.addSphere(radius, appearance));
             break;
          }
          case ELLIPSOID:
          {
-            linkGraphicInstructions.add(linkGraphics.addEllipsoid(0.50, 1.0, 0.20, appearance));
+            visualDescriptions.add(linkGraphics.addEllipsoid(0.50, 1.0, 0.20, appearance));
             break;
          }
          case CROSS:
          {
             double R = 1.0, r = 0.16;
 
-            linkGraphicInstructions.add(linkGraphics.addArcTorus(0.0, 2.0 * Math.PI, R, r, appearance));
+            visualDescriptions.add(linkGraphics.addArcTorus(0.0, 2.0 * Math.PI, R, r, appearance));
 
-            linkGraphics.rotate(Math.PI / 2.0, Axis3D.X);
-            linkGraphics.translate(0.0, 0.0, -R);
-            linkGraphicInstructions.add(linkGraphics.addCylinder(2.0 * R, r, appearance));
+            linkGraphics.appendRotation(Math.PI / 2.0, Axis3D.X);
+            linkGraphics.appendTranslation(0.0, 0.0, -R);
+            visualDescriptions.add(linkGraphics.addCylinder(2.0 * R, r, appearance));
 
             linkGraphics.identity();
-            linkGraphics.rotate(Math.PI / 2.0, Axis3D.Y);
-            linkGraphics.translate(0.0, 0.0, -R);
-            linkGraphicInstructions.add(linkGraphics.addCylinder(2.0 * R, r, appearance));
+            linkGraphics.appendRotation(Math.PI / 2.0, Axis3D.Y);
+            linkGraphics.appendTranslation(0.0, 0.0, -R);
+            visualDescriptions.add(linkGraphics.addCylinder(2.0 * R, r, appearance));
             break;
          }
 
@@ -242,18 +242,18 @@ public class YoGraphicPosition extends YoGraphic implements RemoteYoGraphic
 
             double R = 1.0, r = 0.16;
 
-            linkGraphicInstructions.add(linkGraphics.addArcTorus(0.0, 2.0 * Math.PI, R, r, appearance));
+            visualDescriptions.add(linkGraphics.addArcTorus(0.0, 2.0 * Math.PI, R, r, appearance));
 
-            linkGraphics.rotate(Math.PI / 4.0, Axis3D.Z);
-            linkGraphics.rotate(Math.PI / 2.0, Axis3D.X);
-            linkGraphics.translate(0.0, 0.0, -R);
-            linkGraphicInstructions.add(linkGraphics.addCylinder(2.0 * R, r, appearance));
+            linkGraphics.appendRotation(Math.PI / 4.0, Axis3D.Z);
+            linkGraphics.appendRotation(Math.PI / 2.0, Axis3D.X);
+            linkGraphics.appendTranslation(0.0, 0.0, -R);
+            visualDescriptions.add(linkGraphics.addCylinder(2.0 * R, r, appearance));
 
             linkGraphics.identity();
-            linkGraphics.rotate(Math.PI / 4.0, Axis3D.Z);
-            linkGraphics.rotate(Math.PI / 2.0, Axis3D.Y);
-            linkGraphics.translate(0.0, 0.0, -R);
-            linkGraphicInstructions.add(linkGraphics.addCylinder(2.0 * R, r, appearance));
+            linkGraphics.appendRotation(Math.PI / 4.0, Axis3D.Z);
+            linkGraphics.appendRotation(Math.PI / 2.0, Axis3D.Y);
+            linkGraphics.appendTranslation(0.0, 0.0, -R);
+            visualDescriptions.add(linkGraphics.addCylinder(2.0 * R, r, appearance));
             break;
          }
          default:

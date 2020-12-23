@@ -11,12 +11,19 @@ import us.ihmc.euclid.referenceFrame.interfaces.FrameConvexPolygon2DReadOnly;
 import us.ihmc.euclid.tuple2D.interfaces.Point2DReadOnly;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.GraphicsUpdatable;
+import us.ihmc.graphicsDescription.VisualDescription;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
-import us.ihmc.graphicsDescription.instructions.Graphics3DAddMeshDataInstruction;
+import us.ihmc.graphicsDescription.appearance.MaterialDescription;
+import us.ihmc.graphicsDescription.geometry.MeshDescription;
 import us.ihmc.graphicsDescription.mesh.MeshDataGenerator;
-import us.ihmc.graphicsDescription.mesh.MeshDataHolder;
 import us.ihmc.graphicsDescription.plotting.artifact.Artifact;
-import us.ihmc.yoVariables.euclid.referenceFrame.*;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameConvexPolygon2D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint2D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePose3D;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoseUsingYawPitchRoll;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameQuaternion;
+import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameYawPitchRoll;
 import us.ihmc.yoVariables.registry.YoRegistry;
 import us.ihmc.yoVariables.variable.YoDouble;
 import us.ihmc.yoVariables.variable.YoInteger;
@@ -30,13 +37,13 @@ public class YoGraphicPolygon extends YoGraphicAbstractShape implements RemoteYo
 
    private YoFrameConvexPolygon2D yoFrameConvexPolygon2d;
    private final Graphics3DObject graphics3dObject;
-   private final Graphics3DAddMeshDataInstruction instruction;
+   private final MeshDescription meshDescription;
+   private final MaterialDescription materialDescription;
 
    private final AppearanceDefinition appearance;
    private final List<Point2DReadOnly> verticesToDisplay;
 
-   public YoGraphicPolygon(String name, YoFramePose3D framePose, int maxNumberOfVertices, YoRegistry registry, double scale,
-                           AppearanceDefinition appearance)
+   public YoGraphicPolygon(String name, YoFramePose3D framePose, int maxNumberOfVertices, YoRegistry registry, double scale, AppearanceDefinition appearance)
    {
       this(name, new YoFrameConvexPolygon2D(name + "ConvexPolygon2d", worldFrame, maxNumberOfVertices, registry), framePose, scale, appearance);
    }
@@ -78,8 +85,7 @@ public class YoGraphicPolygon extends YoGraphicAbstractShape implements RemoteYo
       this(name, yoFrameConvexPolygon2d, framePose.getPosition(), framePose.getYawPitchRoll(), scale, appearance);
    }
 
-   public YoGraphicPolygon(String name, int maxNumberOfVertices, YoRegistry registry, boolean useYawPitchRoll, double scale,
-                           AppearanceDefinition appearance)
+   public YoGraphicPolygon(String name, int maxNumberOfVertices, YoRegistry registry, boolean useYawPitchRoll, double scale, AppearanceDefinition appearance)
    {
       this(name, new YoFrameConvexPolygon2D(name + "ConvexPolygon2d", worldFrame, maxNumberOfVertices, registry), registry, useYawPitchRoll, scale, appearance);
    }
@@ -120,9 +126,9 @@ public class YoGraphicPolygon extends YoGraphicAbstractShape implements RemoteYo
       graphics3dObject = new Graphics3DObject();
       graphics3dObject.setChangeable(true);
 
-      MeshDataHolder meshDataHolder = MeshDataGenerator.ExtrudedPolygon(yoFrameConvexPolygon2d, height);
-      instruction = new Graphics3DAddMeshDataInstruction(meshDataHolder, appearance);
-      graphics3dObject.addInstruction(instruction);
+      meshDescription = new MeshDescription(MeshDataGenerator.ExtrudedPolygon(yoFrameConvexPolygon2d, height));
+      materialDescription = new MaterialDescription(appearance.toColorDescription());
+      graphics3dObject.addVisualDescription(new VisualDescription(meshDescription, materialDescription));
    }
 
    static YoGraphicPolygon createAsRemoteYoGraphic(String name, YoVariable[] yoVariables, double[] constants, AppearanceDefinition appearance)
@@ -163,9 +169,9 @@ public class YoGraphicPolygon extends YoGraphicAbstractShape implements RemoteYo
       graphics3dObject = new Graphics3DObject();
       graphics3dObject.setChangeable(true);
 
-      MeshDataHolder meshDataHolder = MeshDataGenerator.ExtrudedPolygon(yoFrameConvexPolygon2d, height);
-      instruction = new Graphics3DAddMeshDataInstruction(meshDataHolder, appearance);
-      graphics3dObject.addInstruction(instruction);
+      meshDescription = new MeshDescription(MeshDataGenerator.ExtrudedPolygon(yoFrameConvexPolygon2d, height));
+      materialDescription = new MaterialDescription(appearance.toColorDescription());
+      graphics3dObject.addVisualDescription(new VisualDescription(meshDescription, materialDescription));
    }
 
    @Override
@@ -189,12 +195,12 @@ public class YoGraphicPolygon extends YoGraphicAbstractShape implements RemoteYo
          verticesToDisplay.add(yoFrameConvexPolygon2d.getVertexUnsafe(i));
       }
 
-      instruction.setMesh(MeshDataGenerator.ExtrudedPolygon(verticesToDisplay, height));
+      meshDescription.setMesh(MeshDataGenerator.ExtrudedPolygon(verticesToDisplay, height));
    }
 
    public void updateAppearance(AppearanceDefinition appearance)
    {
-      instruction.setAppearance(appearance);
+      materialDescription.setDiffuseColor(appearance.toColorDescription());
    }
 
    public void updateConvexPolygon2d(FrameConvexPolygon2DReadOnly frameConvexPolygon2d)

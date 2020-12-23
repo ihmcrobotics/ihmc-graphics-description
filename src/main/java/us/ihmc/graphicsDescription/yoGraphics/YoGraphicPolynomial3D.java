@@ -19,9 +19,10 @@ import us.ihmc.euclid.tuple3D.interfaces.Point3DReadOnly;
 import us.ihmc.euclid.tuple3D.interfaces.Vector3DReadOnly;
 import us.ihmc.graphicsDescription.Graphics3DObject;
 import us.ihmc.graphicsDescription.GraphicsUpdatable;
+import us.ihmc.graphicsDescription.VisualDescription;
 import us.ihmc.graphicsDescription.appearance.AppearanceDefinition;
 import us.ihmc.graphicsDescription.appearance.YoAppearance;
-import us.ihmc.graphicsDescription.instructions.Graphics3DAddMeshDataInstruction;
+import us.ihmc.graphicsDescription.geometry.MeshDescription;
 import us.ihmc.graphicsDescription.mesh.PointCloud3DMeshDataGenerator;
 import us.ihmc.graphicsDescription.mesh.SegmentedLine3DMeshDataGenerator;
 import us.ihmc.graphicsDescription.plotting.artifact.Artifact;
@@ -29,7 +30,11 @@ import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePoint3D;
 import us.ihmc.yoVariables.euclid.referenceFrame.YoFramePose3D;
 import us.ihmc.yoVariables.euclid.referenceFrame.YoFrameQuaternion;
 import us.ihmc.yoVariables.registry.YoRegistry;
-import us.ihmc.yoVariables.variable.*;
+import us.ihmc.yoVariables.variable.YoBoolean;
+import us.ihmc.yoVariables.variable.YoDouble;
+import us.ihmc.yoVariables.variable.YoEnum;
+import us.ihmc.yoVariables.variable.YoInteger;
+import us.ihmc.yoVariables.variable.YoVariable;
 
 /**
  * {@link YoGraphic} that can display 3D trajectories using {@link PolynomialVariables}s or
@@ -127,7 +132,7 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
    private final AppearanceDefinition[] colorPalette = createColorPalette(COLOR_RESOLUTION);
    private final SegmentedLine3DMeshDataGenerator segmentedLine3DMeshGenerator;
    private final PointCloud3DMeshDataGenerator pointCloud3DMeshGenerator;
-   private final Graphics3DAddMeshDataInstruction[] graphics3DAddMeshDataInstructions;
+   private final VisualDescription[] visualDescriptions;
    private final Point3D[] intermediatePositions;
    private final Vector3D[] intermediateVelocities;
    private final Vector3D[] intermediateAccelerations;
@@ -184,8 +189,8 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
     * @param radius           either the radius of the segmented line of the points.
     * @param resolution       defines the number of trajectory samples to use.
     * @param radialResolution used to define the mesh resolution.
-    * @param registry         the {@link YoRegistry} to which internal {@link YoVariable}s will
-    *                         be registered to. Modified.
+    * @param registry         the {@link YoRegistry} to which internal {@link YoVariable}s will be
+    *                         registered to. Modified.
     * @throws RuntimeException if the number of {@link Polynomial3DVariableHolder}s differs from the
     *                          number of waypoint times.
     */
@@ -250,8 +255,8 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
     * @param radius           either the radius of the segmented line of the points.
     * @param resolution       defines the number of trajectory samples to use.
     * @param radialResolution used to define the mesh resolution.
-    * @param registry         the {@link YoRegistry} to which internal {@link YoVariable}s will
-    *                         be registered to. Modified.
+    * @param registry         the {@link YoRegistry} to which internal {@link YoVariable}s will be
+    *                         registered to. Modified.
     * @throws RuntimeException if the number of {@link Polynomial3DVariableHolder}s differs from the
     *                          number of waypoint times.
     */
@@ -286,8 +291,8 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
     * @param radius           either the radius of the segmented line of the points.
     * @param resolution       defines the number of trajectory samples to use.
     * @param radialResolution used to define the mesh resolution.
-    * @param registry         the {@link YoRegistry} to which internal {@link YoVariable}s will
-    *                         be registered to. Modified.
+    * @param registry         the {@link YoRegistry} to which internal {@link YoVariable}s will be
+    *                         registered to. Modified.
     * @throws RuntimeException if the number of {@link Polynomial3DVariableHolder}s differs from the
     *                          number of waypoint times.
     */
@@ -411,11 +416,11 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
 
       segmentedLine3DMeshGenerator = new SegmentedLine3DMeshDataGenerator(resolution, radialResolution, radius);
       pointCloud3DMeshGenerator = new PointCloud3DMeshDataGenerator(resolution, radialResolution, radius);
-      graphics3DAddMeshDataInstructions = new Graphics3DAddMeshDataInstruction[resolution - 1];
+      visualDescriptions = new VisualDescription[resolution - 1];
 
       graphics3dObject.setChangeable(true);
       for (int i = 0; i < resolution - 1; i++)
-         graphics3DAddMeshDataInstructions[i] = graphics3dObject.addMeshData(segmentedLine3DMeshGenerator.getMeshDataHolders()[i], YoAppearance.AliceBlue());
+         visualDescriptions[i] = graphics3dObject.addMeshData(segmentedLine3DMeshGenerator.getMeshDataHolders()[i], YoAppearance.AliceBlue());
 
       setupDirtyGraphicListener();
    }
@@ -511,11 +516,11 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
 
       segmentedLine3DMeshGenerator = new SegmentedLine3DMeshDataGenerator(resolution, radialResolution, radius);
       pointCloud3DMeshGenerator = new PointCloud3DMeshDataGenerator(resolution, radialResolution);
-      graphics3DAddMeshDataInstructions = new Graphics3DAddMeshDataInstruction[resolution - 1];
+      visualDescriptions = new VisualDescription[resolution - 1];
 
       graphics3dObject.setChangeable(true);
       for (int i = 0; i < resolution - 1; i++)
-         graphics3DAddMeshDataInstructions[i] = graphics3dObject.addMeshData(segmentedLine3DMeshGenerator.getMeshDataHolders()[i], YoAppearance.AliceBlue());
+         visualDescriptions[i] = graphics3dObject.addMeshData(segmentedLine3DMeshGenerator.getMeshDataHolders()[i], YoAppearance.AliceBlue());
 
       setupDirtyGraphicListener();
    }
@@ -645,8 +650,8 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
 
       if (getCurrentGraphicType() == TrajectoryGraphicType.HIDE)
       {
-         for (Graphics3DAddMeshDataInstruction meshDataInstruction : graphics3DAddMeshDataInstructions)
-            meshDataInstruction.setMesh(null);
+         for (VisualDescription visualDescription : visualDescriptions)
+            ((MeshDescription) visualDescription.getGeometry()).setMesh(null);
          dirtyGraphic.set(false);
          return;
       }
@@ -692,15 +697,15 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
       switch (getCurrentColorType())
       {
          case BLACK:
-            for (Graphics3DAddMeshDataInstruction meshDataInstruction : graphics3DAddMeshDataInstructions)
-               meshDataInstruction.setAppearance(BLACK_APPEARANCE);
+            for (VisualDescription visualDescription : visualDescriptions)
+               visualDescription.getMaterial().setDiffuseColor(BLACK_APPEARANCE.toColorDescription());
             break;
          case VELOCITY_BASED:
             for (int i = 0; i < resolution - 1; i++)
             {
                double velocity = intermediateVelocities[i].length();
                int colorIndex = (int) Math.round((colorPalette.length - 1.0) * (velocity / maxVelocity));
-               graphics3DAddMeshDataInstructions[i].setAppearance(colorPalette[colorIndex]);
+               visualDescriptions[i].getMaterial().setDiffuseColor(colorPalette[colorIndex].toColorDescription());
             }
             break;
          case ACCELERATION_BASED:
@@ -709,7 +714,7 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
 
                double acceleration = intermediateAccelerations[i].length();
                int colorIndex = (int) Math.round((colorPalette.length - 1.0) * (acceleration / maxAcceleration));
-               graphics3DAddMeshDataInstructions[i].setAppearance(colorPalette[colorIndex]);
+               visualDescriptions[i].getMaterial().setDiffuseColor(colorPalette[colorIndex].toColorDescription());
             }
             break;
          default:
@@ -723,7 +728,7 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
                segmentedLine3DMeshGenerator.setLineRadius(radius * globalScaleProvider.getValue());
             segmentedLine3DMeshGenerator.compute(intermediatePositions, intermediateVelocities);
             for (int i = 0; i < resolution - 1; i++)
-               graphics3DAddMeshDataInstructions[i].setMesh(segmentedLine3DMeshGenerator.getMeshDataHolders()[i]);
+               ((MeshDescription) visualDescriptions[i].getGeometry()).setMesh(segmentedLine3DMeshGenerator.getMeshDataHolders()[i]);
             break;
 
          case SHOW_AS_POINTS:
@@ -731,7 +736,7 @@ public class YoGraphicPolynomial3D extends YoGraphic implements RemoteYoGraphic,
                pointCloud3DMeshGenerator.setPointRadius(radius * globalScaleProvider.getValue());
             pointCloud3DMeshGenerator.compute(intermediatePositions);
             for (int i = 0; i < resolution - 1; i++)
-               graphics3DAddMeshDataInstructions[i].setMesh(pointCloud3DMeshGenerator.getMeshDataHolders()[i]);
+               ((MeshDescription) visualDescriptions[i].getGeometry()).setMesh(pointCloud3DMeshGenerator.getMeshDataHolders()[i]);
             break;
          default:
             throw new RuntimeException("Unexpected state: " + getCurrentGraphicType());

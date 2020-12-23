@@ -253,7 +253,7 @@ public class YoGraphicVector extends YoGraphic implements RemoteYoGraphic, Graph
       if (drawArrowhead)
       {
          linkGraphics.addCylinder(0.9, lineRadiusWhenOneMeterLong, appearance);
-         linkGraphics.translate(0.0, 0.0, 0.9);
+         linkGraphics.appendTranslation(0.0, 0.0, 0.9);
          linkGraphics.addCone(0.1, 0.05 / 0.02 * lineRadiusWhenOneMeterLong, appearance);
       }
       else

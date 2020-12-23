@@ -79,8 +79,8 @@ public class YoGraphicVRML extends YoGraphicCoordinateSystem
          linkGraphics.addCoordinateSystem(scale, arrowColor);
       }
 
-      linkGraphics.rotate(graphicRotation);
-      linkGraphics.translate(graphicOffset);
+      linkGraphics.appendRotation(graphicRotation);
+      linkGraphics.appendTranslation(graphicOffset);
 
       linkGraphics.addModelFile(modelFilePath, appearance);
 
