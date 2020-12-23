@@ -88,6 +88,16 @@ public class Capsule3DDescription implements GeometryDescription
       this.resolution = resolution;
    }
 
+   public Capsule3DDescription(Capsule3DDescription other)
+   {
+      name = other.name;
+      height = other.height;
+      radiusX = other.radiusX;
+      radiusY = other.radiusY;
+      radiusZ = other.radiusZ;
+      resolution = other.resolution;
+   }
+
    /** {@inheritDoc} */
    @Override
    public void setName(String name)
@@ -236,6 +246,12 @@ public class Capsule3DDescription implements GeometryDescription
    public int getResolution()
    {
       return resolution;
+   }
+
+   @Override
+   public Capsule3DDescription copy()
+   {
+      return new Capsule3DDescription(this);
    }
 
    @Override

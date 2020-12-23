@@ -1,6 +1,8 @@
 package us.ihmc.graphicsDescription.geometry;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import us.ihmc.euclid.tuple3D.Vector3D;
 
@@ -32,6 +34,19 @@ public class ModelFileGeometryDescription implements GeometryDescription
    public ModelFileGeometryDescription(String fileName)
    {
       setFileName(fileName);
+   }
+
+   public ModelFileGeometryDescription(ModelFileGeometryDescription other)
+   {
+      name = other.name;
+      fileName = other.fileName;
+      if (other.submeshes != null)
+         submeshes = other.submeshes.stream().map(SubMeshDescription::new).collect(Collectors.toList());
+      if (other.resourceDirectories != null)
+         resourceDirectories = new ArrayList<>(other.resourceDirectories);
+      resourceClassLoader = other.resourceClassLoader;
+      if (other.scale != null)
+         scale = new Vector3D(other.scale);
    }
 
    /** {@inheritDoc} */
@@ -149,6 +164,12 @@ public class ModelFileGeometryDescription implements GeometryDescription
       return scale;
    }
 
+   @Override
+   public ModelFileGeometryDescription copy()
+   {
+      return new ModelFileGeometryDescription(this);
+   }
+
    /**
     * Description of a sub-mesh to be loaded together with a main mesh.
     */
@@ -175,6 +196,12 @@ public class ModelFileGeometryDescription implements GeometryDescription
       {
          this.name = name;
          this.center = center;
+      }
+
+      public SubMeshDescription(SubMeshDescription other)
+      {
+         name = other.name;
+         center = other.center;
       }
 
       /**
@@ -218,6 +245,11 @@ public class ModelFileGeometryDescription implements GeometryDescription
       public boolean getCenter()
       {
          return center;
+      }
+
+      public SubMeshDescription copy()
+      {
+         return new SubMeshDescription(this);
       }
    }
 }

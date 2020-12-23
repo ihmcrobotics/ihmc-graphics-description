@@ -119,4 +119,10 @@ public class MeshDescription implements GeometryDescription
          return meshDescription;
       }
    }
+
+   @Override
+   public MeshDescription copy()
+   {
+      return new MeshDescription(this);
+   }
 }

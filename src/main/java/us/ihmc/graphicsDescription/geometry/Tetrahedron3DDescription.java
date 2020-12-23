@@ -31,6 +31,12 @@ public class Tetrahedron3DDescription implements GeometryDescription
       this.edgeLength = edgeLength;
    }
 
+   public Tetrahedron3DDescription(Tetrahedron3DDescription other)
+   {
+      name = other.name;
+      edgeLength = other.edgeLength;
+   }
+
    /** {@inheritDoc} */
    @Override
    public void setName(String name)
@@ -63,6 +69,12 @@ public class Tetrahedron3DDescription implements GeometryDescription
    public double getEdgeLength()
    {
       return edgeLength;
+   }
+
+   @Override
+   public Tetrahedron3DDescription copy()
+   {
+      return new Tetrahedron3DDescription(this);
    }
 
    @Override

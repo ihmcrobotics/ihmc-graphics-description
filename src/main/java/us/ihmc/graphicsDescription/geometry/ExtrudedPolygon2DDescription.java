@@ -1,6 +1,7 @@
 package us.ihmc.graphicsDescription.geometry;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import us.ihmc.euclid.tools.EuclidCoreIOTools;
 import us.ihmc.euclid.tools.EuclidHashCodeTools;
@@ -59,6 +60,16 @@ public class ExtrudedPolygon2DDescription implements GeometryDescription
       this.counterClockwiseOrdered = counterClockwiseOrdered;
       this.topZ = topZ;
       this.bottomZ = bottomZ;
+   }
+
+   public ExtrudedPolygon2DDescription(ExtrudedPolygon2DDescription other)
+   {
+      name = other.name;
+      if (other.polygonVertices != null)
+         polygonVertices = other.polygonVertices.stream().map(Point2D::new).collect(Collectors.toList());
+      counterClockwiseOrdered = other.counterClockwiseOrdered;
+      topZ = other.topZ;
+      bottomZ = other.bottomZ;
    }
 
    /** {@inheritDoc} */
@@ -166,6 +177,12 @@ public class ExtrudedPolygon2DDescription implements GeometryDescription
    public double getBottomZ()
    {
       return bottomZ;
+   }
+
+   @Override
+   public ExtrudedPolygon2DDescription copy()
+   {
+      return new ExtrudedPolygon2DDescription(this);
    }
 
    @Override

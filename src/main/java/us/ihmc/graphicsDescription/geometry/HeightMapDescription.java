@@ -20,6 +20,15 @@ public class HeightMapDescription implements GeometryDescription
       setResolutionY(resolutionY);
    }
 
+   public HeightMapDescription(HeightMapDescription other)
+   {
+      name = other.name;
+      heightMap = other.heightMap;
+      resolutionX = other.resolutionX;
+      resolutionY = other.resolutionY;
+   }
+
+   @Override
    public void setName(String name)
    {
       this.name = name;
@@ -40,6 +49,7 @@ public class HeightMapDescription implements GeometryDescription
       this.resolutionY = resolutionY;
    }
 
+   @Override
    public String getName()
    {
       return name;
@@ -58,5 +68,11 @@ public class HeightMapDescription implements GeometryDescription
    public int getResolutionY()
    {
       return resolutionY;
+   }
+
+   @Override
+   public HeightMapDescription copy()
+   {
+      return new HeightMapDescription(this);
    }
 }

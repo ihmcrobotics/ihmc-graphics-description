@@ -38,6 +38,14 @@ public class Wedge3DDescription implements GeometryDescription
       this.sizeZ = sizeZ;
    }
 
+   public Wedge3DDescription(Wedge3DDescription other)
+   {
+      name = other.name;
+      sizeX = other.sizeX;
+      sizeY = other.sizeY;
+      sizeZ = other.sizeZ;
+   }
+
    /** {@inheritDoc} */
    @Override
    public void setName(String name)
@@ -124,6 +132,12 @@ public class Wedge3DDescription implements GeometryDescription
    public double getSizeZ()
    {
       return sizeZ;
+   }
+
+   @Override
+   public Wedge3DDescription copy()
+   {
+      return new Wedge3DDescription(this);
    }
 
    @Override

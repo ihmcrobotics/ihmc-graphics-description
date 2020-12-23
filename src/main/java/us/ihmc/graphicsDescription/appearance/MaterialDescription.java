@@ -36,6 +36,22 @@ public class MaterialDescription
       this.diffuseColor = diffuseColor;
    }
 
+   public MaterialDescription(MaterialDescription other)
+   {
+      name = other.name;
+      ambientColor = other.ambientColor == null ? null : other.ambientColor.copy();
+      diffuseColor = other.diffuseColor == null ? null : other.diffuseColor.copy();
+      specularColor = other.specularColor == null ? null : other.specularColor.copy();
+      emissiveColor = other.emissiveColor == null ? null : other.emissiveColor.copy();
+
+      shininess = other.shininess;
+
+      diffuseMap = other.diffuseMap == null ? null : other.diffuseMap.copy();
+      normalMap = other.normalMap == null ? null : other.normalMap.copy();
+      specularMap = other.specularMap == null ? null : other.specularMap.copy();
+      emissiveMap = other.emissiveMap == null ? null : other.emissiveMap.copy();
+   }
+
    public void setName(String name)
    {
       this.name = name;
@@ -185,6 +201,11 @@ public class MaterialDescription
    public TextureDescription getEmissiveMap()
    {
       return emissiveMap;
+   }
+
+   public MaterialDescription copy()
+   {
+      return new MaterialDescription(this);
    }
 
    public static interface MaterialChangedListener

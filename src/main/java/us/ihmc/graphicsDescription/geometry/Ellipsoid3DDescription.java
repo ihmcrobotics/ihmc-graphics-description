@@ -52,6 +52,15 @@ public class Ellipsoid3DDescription implements GeometryDescription
       this.resolution = resolution;
    }
 
+   public Ellipsoid3DDescription(Ellipsoid3DDescription other)
+   {
+      name = other.name;
+      radiusX = other.radiusX;
+      radiusY = other.radiusY;
+      radiusZ = other.radiusZ;
+      resolution = other.resolution;
+   }
+
    /** {@inheritDoc} */
    @Override
    public void setName(String name)
@@ -168,6 +177,12 @@ public class Ellipsoid3DDescription implements GeometryDescription
    public int getResolution()
    {
       return resolution;
+   }
+
+   @Override
+   public Ellipsoid3DDescription copy()
+   {
+      return new Ellipsoid3DDescription(this);
    }
 
    @Override

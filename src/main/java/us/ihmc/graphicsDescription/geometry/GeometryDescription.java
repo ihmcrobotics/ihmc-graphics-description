@@ -19,4 +19,6 @@ public interface GeometryDescription
     * @return the name associated with this description.
     */
    String getName();
+
+   GeometryDescription copy();
 }

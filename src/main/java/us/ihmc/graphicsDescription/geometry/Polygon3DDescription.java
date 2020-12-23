@@ -1,6 +1,7 @@
 package us.ihmc.graphicsDescription.geometry;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import us.ihmc.euclid.tools.EuclidCoreIOTools;
 import us.ihmc.euclid.tools.EuclidHashCodeTools;
@@ -37,6 +38,14 @@ public class Polygon3DDescription implements GeometryDescription
    {
       this.polygonVertices = polygonVertices;
       this.counterClockwiseOrdered = counterClockwiseOrdered;
+   }
+
+   public Polygon3DDescription(Polygon3DDescription other)
+   {
+      name = other.name;
+      if (other.polygonVertices != null)
+         polygonVertices = other.polygonVertices.stream().map(Point3D::new).collect(Collectors.toList());
+      counterClockwiseOrdered = other.counterClockwiseOrdered;
    }
 
    /** {@inheritDoc} */
@@ -92,6 +101,12 @@ public class Polygon3DDescription implements GeometryDescription
    public boolean isCounterClockwiseOrdered()
    {
       return counterClockwiseOrdered;
+   }
+
+   @Override
+   public Polygon3DDescription copy()
+   {
+      return new Polygon3DDescription(this);
    }
 
    @Override

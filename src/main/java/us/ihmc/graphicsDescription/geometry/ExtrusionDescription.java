@@ -7,6 +7,8 @@ import java.awt.Graphics2D;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +33,7 @@ public class ExtrusionDescription implements GeometryDescription
    public ExtrusionDescription(ExtrusionDescription other)
    {
       name = other.name;
-      image = other.image;
+      image = copyImage(other.image);
       thickness = other.thickness;
    }
 
@@ -62,6 +64,16 @@ public class ExtrusionDescription implements GeometryDescription
       graphics.dispose();
 
       return bufferedImage;
+   }
+
+   public static BufferedImage copyImage(BufferedImage original)
+   {
+      if (original == null)
+         return null;
+      ColorModel colorModel = original.getColorModel();
+      boolean isAlphaPremultiplied = colorModel.isAlphaPremultiplied();
+      WritableRaster raster = original.copyData(null);
+      return new BufferedImage(colorModel, raster, isAlphaPremultiplied, null);
    }
 
    @Override
@@ -136,5 +148,11 @@ public class ExtrusionDescription implements GeometryDescription
    public static interface ExtrusionChangedListener
    {
       void onChange(ExtrusionDescription oldValue, ExtrusionDescription newValue);
+   }
+
+   @Override
+   public ExtrusionDescription copy()
+   {
+      return new ExtrusionDescription(this);
    }
 }

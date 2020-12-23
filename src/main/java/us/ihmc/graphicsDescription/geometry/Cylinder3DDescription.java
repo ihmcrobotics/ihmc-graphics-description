@@ -89,6 +89,15 @@ public class Cylinder3DDescription implements GeometryDescription
       this.resolution = resolution;
    }
 
+   public Cylinder3DDescription(Cylinder3DDescription other)
+   {
+      name = other.name;
+      height = other.height;
+      radius = other.radius;
+      centered = other.centered;
+      resolution = other.resolution;
+   }
+
    /** {@inheritDoc} */
    @Override
    public void setName(String name)
@@ -183,6 +192,12 @@ public class Cylinder3DDescription implements GeometryDescription
    public int getResolution()
    {
       return resolution;
+   }
+
+   @Override
+   public Cylinder3DDescription copy()
+   {
+      return new Cylinder3DDescription(this);
    }
 
    @Override

@@ -569,6 +569,11 @@ public class ColorDescription
       return new double[] {hue, saturation, lightness, alpha};
    }
 
+   public ColorDescription copy()
+   {
+      return new ColorDescription(this);
+   }
+
    @Override
    public boolean equals(Object object)
    {

@@ -68,6 +68,16 @@ public class ArcTorus3DDescription implements GeometryDescription
       this.resolution = resolution;
    }
 
+   public ArcTorus3DDescription(ArcTorus3DDescription other)
+   {
+      name = other.name;
+      startAngle = other.startAngle;
+      endAngle = other.endAngle;
+      majorRadius = other.majorRadius;
+      minorRadius = other.minorRadius;
+      resolution = other.resolution;
+   }
+
    /** {@inheritDoc} */
    @Override
    public void setName(String name)
@@ -198,6 +208,12 @@ public class ArcTorus3DDescription implements GeometryDescription
    public int getResolution()
    {
       return resolution;
+   }
+
+   @Override
+   public ArcTorus3DDescription copy()
+   {
+      return new ArcTorus3DDescription(this);
    }
 
    @Override

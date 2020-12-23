@@ -58,6 +58,15 @@ public class Box3DDescription implements GeometryDescription
       this.centered = centered;
    }
 
+   public Box3DDescription(Box3DDescription other)
+   {
+      name = other.name;
+      sizeX = other.sizeX;
+      sizeY = other.sizeY;
+      sizeZ = other.sizeZ;
+      centered = other.centered;
+   }
+
    /** {@inheritDoc} */
    @Override
    public void setName(String name)
@@ -176,6 +185,12 @@ public class Box3DDescription implements GeometryDescription
    public boolean isCentered()
    {
       return centered;
+   }
+
+   @Override
+   public Box3DDescription copy()
+   {
+      return new Box3DDescription(this);
    }
 
    @Override

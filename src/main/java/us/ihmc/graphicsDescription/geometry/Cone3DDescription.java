@@ -51,6 +51,14 @@ public class Cone3DDescription implements GeometryDescription
       this.resolution = resolution;
    }
 
+   public Cone3DDescription(Cone3DDescription other)
+   {
+      name = other.name;
+      height = other.height;
+      radius = other.radius;
+      resolution = other.resolution;
+   }
+
    /** {@inheritDoc} */
    @Override
    public void setName(String name)
@@ -123,6 +131,12 @@ public class Cone3DDescription implements GeometryDescription
    public int getResolution()
    {
       return resolution;
+   }
+
+   @Override
+   public Cone3DDescription copy()
+   {
+      return new Cone3DDescription(this);
    }
 
    @Override

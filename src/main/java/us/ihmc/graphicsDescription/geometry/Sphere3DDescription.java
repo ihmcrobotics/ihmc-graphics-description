@@ -42,6 +42,13 @@ public class Sphere3DDescription implements GeometryDescription
       this.resolution = resolution;
    }
 
+   public Sphere3DDescription(Sphere3DDescription other)
+   {
+      name = other.name;
+      radius = other.radius;
+      resolution = other.resolution;
+   }
+
    /** {@inheritDoc} */
    @Override
    public void setName(String name)
@@ -94,6 +101,12 @@ public class Sphere3DDescription implements GeometryDescription
    public int getResolution()
    {
       return resolution;
+   }
+
+   @Override
+   public Sphere3DDescription copy()
+   {
+      return new Sphere3DDescription(this);
    }
 
    @Override

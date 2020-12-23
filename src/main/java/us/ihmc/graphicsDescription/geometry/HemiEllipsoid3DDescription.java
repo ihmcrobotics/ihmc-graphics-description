@@ -56,6 +56,15 @@ public class HemiEllipsoid3DDescription implements GeometryDescription
       this.resolution = resolution;
    }
 
+   public HemiEllipsoid3DDescription(HemiEllipsoid3DDescription other)
+   {
+      name = other.name;
+      radiusX = other.radiusX;
+      radiusY = other.radiusY;
+      radiusZ = other.radiusZ;
+      resolution = other.resolution;
+   }
+
    @Override
    public void setName(String name)
    {
@@ -161,6 +170,12 @@ public class HemiEllipsoid3DDescription implements GeometryDescription
    public int getResolution()
    {
       return resolution;
+   }
+
+   @Override
+   public HemiEllipsoid3DDescription copy()
+   {
+      return new HemiEllipsoid3DDescription(this);
    }
 
    @Override

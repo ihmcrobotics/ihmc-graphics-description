@@ -50,6 +50,14 @@ public class Torus3DDescription implements GeometryDescription
       this.resolution = resolution;
    }
 
+   public Torus3DDescription(Torus3DDescription other)
+   {
+      name = other.name;
+      majorRadius = other.majorRadius;
+      minorRadius = other.minorRadius;
+      resolution = other.resolution;
+   }
+
    /** {@inheritDoc} */
    @Override
    public void setName(String name)
@@ -122,6 +130,12 @@ public class Torus3DDescription implements GeometryDescription
    public int getResolution()
    {
       return resolution;
+   }
+
+   @Override
+   public Torus3DDescription copy()
+   {
+      return new Torus3DDescription(this);
    }
 
    @Override

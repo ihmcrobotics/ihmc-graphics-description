@@ -50,6 +50,13 @@ public class VisualDescription implements Transformable
       this.material = material;
    }
 
+   public VisualDescription(VisualDescription other)
+   {
+      pose = other.pose == null ? null : new AffineTransform(other.pose);
+      geometry = other.geometry == null ? null : other.geometry.copy();
+      material = other.material == null ? null : other.material.copy();
+   }
+
    /**
     * Sets the name to associate to this visual. The name can be passed to objects or graphics created
     * using this description.
@@ -141,5 +148,10 @@ public class VisualDescription implements Transformable
    public void applyInverseTransform(Transform transform)
    {
       transform.inverseTransform(pose);
+   }
+
+   public VisualDescription copy()
+   {
+      return new VisualDescription(this);
    }
 }

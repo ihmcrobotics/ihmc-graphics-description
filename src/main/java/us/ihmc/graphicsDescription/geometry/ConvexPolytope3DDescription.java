@@ -1,5 +1,6 @@
 package us.ihmc.graphicsDescription.geometry;
 
+import us.ihmc.euclid.shape.convexPolytope.ConvexPolytope3D;
 import us.ihmc.euclid.shape.convexPolytope.interfaces.ConvexPolytope3DReadOnly;
 import us.ihmc.euclid.tools.EuclidHashCodeTools;
 
@@ -27,6 +28,13 @@ public class ConvexPolytope3DDescription implements GeometryDescription
    public ConvexPolytope3DDescription(ConvexPolytope3DReadOnly convexPolytope)
    {
       this.convexPolytope = convexPolytope;
+   }
+
+   public ConvexPolytope3DDescription(ConvexPolytope3DDescription other)
+   {
+      name = other.name;
+      if (other.convexPolytope != null)
+         convexPolytope = new ConvexPolytope3D(other.convexPolytope);
    }
 
    /** {@inheritDoc} */
@@ -61,6 +69,12 @@ public class ConvexPolytope3DDescription implements GeometryDescription
    public ConvexPolytope3DReadOnly getConvexPolytope()
    {
       return convexPolytope;
+   }
+
+   @Override
+   public ConvexPolytope3DDescription copy()
+   {
+      return new ConvexPolytope3DDescription(this);
    }
 
    @Override

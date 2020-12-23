@@ -39,6 +39,15 @@ public class PyramidBox3DDescription implements GeometryDescription
       this.pyramidHeight = pyramidHeight;
    }
 
+   public PyramidBox3DDescription(PyramidBox3DDescription other)
+   {
+      name = other.name;
+      boxSizeX = other.boxSizeX;
+      boxSizeY = other.boxSizeY;
+      boxSizeZ = other.boxSizeZ;
+      pyramidHeight = other.pyramidHeight;
+   }
+
    /** {@inheritDoc} */
    @Override
    public void setName(String name)
@@ -145,6 +154,12 @@ public class PyramidBox3DDescription implements GeometryDescription
    public double getPyramidHeight()
    {
       return pyramidHeight;
+   }
+
+   @Override
+   public PyramidBox3DDescription copy()
+   {
+      return new PyramidBox3DDescription(this);
    }
 
    @Override

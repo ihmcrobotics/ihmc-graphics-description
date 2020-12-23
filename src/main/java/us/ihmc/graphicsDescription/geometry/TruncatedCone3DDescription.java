@@ -183,8 +183,20 @@ public class TruncatedCone3DDescription implements GeometryDescription
       this.topRadiusY = topRadiusY;
       this.baseRadiusX = baseRadiusX;
       this.baseRadiusY = baseRadiusY;
-      this.resolution = resolution;
       this.centered = centered;
+      this.resolution = resolution;
+   }
+
+   public TruncatedCone3DDescription(TruncatedCone3DDescription other)
+   {
+      name = other.name;
+      height = other.height;
+      topRadiusX = other.topRadiusX;
+      topRadiusY = other.topRadiusY;
+      baseRadiusX = other.baseRadiusX;
+      baseRadiusY = other.baseRadiusY;
+      centered = other.centered;
+      resolution = other.resolution;
    }
 
    /** {@inheritDoc} */
@@ -385,6 +397,12 @@ public class TruncatedCone3DDescription implements GeometryDescription
    public int getResolution()
    {
       return resolution;
+   }
+
+   @Override
+   public TruncatedCone3DDescription copy()
+   {
+      return new TruncatedCone3DDescription(this);
    }
 
    @Override
