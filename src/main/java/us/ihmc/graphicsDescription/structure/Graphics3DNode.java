@@ -17,41 +17,26 @@ import us.ihmc.tools.inputDevices.keyboard.ModifierKeyInterface;
 
 public class Graphics3DNode
 {
-   private static final Graphics3DNodeType DEFAULT_NODE_TYPE = Graphics3DNodeType.JOINT;
    private final String name;
-   private final Graphics3DNodeType nodeType;
    private final AffineTransform transform = new AffineTransform();
 
    private Graphics3DObject graphicsObject;
    private boolean hasGraphicsObjectChanged = false;
 
-   private final ArrayList<Graphics3DNode> childeren = new ArrayList<>();
+   private final ArrayList<Graphics3DNode> children = new ArrayList<>();
    private final ArrayList<SelectedListener> selectedListeners = new ArrayList<>();
 
-   public Graphics3DNode(String name, Graphics3DNodeType nodeType, Graphics3DObject graphicsObject)
+   public Graphics3DNode(String name)
    {
-      this.name = name;
-      this.nodeType = nodeType;
-
-      if (graphicsObject != null)
-      {
-         setGraphicsObject(graphicsObject);
-      }
+      this(name, null);
    }
 
    public Graphics3DNode(String name, Graphics3DObject graphicsObject)
    {
-      this(name, DEFAULT_NODE_TYPE, graphicsObject);
-   }
+      this.name = name;
 
-   public Graphics3DNode(String name, Graphics3DNodeType nodeType)
-   {
-      this(name, nodeType, null);
-   }
-
-   public Graphics3DNode(String name)
-   {
-      this(name, DEFAULT_NODE_TYPE, null);
+      if (graphicsObject != null)
+         setGraphicsObject(graphicsObject);
    }
 
    public synchronized AffineTransform getTransform()
@@ -126,17 +111,17 @@ public class Graphics3DNode
 
    public void addChild(Graphics3DNode child)
    {
-      synchronized (childeren)
+      synchronized (children)
       {
-         childeren.add(child);
+         children.add(child);
       }
    }
 
    public List<Graphics3DNode> getChildrenNodes()
    {
-      synchronized (childeren)
+      synchronized (children)
       {
-         return Collections.unmodifiableList(childeren);
+         return Collections.unmodifiableList(children);
       }
    }
 
@@ -147,10 +132,8 @@ public class Graphics3DNode
 
    public synchronized Graphics3DObject getGraphicsObjectAndResetHasGraphicsObjectChanged()
    {
-      Graphics3DObject ret = graphicsObject;
       setHasGraphicsObjectChanged(false);
-
-      return ret;
+      return graphicsObject;
    }
 
    public synchronized void setHasGraphicsObjectChanged(boolean hasGraphicsObjectChanged)
@@ -174,11 +157,6 @@ public class Graphics3DNode
       return name;
    }
 
-   public Graphics3DNodeType getNodeType()
-   {
-      return nodeType;
-   }
-
    public void notifySelectedListeners(ModifierKeyInterface modifierKeys, Point3DReadOnly location, Point3DReadOnly cameraPosition,
                                        QuaternionReadOnly cameraRotation)
    {
@@ -186,8 +164,6 @@ public class Graphics3DNode
       {
          selectedListener.selected(this, modifierKeys, location, cameraPosition, cameraRotation);
       }
-
-      graphicsObject.notifySelectedListeners(this, modifierKeys, location, cameraPosition, cameraRotation);
    }
 
    public void addSelectedListener(SelectedListener selectedListener)

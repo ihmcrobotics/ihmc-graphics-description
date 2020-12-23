@@ -271,7 +271,7 @@ public class Graphics3DObject
     * @param scaleFactors Vector3d describing the scaling factors in each dimension
     * @return
     */
-   public void prependScale(Vector3DReadOnly scaleFactors)
+   public void prependScale(Vector3D scaleFactors)
    {
       for (int i = 0; i < visualDescriptions.size(); i++)
          visualDescriptions.get(i).getPose().prependScale(scaleFactors);
