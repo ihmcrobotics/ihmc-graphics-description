@@ -187,6 +187,35 @@ public class MeshDataBuilder
    }
 
    /**
+    * Add a hollow cylinder to this builder. Its axis is aligned with the z-axis in its local coordinate
+    * system.
+    *
+    * @param height      height along z of the cylinder.
+    * @param outerRadius the cylinder's outer radius.
+    * @param innerRadius the cylinder's inner radius.
+    * @param offset      coordinates of the cylinder's center. Not modified.
+    * @param orientation axis-angle describing the cylinder orientation with respect to world. Not
+    *                    modified.
+    */
+   public void addHollowCylinder(double height, double outerRadius, double innerRadius, Tuple3DReadOnly offset, Orientation3DReadOnly orientation)
+   {
+      addMesh(MeshDataGenerator.HollowCylinder(outerRadius, innerRadius, height, DEFAULT_RES), offset, orientation);
+   }
+
+   /**
+    * Add a hollow cylinder to this builder. Its axis is aligned with the z-axis.
+    *
+    * @param height height along z of the cylinder.
+    * @param outerRadius the cylinder's outer radius.
+    * @param innerRadius the cylinder's inner radius.
+    * @param offset coordinates of the cylinder's center. Not modified.
+    */
+   public void addHollowCylinder(double height, double outerRadius, double innerRadius, Tuple3DReadOnly offset)
+   {
+      addMesh(MeshDataGenerator.HollowCylinder(outerRadius, innerRadius, height, DEFAULT_RES), offset);
+   }
+
+   /**
     * Add a 3D line to this builder.
     * 
     * @param x0        x-coordinate of the line start.

@@ -678,6 +678,132 @@ public class MeshDataGenerator
       return new MeshDataHolder(points, textPoints, triangleIndices, normals);
    }
 
+   public static MeshDataHolder HollowCylinder(double outerRadius, double innerRadius, double height, int N)
+   {
+      return HollowCylinder((float) outerRadius, (float) innerRadius, (float) height, N);
+   }
+
+   public static MeshDataHolder HollowCylinder(float outerRadius, float innerRadius, float height, int N)
+   {
+      Point3D32[] points = new Point3D32[8 * N];
+      Vector3D32[] normals = new Vector3D32[8 * N];
+      TexCoord2f[] textPoints = new TexCoord2f[8 * N];
+
+      for (int i = 0; i < N; i++)
+      {
+         double angle = i * TwoPi / N;
+         float cosAngle = (float) Math.cos(angle);
+         float sinAngle = (float) Math.sin(angle);
+
+         float vertexX = outerRadius * cosAngle;
+         float vertexY = outerRadius * sinAngle;
+
+         // Bottom vertices
+         points[i] = new Point3D32(vertexX, vertexY, 0.0f);
+         normals[i] = new Vector3D32(0.0f, 0.0f, -1.0f);
+         textPoints[i] = new TexCoord2f(0.5f * cosAngle + 0.5f, 0.5f * sinAngle + 0.5f);
+
+         // Top vertices
+         points[i + N] = new Point3D32(vertexX, vertexY, height);
+         normals[i + N] = new Vector3D32(0.0f, 0.0f, 1.0f);
+         textPoints[i + N] = new TexCoord2f(0.5f * cosAngle + 0.5f, 0.5f * sinAngle + 0.5f);
+
+         // Outer vertices
+         // Bottom
+         points[i + 2 * N] = new Point3D32(vertexX, vertexY, 0.0f);
+         normals[i + 2 * N] = new Vector3D32(cosAngle, sinAngle, 0.0f);
+         textPoints[i + 2 * N] = new TexCoord2f(0.5f * cosAngle + 0.5f, 0.5f * sinAngle + 0.5f);
+
+         // Top
+         points[i + 3 * N] = new Point3D32(vertexX, vertexY, height);
+         normals[i + 3 * N] = new Vector3D32(cosAngle, sinAngle, 0.0f);
+         textPoints[i + 3 * N] = new TexCoord2f(0.5f * cosAngle + 0.5f, 0.5f * sinAngle + 0.5f);
+      }
+
+      for (int i = 0; i < N; i++)
+      {
+         double angle = i * TwoPi / N;
+         float cosAngle = (float) Math.cos(angle);
+         float sinAngle = (float) Math.sin(angle);
+
+         float vertexX = innerRadius * cosAngle;
+         float vertexY = innerRadius * sinAngle;
+
+         // Bottom vertices
+         points[i + 4 * N] = new Point3D32(vertexX, vertexY, 0.0f);
+         normals[i + 4 * N] = new Vector3D32(0.0f, 0.0f, -1.0f);
+         textPoints[i + 4 * N] = new TexCoord2f(0.5f * cosAngle + 0.5f, 0.5f * sinAngle + 0.5f);
+
+         // Top vertices
+         points[i + 5 * N] = new Point3D32(vertexX, vertexY, height);
+         normals[i + 5 * N] = new Vector3D32(0.0f, 0.0f, 1.0f);
+         textPoints[i + 5 * N] = new TexCoord2f(0.5f * cosAngle + 0.5f, 0.5f * sinAngle + 0.5f);
+
+         // Inner vertices
+         // Bottom
+         points[i + 6 * N] = new Point3D32(vertexX, vertexY, 0.0f);
+         normals[i + 6 * N] = new Vector3D32(-cosAngle, -sinAngle, 0.0f);
+         textPoints[i + 6 * N] = new TexCoord2f(0.5f * cosAngle + 0.5f, 0.5f * sinAngle + 0.5f);
+
+         // Top
+         points[i + 7 * N] = new Point3D32(vertexX, vertexY, height);
+         normals[i + 7 * N] = new Vector3D32(-cosAngle, -sinAngle, 0.0f);
+         textPoints[i + 7 * N] = new TexCoord2f(0.5f * cosAngle + 0.5f, 0.5f * sinAngle + 0.5f);
+      }
+
+      int numberOfTriangles = 4 * N;
+      int[] triangleIndices = new int[6 * numberOfTriangles];
+
+      int index = 0;
+
+      // counter clockwise winding order
+      for (int i = 0; i < N; i++)
+      { // The bottom cap
+         triangleIndices[index++] = i;
+         triangleIndices[index++] = i + 4 * N;
+         triangleIndices[index++] = (i + 1) % N;
+         triangleIndices[index++] = i + 4 * N;
+         triangleIndices[index++] = (i + 1) % N + 4 * N;
+         triangleIndices[index++] = (i + 1) % N;
+      }
+
+      for (int i = 0; i < N; i++)
+      { // The top cap
+         triangleIndices[index++] = i + N;
+         triangleIndices[index++] = (i + 1) % N + N;
+         triangleIndices[index++] = i + 5 * N;
+         triangleIndices[index++] = i + 5 * N;
+         triangleIndices[index++] = (i + 1) % N + N;
+         triangleIndices[index++] = (i + 1) % N + 5 * N;
+      }
+
+      for (int i = 0; i < N; i++)
+      { // The outer cylinder part
+         // Lower triangle
+         triangleIndices[index++] = i + 2 * N;
+         triangleIndices[index++] = (i + 1) % N + 2 * N;
+         triangleIndices[index++] = i + 3 * N;
+         // Upper triangle
+         triangleIndices[index++] = (i + 1) % N + 2 * N;
+         triangleIndices[index++] = (i + 1) % N + 3 * N;
+         triangleIndices[index++] = i + 3 * N;
+      }
+
+      for (int i = 0; i < N; i++)
+      { // The inner cylinder part
+         // Lower triangle
+         triangleIndices[index++] = i + 6 * N;
+         triangleIndices[index++] = i + 7 * N;
+         triangleIndices[index++] = (i + 1) % N + 6 * N;
+         // Upper triangle
+         triangleIndices[index++] = (i + 1) % N + 6 * N;
+         triangleIndices[index++] = i + 7 * N;
+         triangleIndices[index++] = (i + 1) % N + 7 * N;
+      }
+
+      return new MeshDataHolder(points, textPoints, triangleIndices, normals);
+   }
+
    public static MeshDataHolder Cone(double height, double radius, int N)
    {
       return Cone((float) height, (float) radius, N);
