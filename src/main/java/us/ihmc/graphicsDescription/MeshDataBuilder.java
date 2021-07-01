@@ -148,7 +148,7 @@ public class MeshDataBuilder
    }
 
    /**
-    * Add a isosceles triangular to this builder. The prism's origin is at the center of it's base face with the peak on top
+    * Add a isosceles triangular prism to this builder. The prism's origin is at the center of it's base face with the peak on top
     * like a roofline along the Y axis. The depth of the prism is along the Y axis.
     *
     * @param triangleWidth   The width/base of the upward pointing isosceles triangle
@@ -162,7 +162,7 @@ public class MeshDataBuilder
    }
 
    /**
-    * Add a isosceles triangular to this builder. The prism's origin is at the center of it's base face with the peak on top
+    * Add a isosceles triangular prism to this builder. The prism's origin is at the center of it's base face with the peak on top
     * like a roofline along the Y axis. The depth of the prism is along the Y axis.
     *
     * @param triangleWidth   The width/base of the upward pointing isosceles triangle
