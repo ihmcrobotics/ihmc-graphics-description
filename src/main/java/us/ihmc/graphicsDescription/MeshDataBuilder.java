@@ -148,6 +148,39 @@ public class MeshDataBuilder
    }
 
    /**
+    * Add a isosceles triangular to this builder. The prism's origin is at the center of it's base face with the peak on top
+    * like a roofline along the Y axis. The depth of the prism is along the Y axis.
+    *
+    * @param triangleWidth   The width/base of the upward pointing isosceles triangle
+    * @param triangleHeight  The height of the upward pointing isosceles triangle
+    * @param prismThickness  The thichness/depth extruded by the triangle to make a prism
+    * @param offset          Coordinates of the origin
+    */
+   public void addIsoscelesTriangularPrism(double triangleWidth, double triangleHeight, double prismThickness, Tuple3DReadOnly offset)
+   {
+      addMesh(MeshDataGenerator.IsoscelesTriangularPrism(triangleWidth, triangleHeight, prismThickness), offset);
+   }
+
+   /**
+    * Add a isosceles triangular to this builder. The prism's origin is at the center of it's base face with the peak on top
+    * like a roofline along the Y axis. The depth of the prism is along the Y axis.
+    *
+    * @param triangleWidth   The width/base of the upward pointing isosceles triangle
+    * @param triangleHeight  The height of the upward pointing isosceles triangle
+    * @param prismThickness  The thichness/depth extruded by the triangle to make a prism
+    * @param offset          Coordinates of the origin
+    * @param orientation     Orientation of the origin
+    */
+   public void addIsoscelesTriangularPrism(double triangleWidth,
+                                           double triangleHeight,
+                                           double prismThickness,
+                                           Tuple3DReadOnly offset,
+                                           Orientation3DReadOnly orientation)
+   {
+      addMesh(MeshDataGenerator.IsoscelesTriangularPrism(triangleWidth, triangleHeight, prismThickness), offset, orientation);
+   }
+
+   /**
     * Add a cylinder to this builder. Its axis is aligned with the z-axis.
     * 
     * @param height height along z of the cylinder.
