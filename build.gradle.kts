@@ -17,7 +17,7 @@ ihmc {
 
 mainDependencies {
    api("net.sf.trove4j:trove4j:3.0.3")
-   api("org.apache.commons:commons-lang3:3.11")
+   api("org.apache.commons:commons-lang3:3.12.0")
 
    api("us.ihmc:euclid-frame:0.17.0")
    api("us.ihmc:euclid-shape:0.17.0")
