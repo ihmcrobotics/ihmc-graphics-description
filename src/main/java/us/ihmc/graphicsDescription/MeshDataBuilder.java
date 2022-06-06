@@ -148,6 +148,39 @@ public class MeshDataBuilder
    }
 
    /**
+    * Add a isosceles triangular prism to this builder. The prism's origin is at the center of it's base face with the peak on top
+    * like a roofline along the Y axis. The depth of the prism is along the Y axis.
+    *
+    * @param triangleWidth   The width/base of the upward pointing isosceles triangle
+    * @param triangleHeight  The height of the upward pointing isosceles triangle
+    * @param prismThickness  The thichness/depth extruded by the triangle to make a prism
+    * @param offset          Coordinates of the origin
+    */
+   public void addIsoscelesTriangularPrism(double triangleWidth, double triangleHeight, double prismThickness, Tuple3DReadOnly offset)
+   {
+      addMesh(MeshDataGenerator.IsoscelesTriangularPrism(triangleWidth, triangleHeight, prismThickness), offset);
+   }
+
+   /**
+    * Add a isosceles triangular prism to this builder. The prism's origin is at the center of it's base face with the peak on top
+    * like a roofline along the Y axis. The depth of the prism is along the Y axis.
+    *
+    * @param triangleWidth   The width/base of the upward pointing isosceles triangle
+    * @param triangleHeight  The height of the upward pointing isosceles triangle
+    * @param prismThickness  The thichness/depth extruded by the triangle to make a prism
+    * @param offset          Coordinates of the origin
+    * @param orientation     Orientation of the origin
+    */
+   public void addIsoscelesTriangularPrism(double triangleWidth,
+                                           double triangleHeight,
+                                           double prismThickness,
+                                           Tuple3DReadOnly offset,
+                                           Orientation3DReadOnly orientation)
+   {
+      addMesh(MeshDataGenerator.IsoscelesTriangularPrism(triangleWidth, triangleHeight, prismThickness), offset, orientation);
+   }
+
+   /**
     * Add a cylinder to this builder. Its axis is aligned with the z-axis.
     * 
     * @param height height along z of the cylinder.
@@ -184,6 +217,35 @@ public class MeshDataBuilder
    public void addCylinder(float height, float radius, Tuple3DReadOnly offset)
    {
       addMesh(MeshDataGenerator.Cylinder(radius, height, DEFAULT_RES), offset);
+   }
+
+   /**
+    * Add a hollow cylinder to this builder. Its axis is aligned with the z-axis in its local coordinate
+    * system.
+    *
+    * @param height      height along z of the cylinder.
+    * @param outerRadius the cylinder's outer radius.
+    * @param innerRadius the cylinder's inner radius.
+    * @param offset      coordinates of the cylinder's center. Not modified.
+    * @param orientation axis-angle describing the cylinder orientation with respect to world. Not
+    *                    modified.
+    */
+   public void addHollowCylinder(double height, double outerRadius, double innerRadius, Tuple3DReadOnly offset, Orientation3DReadOnly orientation)
+   {
+      addMesh(MeshDataGenerator.HollowCylinder(outerRadius, innerRadius, height, DEFAULT_RES), offset, orientation);
+   }
+
+   /**
+    * Add a hollow cylinder to this builder. Its axis is aligned with the z-axis.
+    *
+    * @param height height along z of the cylinder.
+    * @param outerRadius the cylinder's outer radius.
+    * @param innerRadius the cylinder's inner radius.
+    * @param offset coordinates of the cylinder's center. Not modified.
+    */
+   public void addHollowCylinder(double height, double outerRadius, double innerRadius, Tuple3DReadOnly offset)
+   {
+      addMesh(MeshDataGenerator.HollowCylinder(outerRadius, innerRadius, height, DEFAULT_RES), offset);
    }
 
    /**
