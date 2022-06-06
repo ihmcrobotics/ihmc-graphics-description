@@ -7,7 +7,7 @@ plugins {
 
 ihmc {
    group = "us.ihmc"
-   version = "0.19.4"
+   version = "0.19.5"
    vcsUrl = "https://github.com/ihmcrobotics/ihmc-graphics-description"
    openSource = true
 
