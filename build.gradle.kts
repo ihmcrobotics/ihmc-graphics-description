@@ -18,10 +18,10 @@ ihmc {
 mainDependencies {
    api("net.sf.trove4j:trove4j:3.0.3")
 
-   api("us.ihmc:euclid-frame:0.17.2")
-   api("us.ihmc:euclid-shape:0.17.2")
+   api("us.ihmc:euclid-frame:0.18.1")
+   api("us.ihmc:euclid-shape:0.18.1")
    api("us.ihmc:ihmc-commons:0.31.0")
-   api("us.ihmc:ihmc-yovariables:0.9.13")
+   api("us.ihmc:ihmc-yovariables:0.9.15")
 }
 
 testDependencies {
