@@ -7,7 +7,7 @@ plugins {
 
 ihmc {
    group = "us.ihmc"
-   version = "0.19.7"
+   version = "0.19.8"
    vcsUrl = "https://github.com/ihmcrobotics/ihmc-graphics-description"
    openSource = true
 
@@ -18,10 +18,10 @@ ihmc {
 mainDependencies {
    api("net.sf.trove4j:trove4j:3.0.3")
 
-   api("us.ihmc:euclid-frame:0.18.1")
-   api("us.ihmc:euclid-shape:0.18.1")
+   api("us.ihmc:euclid-frame:0.19.0")
+   api("us.ihmc:euclid-shape:0.19.0")
    api("us.ihmc:ihmc-commons:0.31.0")
-   api("us.ihmc:ihmc-yovariables:0.9.15")
+   api("us.ihmc:ihmc-yovariables:0.9.16")
 }
 
 testDependencies {
