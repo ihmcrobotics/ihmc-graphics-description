@@ -1,6 +1,7 @@
 package us.ihmc.graphicsDescription.yoGraphics;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import us.ihmc.euclid.referenceFrame.FramePoint3D;
@@ -32,6 +33,7 @@ public class BagOfBalls
    private static final GraphicType DEFAULT_GRAPHIC_TYPE = null;
 
    private final ArrayList<YoGraphicPosition> yoGraphicPositions = new ArrayList<>();
+   private final List<YoFramePoint3D> positions;
    private int index;
    private boolean outOfBallsWarning = false;
    private YoGraphicsList yoGraphicsList;
@@ -120,6 +122,7 @@ public class BagOfBalls
                      YoGraphicsListRegistry yoGraphicsListRegistry)
    {
       YoRegistry registry = new YoRegistry(name + "Balls");
+      List<YoFramePoint3D> pointList = new ArrayList<>();
 
       for (int i = 0; i < appearances.size(); i++)
       {
@@ -130,11 +133,13 @@ public class BagOfBalls
          else
             newPosition = new YoGraphicPosition(name + i, yoFramePoint, sizeInMeters, appearances.get(i));
 
+         pointList.add(yoFramePoint);
          yoGraphicPositions.add(newPosition);
       }
 
       index = 0;
 
+      positions = Collections.unmodifiableList(pointList);
       registerYoGraphics(name, registry, parentRegistry, yoGraphicsListRegistry);
       if (graphicType != null)
          registerArtifacts(name, yoGraphicsListRegistry);
@@ -389,5 +394,15 @@ public class BagOfBalls
    public int getNumberOfBalls()
    {
       return yoGraphicPositions.size();
+   }
+
+   public List<YoGraphicPosition> getYoGraphicPositions()
+   {
+      return yoGraphicPositions;
+   }
+
+   public List<YoFramePoint3D> getPositions()
+   {
+      return positions;
    }
 }

@@ -347,6 +347,11 @@ public class YoGraphicPosition extends YoGraphic implements RemoteYoGraphic
       return y;
    }
 
+   public YoVariable getYoZ()
+   {
+      return z;
+   }
+
    @Override
    public YoGraphicPosition duplicate(YoRegistry newRegistry)
    {
