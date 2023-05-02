@@ -7,7 +7,7 @@ plugins {
 
 ihmc {
    group = "us.ihmc"
-   version = "0.20.2"
+   version = "0.20.3"
    vcsUrl = "https://github.com/ihmcrobotics/ihmc-graphics-description"
    openSource = true
 
@@ -21,8 +21,8 @@ mainDependencies {
    api("us.ihmc:euclid-frame:0.20.0")
    api("us.ihmc:euclid-shape:0.20.0")
    api("us.ihmc:ihmc-commons:0.32.0")
-   api("us.ihmc:ihmc-yovariables:0.9.17")
-   api("us.ihmc:scs2-definition:17-0.14.1")
+   api("us.ihmc:ihmc-yovariables:0.9.18")
+   api("us.ihmc:scs2-definition:17-0.14.3")
 }
 
 testDependencies {
