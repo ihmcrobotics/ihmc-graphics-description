@@ -139,16 +139,22 @@ public class Graphics3DObject
     */
    public void combine(Graphics3DObject graphics3DObject)
    {
+      if (graphics3DObject == null)
+         return;
+
       identity();
       graphics3DInstructions.addAll(graphics3DObject.getGraphics3DInstructions());
    }
 
-   public void combine(Graphics3DObject Graphics3DObject, Vector3DReadOnly offset)
+   public void combine(Graphics3DObject graphics3DObject, Vector3DReadOnly offset)
    {
+      if (graphics3DObject == null)
+         return;
+
       identity();
       this.translate(offset);
 
-      List<Graphics3DPrimitiveInstruction> graphics3dInstructionsToAdd = Graphics3DObject.getGraphics3DInstructions();
+      List<Graphics3DPrimitiveInstruction> graphics3dInstructionsToAdd = graphics3DObject.getGraphics3DInstructions();
 
       for (Graphics3DPrimitiveInstruction graphics3dInstructionToAdd : graphics3dInstructionsToAdd)
       {
