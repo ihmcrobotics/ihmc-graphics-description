@@ -18,11 +18,11 @@ mainDependencies {
 
    api("us.ihmc:euclid-frame:0.22.3")
    api("us.ihmc:euclid-shape:0.22.3")
-   api("us.ihmc:ihmc-commons:0.34.0")
-   api("us.ihmc:ihmc-yovariables:0.13.4")
+   api("us.ihmc:ihmc-commons:0.35.1")
+   api("us.ihmc:ihmc-yovariables:0.13.5")
    api("us.ihmc:scs2-definition:17-0.28.3")
 }
 
 testDependencies {
-   api("us.ihmc:ihmc-commons-testing:0.34.0")
+   api("us.ihmc:ihmc-commons-testing:0.35.1")
 }
